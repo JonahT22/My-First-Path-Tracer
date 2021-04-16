@@ -40,11 +40,11 @@ int main(int argc, char **argv)
 	double camDist = 1 / tan(camFOVy / 2.0);
 	//imageSize -= 1;
 	// Generate rays from the camera to the center of each pixel
-	for (int row = 1; row < 2 * imageSize; row += 2) {
+	for (int row = 0; row < imageSize; row++) {
 		// u and v are in normalized image coords, -1 to 1
-		double v = (row / (double)imageSize) - 1.0;
-		for (int col = 1; col < 2 * imageSize; col += 2) {
-			double u = (col / (double)imageSize) - 1.0;
+		double v = (2.0 * ((double)row + 0.5) / (double)imageSize) - 1.0;
+		for (int col = 0; col < imageSize; col++) {
+			double u = (2.0 * ((double)col + 0.5) / (double)imageSize) - 1.0;
 			Ray3D newRay = Ray3D(vec3(camPos), vec3(u * camAspect, v, -1.0 * camDist));
 			newRay.dir = normalize(newRay.dir);
 		}
