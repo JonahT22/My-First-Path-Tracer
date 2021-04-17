@@ -32,6 +32,7 @@ struct HitResult {
 	vec3 loc;
 	vec3 nor;
 	vec3 color;
+	// TODO: Material properties
 };
 
 struct Camera {
@@ -46,10 +47,14 @@ class SceneObject3D {
 public:
 	SceneObject3D() = default;
 
+	// TODO: add epsilon to this intersection function, and discard any t values below it
 	virtual bool Intersect(Ray3D ray, HitResult& outHit) = 0;
+	// TODO: add another function for finding shadow intersections. Makes a new ray
+	// tracing loop over all objects, but initializes the hit result's t to the distance to the light,
+	// and stops after the first new tmin is found
 
 private:
-	Transform trans;
+	Transform transform;
 };
 
 class Sphere : public SceneObject3D {
@@ -96,7 +101,7 @@ int main(int argc, char **argv)
 	string fileName(argv[3]);
 	shared_ptr<Image> outputImage = make_shared<Image>(width, height);
 
-	Camera camera = Camera(
+	Camera camera (
 		vec3(0, 0, 5),
 		45.0 * pi<double>() / 180.0, 
 		width, height);
