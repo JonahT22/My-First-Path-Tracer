@@ -65,7 +65,14 @@ public:
 		mat4 invMtx = inverse(transMtx);
 		Ray3D localRay(invMtx * ray.start, invMtx * ray.dir);
 		// Check intersection (NOTE: ray direction is NOT normalized)
-		return IntersectLocal(localRay, outHit);
+		if (IntersectLocal(localRay, outHit)) {
+			// TODO: convert the outHit back to world coords
+			// WARNING: if the IntersectLocal function didn't change the value of outHit,
+			// then I shouldn't try to convert its values here. Maybe only return true if the 
+			// raycast actually updated outHit? 
+			return true;
+		}
+		else return false;
 	}
 
 	// TODO: add epsilon to this intersection function, and discard any t values below it
@@ -118,6 +125,7 @@ public:
 		// Better way to organize: return false at the top. If makes it past that, assume there are 2 hits.
 		// (if d = 0, then both t's will be the same). If the smaller positive t is less than the one in the 
 		// hitresult, then update the hitresult before returning true
+		// Maybe: only return true if I actually updated the value of outHit?
 	}
 };
 
