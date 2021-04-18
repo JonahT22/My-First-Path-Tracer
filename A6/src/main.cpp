@@ -74,6 +74,8 @@ public:
 	// TODO: add another function for finding shadow intersections. Makes a new ray
 	// tracing loop over all objects, but initializes the hit result's t to the distance to the light,
 	// and stops after the first new tmin is found
+	// This function won't be on the sceneobject class, it'll be on the scene class, and will be implemented
+	// using this Hit() function
 
 private:
 	// The transformation matrix to convert this object from local->world space
@@ -87,6 +89,7 @@ public:
 	Sphere() = default;
 
 	bool IntersectLocal(Ray3D ray, HitResult& outHit) override {
+		// TODO: compute normals
 		// Assume sphere is at origin with radius 1
 		double a =       dot(vec3(ray.dir),   vec3(ray.dir));
 		double b = 2.0 * dot(vec3(ray.dir),   vec3(ray.start));
@@ -105,12 +108,16 @@ public:
 			}
 			else return false;
 		}
-		else if (d2 == 0) {
+		// TODO: remove this? 
+		else if (d2 == 0) { // Very rare, almost impossible
 			double t = -1.0 * b / (2.0 * a);
 			//cout << "Hit at time " << t << endl;
 			return true;
 		}
 		else return false;
+		// Better way to organize: return false at the top. If makes it past that, assume there are 2 hits.
+		// (if d = 0, then both t's will be the same). If the smaller positive t is less than the one in the 
+		// hitresult, then update the hitresult before returning true
 	}
 };
 
@@ -140,15 +147,12 @@ int main(int argc, char **argv)
 	
 	// Find distance to image plane so that it goes from -1 to 1 in the y direction
 	double camDist = 1 / tan(camera.fovY / 2.0);
-	//imageSize -= 1;
 	// Generate rays from the camera to the center of each pixel
 	for (int row = 0; row < height; row++) {
 		// u and v are in normalized image coords, -1 to 1
 		double v = (2.0 * ((double)row + 0.5) / (double)height) - 1.0;
 		for (int col = 0; col < width; col++) {
 			double u = (2.0 * ((double)col + 0.5) / (double)width) - 1.0;
-			//cout << "u: " << u << endl;
-			//cout << "v: " << v << endl;
 			Ray3D newRay = Ray3D(camera.pos, vec4(u * camera.aspect, v, -1.0 * camDist, 0.0f));
 			newRay.dir = normalize(newRay.dir);
 			HitResult hit;
