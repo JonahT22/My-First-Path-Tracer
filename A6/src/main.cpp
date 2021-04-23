@@ -11,6 +11,9 @@
 #include "tiny_obj_loader.h"
 #include "Image.h"
 
+#include "Camera.h"
+#include "HelperStructs.h"
+
 using namespace std;
 using namespace glm;
 
@@ -23,12 +26,6 @@ struct Transform {
 		: loc(_loc), rot(_rot), scale(_scale) {}
 };
 
-struct Ray3D {
-	vec4 start;
-	vec4 dir;
-	Ray3D(vec4 _start, vec4 _dir) : start(_start), dir(_dir) {}
-};
-
 struct HitResult {
 	// Initilialize as largest possible double value
 	double tMin = numeric_limits<double>::max();
@@ -36,14 +33,6 @@ struct HitResult {
 	vec4 nor;
 	vec3 color;
 	// TODO: Material properties
-};
-
-struct Camera {
-	vec4 pos = vec4(0, 0, 0, 1);
-	double fovY = 90;
-	double aspect = 1.0;
-	Camera(vec4 _pos, double _fov, int width, int height)
-		: pos(_pos), fovY(_fov), aspect(width / (double)height) {}
 };
 
 class SceneObject {
@@ -131,6 +120,8 @@ public:
 
 int main(int argc, char **argv)
 {
+	// TODO: make background color an editable property 
+
 	if(argc < 4) {
 		cout << "Usage: ./A6 <SCENENUMBER> <IMAGE SIZE> <IMAGE FILENAME>" << endl;
 		return 0;
@@ -153,16 +144,10 @@ int main(int argc, char **argv)
 		vec3(0, 0, 0.75),
 		vec3(0.5, 1, 1)));
 	
-	// Find distance to image plane so that it goes from -1 to 1 in the y direction
-	double camDist = 1 / tan(camera.fovY / 2.0);
 	// Generate rays from the camera to the center of each pixel
 	for (int row = 0; row < height; row++) {
-		// u and v are in normalized image coords, -1 to 1
-		double v = (2.0 * ((double)row + 0.5) / (double)height) - 1.0;
 		for (int col = 0; col < width; col++) {
-			double u = (2.0 * ((double)col + 0.5) / (double)width) - 1.0;
-			Ray3D newRay = Ray3D(camera.pos, vec4(u * camera.aspect, v, -1.0 * camDist, 0.0f));
-			newRay.dir = normalize(newRay.dir);
+			Ray3D newRay = camera.CreateCameraRay(row, col);
 			HitResult hit;
 			if (testSphere->Hit(newRay, hit)) {
 				//cout << "Hit at point (" << hit.loc.x << ", " << hit.loc.y << ", " << hit.loc.z << ")" << endl;
