@@ -4,8 +4,6 @@
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/euler_angles.hpp>
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
@@ -13,110 +11,11 @@
 
 #include "Camera.h"
 #include "HelperStructs.h"
+#include "SceneObject.h"
+#include "Sphere.h"
 
 using namespace std;
 using namespace glm;
-
-struct Transform {
-	vec4 loc = vec4(0, 0, 0, 1);
-	vec3 rot = vec3(0, 0, 0);
-	vec3 scale = vec3(1, 1, 1);
-	Transform() = default;
-	Transform(vec4 _loc, vec3 _rot, vec3 _scale)
-		: loc(_loc), rot(_rot), scale(_scale) {}
-};
-
-struct HitResult {
-	// Initilialize as largest possible double value
-	double tMin = numeric_limits<double>::max();
-	vec4 loc;
-	vec4 nor;
-	vec3 color;
-	// TODO: Material properties
-};
-
-class SceneObject {
-public:
-	SceneObject() = default;
-
-	// Calcualte the transformation matrix for this object
-	void CreateTransformMtx(Transform _transf) {
-		// Since all objects in this project are static and independent, the MatrixStack class is not required
-		// (We can just calculate the transformations once, no need for hierarchies or dynamic transf calculations)
-		transform = _transf;
-		transMtx *= glm::translate(glm::mat4(1.0f), vec3(_transf.loc));
-		transMtx *= glm::eulerAngleXYZ(_transf.rot.x, _transf.rot.y, _transf.rot.z);
-		transMtx *= glm::scale(glm::mat4(1.0f), _transf.scale);
-	}
-
-	bool Hit(Ray3D ray, HitResult& outHit) {
-		// Apply transformations to the ray to change it to local space
-		mat4 invMtx = inverse(transMtx);
-		Ray3D localRay(invMtx * ray.start, invMtx * ray.dir);
-		// Check intersection (NOTE: ray direction is NOT normalized)
-		if (IntersectLocal(localRay, outHit)) {
-			// TODO: convert the outHit back to world coords
-			// WARNING: if the IntersectLocal function didn't change the value of outHit,
-			// then I shouldn't try to convert its values here. Maybe only return true if the 
-			// raycast actually updated outHit? 
-			return true;
-		}
-		else return false;
-	}
-
-	// TODO: add epsilon to this intersection function, and discard any t values below it
-	virtual bool IntersectLocal(Ray3D ray, HitResult& outHit) = 0;
-	
-	// TODO: add another function for finding shadow intersections. Makes a new ray
-	// tracing loop over all objects, but initializes the hit result's t to the distance to the light,
-	// and stops after the first new tmin is found
-	// This function won't be on the sceneobject class, it'll be on the scene class, and will be implemented
-	// using this Hit() function
-
-private:
-	// The transformation matrix to convert this object from local->world space
-	glm::mat4 transMtx = glm::mat4(1.0f);
-	// TODO: is this variable necessary after finding transMtx?
-	Transform transform;
-};
-
-class Sphere : public SceneObject {
-public:
-	Sphere() = default;
-
-	bool IntersectLocal(Ray3D ray, HitResult& outHit) override {
-		// TODO: compute normals
-		// Assume sphere is at origin with radius 1
-		double a =       dot(vec3(ray.dir),   vec3(ray.dir));
-		double b = 2.0 * dot(vec3(ray.dir),   vec3(ray.start));
-		double c =       dot(vec3(ray.start), vec3(ray.start)) - 1.0;
-		double d2 = pow(b, 2) - (4 * a * c);
-		if (d2 > 0) {
-			double t1 = (-1.0 * b + sqrt(d2)) / (2.0 * a);
-			double t2 = (-1.0 * b - sqrt(d2)) / (2.0 * a);
-			if (t1 > 0 && t1 < t2) {
-				//cout << "Hit at time " << t1 << endl;
-				return true;
-			}
-			else if (t2 > 0 && t2 < t1) {
-				//cout << "Hit at time " << t1 << endl;
-				return true;
-			}
-			else return false;
-		}
-		// TODO: remove this? 
-		else if (d2 == 0) { // Very rare, almost impossible
-			double t = -1.0 * b / (2.0 * a);
-			//cout << "Hit at time " << t << endl;
-			return true;
-		}
-		else return false;
-		// Better way to organize: return false at the top. If makes it past that, assume there are 2 hits.
-		// (if d = 0, then both t's will be the same). If the smaller positive t is less than the one in the 
-		// hitresult, then update the hitresult before returning true
-		// Maybe: only return true if I actually updated the value of outHit?
-	}
-};
 
 int main(int argc, char **argv)
 {
@@ -151,7 +50,7 @@ int main(int argc, char **argv)
 			HitResult hit;
 			if (testSphere->Hit(newRay, hit)) {
 				//cout << "Hit at point (" << hit.loc.x << ", " << hit.loc.y << ", " << hit.loc.z << ")" << endl;
-				outputImage->setPixel(col, row, 255, 0, 0);
+				outputImage->setPixel(col, row, 0, 255, 0);
 			}
 		}
 	}
