@@ -9,7 +9,7 @@ using namespace std;
 glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 {
 	HitResult hit;
-	for (auto object : allObjects) {
+	for (auto& object : allObjects) {
 		if (object->Hit(ray, hit)) {
 			// If hit was successfull (i.e. found a new tMin), store a reference to the object
 			hit.hitObject = object;
@@ -24,14 +24,14 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 		// Calculate the hit's properties, now that we know that this hit is the closest one 
 		// (this way, we only have to do these calculations once)
 
-		// New position from tMin (TODO: is storing the hit loc necessary?)
+		// New position from tMin
 		hit.loc = ray.FindLocAtTime(hit.t);
 
 		// During intersection checks, hit.nor is filled with local-space normal. Now, convert to world space
 		hit.nor = normalize(hit.hitObject->GetInverseTranspose() * hit.nor);
 
 		// Calculate lighting using simple lambertian shading model
-		vec4 lightPos(1, 1, 0, 1);
+		vec4 lightPos(0, 1, 0, 1);
 		double intensity = std::max(0.0f, dot(hit.nor, normalize(lightPos - hit.loc)));
 
 		// Color Red w/lambertian shading
@@ -51,10 +51,17 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 void Scene::BuildSceneFromFile(std::string filename)
 {
 	// Hard-code a sphere into the middle of the scene
-	shared_ptr<SceneObject> testSphere = make_shared<Sphere>();
-	testSphere->CreateTransformMtx(Transform(
+	shared_ptr<SceneObject> testSphere1 = make_shared<Sphere>();
+	testSphere1->CreateTransformMtx(Transform(
 		vec4(-1, 0, 0, 1),
 		vec3(0, 0, .75),
 		vec3(.5, 1, 1)));
-	allObjects.push_back(testSphere);
+	allObjects.push_back(testSphere1);
+
+	shared_ptr<SceneObject> testSphere2 = make_shared<Sphere>();
+	testSphere2->CreateTransformMtx(Transform(
+		vec4(1, 0, 0, 1),
+		vec3(0, 0, 0),
+		vec3(0.5, 1.5, 1)));
+	allObjects.push_back(testSphere2);
 }
