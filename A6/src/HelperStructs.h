@@ -6,6 +6,10 @@ struct Ray3D {
 	glm::vec4 start;
 	glm::vec4 dir;
 	Ray3D(glm::vec4 _start, glm::vec4 _dir) : start(_start), dir(_dir) {}
+
+	glm::vec4 FindLocAtTime(double time) {
+		return start + ((float)time * dir);
+	}
 };
 
 struct Transform {
@@ -24,4 +28,11 @@ struct HitResult {
 	glm::vec4 nor;
 	glm::vec3 color;
 	// TODO: Material properties
+	bool UpdateTMin(double newT) {
+		if (newT < tMin) {
+			tMin = newT;
+			return true;
+		}
+		else return false;
+	}
 };
