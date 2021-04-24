@@ -23,7 +23,7 @@ bool Sphere::IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, double tM
 			// Try updating the hit result with whichever t value was the smallest in the range
 			if (outHit.UpdateTMin(timeToUpdate)) {
 				// If it ended up finding a new minT, update the normal value in the hit result
-				vec4 localPos = ray.FindLocAtTime(outHit.tMin);
+				vec4 localPos = ray.FindLocAtTime(outHit.t);
 				outHit.nor = normalize(localPos);
 				outHit.nor.w = 0.0; // outHit.nor is a vector, so the w value is always 0
 				return true;

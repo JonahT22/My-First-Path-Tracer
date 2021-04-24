@@ -3,7 +3,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
-#include "HelperStructs.h"
+#include "Ray3D.h"
+#include "Transform.h"
+#include "HitResult.h"
 
 class SceneObject {
 public:

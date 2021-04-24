@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "HelperStructs.h"
+#include "Ray3D.h"
 
 class Camera {
 public:

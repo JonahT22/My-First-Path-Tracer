@@ -10,7 +10,9 @@
 #include "Image.h"
 
 #include "Camera.h"
-#include "HelperStructs.h"
+#include "HitResult.h"
+#include "Ray3D.h"
+#include "Scene.h"
 #include "SceneObject.h"
 #include "Sphere.h"
 

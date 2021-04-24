@@ -2,7 +2,8 @@
 
 #include <glm/glm.hpp>
 #include "SceneObject.h"
-#include "HelperStructs.h"
+#include "Ray3D.h"
+#include "HitResult.h"
 
 class Sphere : public SceneObject {
 public:
