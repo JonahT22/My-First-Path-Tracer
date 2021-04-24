@@ -40,4 +40,11 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 
 void Scene::BuildSceneFromFile(std::string filename)
 {
+	// Hard-code a sphere into the middle of the scene
+	shared_ptr<SceneObject> testSphere = make_shared<Sphere>();
+	testSphere->CreateTransformMtx(Transform(
+		vec4(0, 0, 0, 1),
+		vec3(0, 0, .75),
+		vec3(.5, 1, 1)));
+	allObjects.push_back(testSphere);
 }

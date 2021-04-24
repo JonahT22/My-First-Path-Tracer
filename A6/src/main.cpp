@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <limits>
+#include <memory>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -37,23 +38,16 @@ int main(int argc, char **argv)
 		vec4(0, 0, 5, 1),
 		45.0 * pi<double>() / 180.0, 
 		width, height);
-	
-	// Hard-code a sphere into the middle of the scene
-	shared_ptr<SceneObject> testSphere = make_shared<Sphere>();
-	testSphere->CreateTransformMtx(Transform(
-		vec4(0, 0, 0, 1),
-		vec3(0, 0, .75),
-		vec3(.5, 1, 1)));
+
+	Scene scene;
+	scene.BuildSceneFromFile("null");
 	
 	// Generate rays from the camera to the center of each pixel
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
 			Ray3D newRay = camera.CreateCameraRay(row, col);
-			HitResult hit;
-			if (testSphere->Hit(newRay, hit)) {
-				//cout << "Hit at point (" << hit.loc.x << ", " << hit.loc.y << ", " << hit.loc.z << ")" << endl;
-				outputImage->setPixel(col, row, hit.color.x, hit.color.y, hit.color.z);
-			}
+			vec3 rayColor = scene.ComputeRayColor(newRay);
+			outputImage->setPixel(col, row, 255 * rayColor.r, 255 * rayColor.g, 255 * rayColor.b);
 		}
 	}
 	outputImage->writeToFile(fileName);
