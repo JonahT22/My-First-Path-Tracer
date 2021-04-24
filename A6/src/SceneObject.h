@@ -16,15 +16,10 @@ public:
 
 	// By default, hits go from 0 to inf unless override is specified
 	bool Hit(Ray3D ray, HitResult& outHit, double tMin = 0, double tMax = std::numeric_limits<double>::max());
+	glm::mat4 GetInverseTranspose();
 
-	// TODO: add epsilon to this intersection function, and discard any t values below it
+	// Check intersection in local space, return true if found an intersection that is closer than the hit's t value
 	virtual bool IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, double tMax) = 0;
-
-	// TODO: add another function for finding shadow intersections. Makes a new ray
-	// tracing loop over all objects, but initializes the hit result's t to the distance to the light,
-	// and stops after the first new tmin is found
-	// This function won't be on the sceneobject class, it'll be on the scene class, and will be implemented
-	// using this Hit() function
 
 protected:
 	bool SelectSmallestInRange(double a, double b, double min, double max, double& result);

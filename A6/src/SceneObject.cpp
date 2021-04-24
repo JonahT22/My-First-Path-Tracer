@@ -16,26 +16,15 @@ bool SceneObject::Hit(Ray3D ray, HitResult& outHit, double tMin, double tMax) {
 	// Apply transformations to the ray to change it to local space
 	mat4 invMtx = inverse(transMtx);
 	Ray3D localRay(invMtx * ray.start, invMtx * ray.dir);
-	// Check intersection (NOTE: ray direction is NOT normalized)
-	if (IntersectLocal(localRay, outHit, tMin, tMax)) {
-		// Since I didn't normalize the ray direction vector, my t distance is already in world space
-		// NOTE: this only gets executed if the IntersectLocal function actually updated the values in outHit
-		
-		// New position from tMin
-		outHit.loc = ray.FindLocAtTime(outHit.tMin); 
-		// Use Inverse transpose to convert nor to world space
-		outHit.nor = normalize(transpose(invMtx) * outHit.nor);
 
-		// Color with normals
-		// Normal -> color conversion taken from assigment handout
-		unsigned char r = 255 * (0.5 * outHit.nor.x + 0.5);
-		unsigned char g = 255 * (0.5 * outHit.nor.y + 0.5);
-		unsigned char b = 255 * (0.5 * outHit.nor.z + 0.5);
-		outHit.color = vec3(r, g, b);
-		
-		return true;
-	}
-	else return false;
+	// Check intersection (NOTE: localRay direction is NOT normalized)
+	// Since I didn't normalize the ray direction vector, the t distance stored in outHit is in world space
+	return IntersectLocal(localRay, outHit, tMin, tMax);
+}
+
+glm::mat4 SceneObject::GetInverseTranspose()
+{
+	return transpose(inverse(transMtx));
 }
 
 // Checks 2 numbers against a given range, places the smaller # in the range into result, or returns false if neither are in the range
