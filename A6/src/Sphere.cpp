@@ -4,7 +4,6 @@
 using namespace glm;
 
 bool Sphere::IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, double tMax) {
-	// TODO: compute normals
 	// Assume sphere is at origin with radius 1
 	double a = dot(vec3(ray.dir), vec3(ray.dir));
 	double b = 2.0 * dot(vec3(ray.dir), vec3(ray.start));
