@@ -83,7 +83,7 @@ void Scene::BuildSceneFromFile(std::string filename)
 	allObjects.push_back(
 		make_shared<Sphere>(
 			Transform(
-				dvec4(0, 0, 0, 1),
+				dvec4(-0.5, -1, 1, 1),
 				dvec3(0, 0, 0),
 				dvec3(1, 1, 1)
 			),
@@ -95,38 +95,38 @@ void Scene::BuildSceneFromFile(std::string filename)
 			)
 		)
 	);
-	//// Green sphere
-	//allObjects.push_back(
-	//	make_shared<Sphere>(
-	//		Transform(
-	//			dvec4(.5, -1, -1, 1),
-	//			dvec3(0, 0, 0),
-	//			dvec3(1, 1, 1)
-	//		),
-	//		Material(
-	//			dvec3(0.0, 1.0, 0.0),
-	//			dvec3(1.0, 1.0, 0.5),
-	//			dvec3(0.1, 0.1, 0.1),
-	//			100.0f
-	//		)
-	//	)
-	//);
-	//// Blue sphere
-	//allObjects.push_back(
-	//	make_shared<Sphere>(
-	//		Transform(
-	//			dvec4(0, 1, 0, 1),
-	//			dvec3(0, 0, 0),
-	//			dvec3(1, 1, 1)
-	//		),
-	//		Material(
-	//			dvec3(0.0, 0.0, 1.0),
-	//			dvec3(1.0, 1.0, 0.5),
-	//			dvec3(0.1, 0.1, 0.1),
-	//			100.0f
-	//		)
-	//		)
-	//);
+	// Green sphere
+	allObjects.push_back(
+		make_shared<Sphere>(
+			Transform(
+				dvec4(.5, -1, -1, 1),
+				dvec3(0, 0, 0),
+				dvec3(1, 1, 1)
+			),
+			Material(
+				dvec3(0.0, 1.0, 0.0),
+				dvec3(1.0, 1.0, 0.5),
+				dvec3(0.1, 0.1, 0.1),
+				100.0f
+			)
+		)
+	);
+	// Blue sphere
+	allObjects.push_back(
+		make_shared<Sphere>(
+			Transform(
+				dvec4(0, 1, 0, 1),
+				dvec3(0, 0, 0),
+				dvec3(1, 1, 1)
+			),
+			Material(
+				dvec3(0.0, 0.0, 1.0),
+				dvec3(1.0, 1.0, 0.5),
+				dvec3(0.1, 0.1, 0.1),
+				100.0f
+			)
+		)
+	);
 	
 	allLights.push_back(PointLight(dvec4(-2, 1, 1, 1), 1.0));
 }
