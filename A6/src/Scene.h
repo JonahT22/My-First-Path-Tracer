@@ -27,4 +27,9 @@ public:
 private:
 	std::vector<std::shared_ptr<SceneObject> > allObjects;
 	std::vector<std::shared_ptr<PointLight> > allLights;
+
+	// Clamps the value of each component of the given vec3
+	void ClampVector(glm::vec3& vec, float min, float max);
+	// Clamps an individual float value to a range
+	void ClampFloat(float& num, float min, float max);
 };

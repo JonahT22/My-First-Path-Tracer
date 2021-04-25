@@ -32,7 +32,7 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 
 		// Start with ambient component
 		Material mat = hit.hitObject->GetMaterial();
-		dvec3 color = mat.ka;
+		vec3 color = mat.ka;
 
 		// Calculate contribution of each light using simple diffuse shading model
 		for (auto& light : allLights) {
@@ -40,7 +40,8 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 			color += mat.kd * diffuseFactor * light->intensity;
 		}
 
-		// Color Red w/lambertian shading
+		// Make sure the color isn't clipping
+		ClampVector(color, 0.0f, 1.0f);
 		return color;
 
 		//// Color with normals
@@ -73,8 +74,21 @@ void Scene::BuildSceneFromFile(std::string filename)
 	testSphere2->SetDiffuseColor(vec3(0.0, 1.0, 0.0));
 	allObjects.push_back(testSphere2);
 
-	//shared_ptr<PointLight> testLight1 = make_shared<PointLight>(vec4(0, 1, 0, 1), 1.0);
-	//allLights.push_back(testLight1);
+	shared_ptr<PointLight> testLight1 = make_shared<PointLight>(vec4(0, 1, 0, 1), 1.0);
+	allLights.push_back(testLight1);
 	shared_ptr<PointLight> testLight2 = make_shared<PointLight>(vec4(5, 0, 0, 1), 1.0);
 	allLights.push_back(testLight2);
+}
+
+void Scene::ClampVector(glm::vec3& vec, float min, float max)
+{
+	ClampFloat(vec.x, min, max);
+	ClampFloat(vec.y, min, max);
+	ClampFloat(vec.z, min, max);
+}
+
+void Scene::ClampFloat(float& num, float min, float max)
+{
+	if (num < min) num = min;
+	if (num > max) num = max;
 }
