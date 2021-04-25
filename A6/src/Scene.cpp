@@ -25,7 +25,10 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D ray)
 		hit.loc = ray.FindLocAtTime(hit.t);
 
 		// During intersection checks, hit.nor is filled with local-space normal. Now, convert to world space
-		hit.nor = normalize(hit.hitObject->GetInverseTranspose() * hit.nor);
+		hit.nor = hit.hitObject->GetInverseTranspose() * hit.nor;
+		// Multiplying by inverse transpose makes the w component nonzero, so reset it here before normalizing
+		hit.nor.w = 0.0;
+		hit.nor = normalize(hit.nor);
 
 		// Start with ambient component
 		Material mat = hit.hitObject->GetMaterial();
