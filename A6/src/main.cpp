@@ -1,4 +1,3 @@
-// TODO: convert all doubles to floats
 // TODO: add 'const' to functions when applicable
 
 #include <iostream>
@@ -38,7 +37,7 @@ int main(int argc, char **argv)
 	shared_ptr<Image> outputImage = make_shared<Image>(width, height);
 
 	Camera camera (
-		vec4(0, 0, 5, 1),
+		dvec4(0, 0, 5, 1),
 		45.0 * pi<double>() / 180.0, 
 		width, height);
 
@@ -49,7 +48,7 @@ int main(int argc, char **argv)
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
 			Ray3D newRay = camera.CreateCameraRay(row, col);
-			vec3 rayColor = scene.ComputeRayColor(newRay);
+			dvec3 rayColor = scene.ComputeRayColor(newRay);
 			outputImage->setPixel(col, row, 255 * rayColor.r, 255 * rayColor.g, 255 * rayColor.b);
 		}
 	}

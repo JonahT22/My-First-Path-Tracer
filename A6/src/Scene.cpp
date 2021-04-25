@@ -6,7 +6,7 @@ using namespace glm;
 using namespace std;
 
 // Main render loop
-glm::vec3 Scene::ComputeRayColor(Ray3D ray)
+glm::dvec3 Scene::ComputeRayColor(Ray3D ray)
 {
 	HitResult hit;
 	for (auto& object : allObjects) {
@@ -29,7 +29,7 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 
 		// Start with ambient component
 		Material mat = hit.hitObject->GetMaterial();
-		vec3 color = mat.ka;
+		dvec3 color = mat.ka;
 
 		// Calculate contribution of each light using Blinn-phong shading
 		for (auto& light : allLights) {
@@ -47,13 +47,13 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 		//double r = 0.5 * hit.nor.x + 0.5;
 		//double g = 0.5 * hit.nor.y + 0.5;
 		//double b = 0.5 * hit.nor.z + 0.5;
-		//return vec3(r, g, b);
+		//return dvec3(r, g, b);
 	}
 	// Background color
-	else return glm::vec3(0, 0, 0);
+	else return glm::dvec3(0, 0, 0);
 }
 
-bool Scene::IsPointInShadow(vec4& hitLoc, PointLight& light) const
+bool Scene::IsPointInShadow(dvec4& hitLoc, PointLight& light) const
 {
 	HitResult shadowHit;
 	// Start the tval at the light distance, so nothing past the light will count as a hit
@@ -81,62 +81,62 @@ void Scene::BuildSceneFromFile(std::string filename)
 	allObjects.push_back(
 		make_shared<Sphere>(
 			Transform(
-				vec4(-.5, -1, 1, 1),
-				vec3(0, 0, 0),
-				vec3(1, 1, 1)
+				dvec4(0, 0, 0, 1),
+				dvec3(0, 0, 0),
+				dvec3(1, 1, 1)
 			),
 			Material(
-				vec3(1.0, 0.0, 0.0),
-				vec3(1.0, 1.0, 0.5),
-				vec3(0.1, 0.1, 0.1),
+				dvec3(1.0, 0.0, 0.0),
+				dvec3(1.0, 1.0, 0.5),
+				dvec3(0.1, 0.1, 0.1),
 				100.0f
 			)
 		)
 	);
-	// Green sphere
-	allObjects.push_back(
-		make_shared<Sphere>(
-			Transform(
-				vec4(.5, -1, -1, 1),
-				vec3(0, 0, 0),
-				vec3(1, 1, 1)
-			),
-			Material(
-				vec3(0.0, 1.0, 0.0),
-				vec3(1.0, 1.0, 0.5),
-				vec3(0.1, 0.1, 0.1),
-				100.0f
-			)
-		)
-	);
-	// Blue sphere
-	allObjects.push_back(
-		make_shared<Sphere>(
-			Transform(
-				vec4(0, 1, 0, 1),
-				vec3(0, 0, 0),
-				vec3(1, 1, 1)
-			),
-			Material(
-				vec3(0.0, 0.0, 1.0),
-				vec3(1.0, 1.0, 0.5),
-				vec3(0.1, 0.1, 0.1),
-				100.0f
-			)
-			)
-	);
+	//// Green sphere
+	//allObjects.push_back(
+	//	make_shared<Sphere>(
+	//		Transform(
+	//			dvec4(.5, -1, -1, 1),
+	//			dvec3(0, 0, 0),
+	//			dvec3(1, 1, 1)
+	//		),
+	//		Material(
+	//			dvec3(0.0, 1.0, 0.0),
+	//			dvec3(1.0, 1.0, 0.5),
+	//			dvec3(0.1, 0.1, 0.1),
+	//			100.0f
+	//		)
+	//	)
+	//);
+	//// Blue sphere
+	//allObjects.push_back(
+	//	make_shared<Sphere>(
+	//		Transform(
+	//			dvec4(0, 1, 0, 1),
+	//			dvec3(0, 0, 0),
+	//			dvec3(1, 1, 1)
+	//		),
+	//		Material(
+	//			dvec3(0.0, 0.0, 1.0),
+	//			dvec3(1.0, 1.0, 0.5),
+	//			dvec3(0.1, 0.1, 0.1),
+	//			100.0f
+	//		)
+	//		)
+	//);
 	
-	allLights.push_back(PointLight(vec4(-2, 1, 1, 1), 1.0));
+	allLights.push_back(PointLight(dvec4(-2, 1, 1, 1), 1.0));
 }
 
-void Scene::ClampVector(glm::vec3& vec, float min, float max)
+void Scene::ClampVector(glm::dvec3& vec, double min, double max)
 {
-	ClampFloat(vec.x, min, max);
-	ClampFloat(vec.y, min, max);
-	ClampFloat(vec.z, min, max);
+	ClampDouble(vec.x, min, max);
+	ClampDouble(vec.y, min, max);
+	ClampDouble(vec.z, min, max);
 }
 
-void Scene::ClampFloat(float& num, float min, float max)
+void Scene::ClampDouble(double& num, double min, double max)
 {
 	if (num < min) num = min;
 	if (num > max) num = max;

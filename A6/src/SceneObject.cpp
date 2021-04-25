@@ -7,16 +7,16 @@ SceneObject::SceneObject(Transform _transf, Material _mat) {
 	// Since all objects in this project are static and independent, the MatrixStack class is not required
 	// (We can just calculate the transformations once, no need for hierarchies or dynamic transf calculations)
 	transform = _transf;
-	transMtx *= translate(glm::mat4(1.0f), vec3(_transf.loc));
+	transMtx *= translate(glm::dmat4(1.0f), dvec3(_transf.loc));
 	transMtx *= eulerAngleXYZ(_transf.rot.x, _transf.rot.y, _transf.rot.z);
-	transMtx *= scale(glm::mat4(1.0f), _transf.scale);
+	transMtx *= scale(glm::dmat4(1.0f), _transf.scale);
 
 	mat = _mat;
 }
 
 bool SceneObject::Hit(Ray3D ray, HitResult& outHit, double tMin, double tMax) {
 	// Apply transformations to the ray to change it to local space
-	mat4 invMtx = inverse(transMtx);
+	dmat4 invMtx = inverse(transMtx);
 	Ray3D localRay(invMtx * ray.start, invMtx * ray.dir);
 
 	// Check intersection (NOTE: localRay direction is NOT normalized)
@@ -24,7 +24,7 @@ bool SceneObject::Hit(Ray3D ray, HitResult& outHit, double tMin, double tMax) {
 	return IntersectLocal(localRay, outHit, tMin, tMax);
 }
 
-glm::mat4 SceneObject::GetInverseTranspose()
+glm::dmat4 SceneObject::GetInverseTranspose()
 {
 	return transpose(inverse(transMtx));
 }

@@ -3,13 +3,13 @@
 #include <glm/glm.hpp>
 
 struct PointLight {
-	glm::vec4 pos;
-	float intensity;
+	glm::dvec4 pos;
+	double intensity;
 
 	PointLight() :
-		pos(glm::vec4(0, 0, 0, 1)),
+		pos(glm::dvec4(0, 0, 0, 1)),
 		intensity(1.0) {}
-	PointLight(glm::vec4 _pos, float _intensity) :
+	PointLight(glm::dvec4 _pos, double _intensity) :
 		pos(_pos),
 		intensity(_intensity) {}
 };
