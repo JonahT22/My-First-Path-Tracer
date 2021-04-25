@@ -7,6 +7,7 @@
 #include "SceneObject.h"
 #include "Sphere.h"
 #include "Ray3D.h"
+#include "Material.h"
 
 class Scene {
 public:

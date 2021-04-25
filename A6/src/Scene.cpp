@@ -35,7 +35,7 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 		double intensity = std::max(0.0f, dot(hit.nor, normalize(lightPos - hit.loc)));
 
 		// Color Red w/lambertian shading
-		return vec3(intensity, 0, 0);
+		return (float)intensity * hit.hitObject->GetMaterial().kd;
 
 		//// Color with normals
 		//// Normal -> color conversion taken from assigment handout
@@ -56,6 +56,7 @@ void Scene::BuildSceneFromFile(std::string filename)
 		vec4(-1, 0, 0, 1),
 		vec3(0, 0, .75),
 		vec3(.5, 1, 1)));
+	testSphere1->SetDiffuseColor(vec3(1.0, 0.0, 0.0));
 	allObjects.push_back(testSphere1);
 
 	shared_ptr<SceneObject> testSphere2 = make_shared<Sphere>();
@@ -63,5 +64,6 @@ void Scene::BuildSceneFromFile(std::string filename)
 		vec4(1, 0, 0, 1),
 		vec3(0, 0, 0),
 		vec3(0.5, 1.5, 1)));
+	testSphere2->SetDiffuseColor(vec3(0.0, 1.0, 0.0));
 	allObjects.push_back(testSphere2);
 }

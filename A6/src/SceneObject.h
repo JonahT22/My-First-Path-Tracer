@@ -6,6 +6,7 @@
 #include "Ray3D.h"
 #include "Transform.h"
 #include "HitResult.h"
+#include "Material.h"
 
 class SceneObject {
 public:
@@ -13,6 +14,8 @@ public:
 
 	// Calcualte the transformation matrix for this object
 	void CreateTransformMtx(Transform _transf);
+	void SetDiffuseColor(glm::vec3 color) { mat.kd = color; }
+	Material GetMaterial() { return mat; }
 
 	// By default, hits go from 0 to inf unless override is specified
 	bool Hit(Ray3D ray, HitResult& outHit, double tMin = 0, double tMax = std::numeric_limits<double>::max());
@@ -28,4 +31,5 @@ protected:
 	glm::mat4 transMtx = glm::mat4(1.0f);
 	// TODO: is this variable necessary after finding transMtx?
 	Transform transform;
+	Material mat;
 };
