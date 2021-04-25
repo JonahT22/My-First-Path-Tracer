@@ -30,12 +30,18 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 		// During intersection checks, hit.nor is filled with local-space normal. Now, convert to world space
 		hit.nor = normalize(hit.hitObject->GetInverseTranspose() * hit.nor);
 
-		// Calculate lighting using simple lambertian shading model
-		vec4 lightPos(0, 1, 0, 1);
-		double intensity = std::max(0.0f, dot(hit.nor, normalize(lightPos - hit.loc)));
+		// Start with ambient component
+		Material mat = hit.hitObject->GetMaterial();
+		dvec3 color = mat.ka;
+
+		// Calculate contribution of each light using simple diffuse shading model
+		for (auto& light : allLights) {
+			float diffuseFactor = std::max(0.0f, dot(hit.nor, normalize(light->pos - hit.loc)));
+			color += mat.kd * diffuseFactor * light->intensity;
+		}
 
 		// Color Red w/lambertian shading
-		return (float)intensity * hit.hitObject->GetMaterial().kd;
+		return color;
 
 		//// Color with normals
 		//// Normal -> color conversion taken from assigment handout
@@ -66,4 +72,9 @@ void Scene::BuildSceneFromFile(std::string filename)
 		vec3(0.5, 1.5, 1)));
 	testSphere2->SetDiffuseColor(vec3(0.0, 1.0, 0.0));
 	allObjects.push_back(testSphere2);
+
+	//shared_ptr<PointLight> testLight1 = make_shared<PointLight>(vec4(0, 1, 0, 1), 1.0);
+	//allLights.push_back(testLight1);
+	shared_ptr<PointLight> testLight2 = make_shared<PointLight>(vec4(5, 0, 0, 1), 1.0);
+	allLights.push_back(testLight2);
 }

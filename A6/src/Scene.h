@@ -8,6 +8,7 @@
 #include "Sphere.h"
 #include "Ray3D.h"
 #include "Material.h"
+#include "PointLight.h"
 
 class Scene {
 public:
@@ -25,5 +26,5 @@ public:
 
 private:
 	std::vector<std::shared_ptr<SceneObject> > allObjects;
-	// TODO: vector of lights
+	std::vector<std::shared_ptr<PointLight> > allLights;
 };
