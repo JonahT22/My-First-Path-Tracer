@@ -29,6 +29,10 @@ private:
 	std::vector<std::shared_ptr<SceneObject> > allObjects;
 	std::vector<PointLight> allLights;
 
+	const float epsilon = 0.00001; // 1e-5
+
+	// Run an intersection check on the ray to a given light, but return false immediately if a hit is found
+	bool IsPointInShadow(glm::vec4& hitLoc, PointLight& light) const;
 	// Clamps the value of each component of the given vec3
 	void ClampVector(glm::vec3& vec, float min, float max);
 	// Clamps an individual float value to a range

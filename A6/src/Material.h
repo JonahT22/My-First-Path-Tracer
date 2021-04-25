@@ -24,7 +24,7 @@ struct Material {
 		exp(_exp)
 	{}
 
-	glm::vec3 ShadeBlinnPhong(HitResult& hit, Ray3D& ray, PointLight& light) const {
+	glm::vec3 ShadeBlinnPhong(Ray3D& ray, HitResult& hit, PointLight& light) const {
 		// Note: don't handle the ambient component here
 		// Diffuse component
 		glm::vec4 lightVec = glm::normalize(light.pos - hit.loc);

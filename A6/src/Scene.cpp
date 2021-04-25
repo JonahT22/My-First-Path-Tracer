@@ -13,9 +13,6 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 		if (object->Hit(ray, hit)) {
 			// If hit was successful (i.e. found a new tMin), store a reference to the object
 			hit.hitObject = object;
-			// TODO problem: do I need a tMax in the Hit function if this only returns true when it finds something smaller
-			// than the default value of t in the hit? I.e. instead of setting tMax at a number, just set the default value of t
-			// to that number
 		}
 	}
 
@@ -34,11 +31,11 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 		Material mat = hit.hitObject->GetMaterial();
 		vec3 color = mat.ka;
 
-		// Calculate contribution of each light using simple diffuse shading model
+		// Calculate contribution of each light using Blinn-phong shading
 		for (auto& light : allLights) {
-			//float diffuseFactor = std::max(0.0f, dot(hit.nor, normalize(light->pos - hit.loc)));
-			//color += mat.kd * diffuseFactor * light->intensity;
-			color += mat.ShadeBlinnPhong(hit, ray, light);
+			if (!IsPointInShadow(hit.loc, light)) {
+				color += mat.ShadeBlinnPhong(ray, hit, light);
+			}
 		}
 
 		// Make sure the color isn't clipping
@@ -54,6 +51,28 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 	}
 	// Background color
 	else return glm::vec3(0, 0, 0);
+}
+
+bool Scene::IsPointInShadow(vec4& hitLoc, PointLight& light) const
+{
+	HitResult shadowHit;
+	// Start the tval at the light distance, so nothing past the light will count as a hit
+	shadowHit.t = glm::length(light.pos - hitLoc);
+	// TODO problem: do I need a tMax in the Hit function if it only returns true when it finds something smaller
+	// than the default value of t in the hit? I.e. instead of setting tMax to light distance, just set the 
+	// default value of t to that number
+
+	// Shadow ray is located at the hit position, goes to the light
+	Ray3D shadowRay(hitLoc, glm::normalize(light.pos - hitLoc));
+	for (auto& object : allObjects) {
+		// Add an epsilon to this hit calculation to avoid self-shadowing
+		if (object->Hit(shadowRay, shadowHit, epsilon)) {
+			// If I hit anything, immediately return true, no further action required
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void Scene::BuildSceneFromFile(std::string filename)
