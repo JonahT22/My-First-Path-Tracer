@@ -1,7 +1,6 @@
 #pragma once
 #include "Scene.h"
 
-#include <iostream>
 using namespace glm;
 using namespace std;
 

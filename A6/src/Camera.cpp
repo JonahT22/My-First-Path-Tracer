@@ -1,8 +1,6 @@
 #pragma once
 #include "Camera.h"
 
-
-
 Camera::Camera(glm::dvec4 location, double fovy, int imageWidth, int imageHeight) :
 	pos(location),
 	fovY(fovy),

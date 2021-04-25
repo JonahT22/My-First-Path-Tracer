@@ -1,6 +1,7 @@
 #pragma once
 #include "SceneObject.h"
 
+using namespace std;
 using namespace glm;
 
 SceneObject::SceneObject(Transform _transf, Material _mat) {

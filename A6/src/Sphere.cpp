@@ -1,6 +1,7 @@
 #pragma once
 #include "Sphere.h"
 
+using namespace std;
 using namespace glm;
 
 bool Sphere::IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, double tMax) {
