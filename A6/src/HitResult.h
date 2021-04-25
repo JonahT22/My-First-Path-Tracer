@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 
+// Forward declare SceneObject since I need to make a ptr to it
 class SceneObject;
 struct HitResult {
 	// Initilialize as largest possible double value

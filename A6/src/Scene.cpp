@@ -36,8 +36,9 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 
 		// Calculate contribution of each light using simple diffuse shading model
 		for (auto& light : allLights) {
-			float diffuseFactor = std::max(0.0f, dot(hit.nor, normalize(light->pos - hit.loc)));
-			color += mat.kd * diffuseFactor * light->intensity;
+			//float diffuseFactor = std::max(0.0f, dot(hit.nor, normalize(light->pos - hit.loc)));
+			//color += mat.kd * diffuseFactor * light->intensity;
+			color += mat.ShadeBlinnPhong(hit, ray, light);
 		}
 
 		// Make sure the color isn't clipping
@@ -74,10 +75,9 @@ void Scene::BuildSceneFromFile(std::string filename)
 	testSphere2->SetDiffuseColor(vec3(0.0, 1.0, 0.0));
 	allObjects.push_back(testSphere2);
 
-	shared_ptr<PointLight> testLight1 = make_shared<PointLight>(vec4(0, 1, 0, 1), 1.0);
-	allLights.push_back(testLight1);
-	shared_ptr<PointLight> testLight2 = make_shared<PointLight>(vec4(5, 0, 0, 1), 1.0);
-	allLights.push_back(testLight2);
+	
+	allLights.push_back(PointLight(vec4(-2, 1, 2, 1), 1.0));
+	//allLights.push_back(PointLight(vec4(5, 0, 0, 1), 1.0));
 }
 
 void Scene::ClampVector(glm::vec3& vec, float min, float max)

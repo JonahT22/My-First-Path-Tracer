@@ -1,3 +1,6 @@
+// TODO: convert all doubles to floats
+// TODO: add 'const' to functions when applicable
+
 #include <iostream>
 #include <string>
 #include <limits>
