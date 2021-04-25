@@ -58,13 +58,13 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 
 void Scene::BuildSceneFromFile(std::string filename)
 {
-	// Red ellipse
+	// Red sphere
 	allObjects.push_back(
 		make_shared<Sphere>(
 			Transform(
-				vec4(-1, 0, 0, 1),
-				vec3(0, 0, .75),
-				vec3(.5, 1, 1)
+				vec4(-.5, -1, 1, 1),
+				vec3(0, 0, 0),
+				vec3(1, 1, 1)
 			),
 			Material(
 				vec3(1.0, 0.0, 0.0),
@@ -74,13 +74,13 @@ void Scene::BuildSceneFromFile(std::string filename)
 			)
 		)
 	);
-	// Green ellipse
+	// Green sphere
 	allObjects.push_back(
 		make_shared<Sphere>(
 			Transform(
-				vec4(1, 0, 0, 1),
+				vec4(.5, -1, -1, 1),
 				vec3(0, 0, 0),
-				vec3(.5, 1.5, 1)
+				vec3(1, 1, 1)
 			),
 			Material(
 				vec3(0.0, 1.0, 0.0),
@@ -90,9 +90,24 @@ void Scene::BuildSceneFromFile(std::string filename)
 			)
 		)
 	);
+	// Blue sphere
+	allObjects.push_back(
+		make_shared<Sphere>(
+			Transform(
+				vec4(0, 1, 0, 1),
+				vec3(0, 0, 0),
+				vec3(1, 1, 1)
+			),
+			Material(
+				vec3(0.0, 0.0, 1.0),
+				vec3(1.0, 1.0, 0.5),
+				vec3(0.1, 0.1, 0.1),
+				100.0f
+			)
+			)
+	);
 	
-	allLights.push_back(PointLight(vec4(-2, 1, 2, 1), 1.0));
-	allLights.push_back(PointLight(vec4(5, 0, 0, 1), 1.0));
+	allLights.push_back(PointLight(vec4(-2, 1, 1, 1), 1.0));
 }
 
 void Scene::ClampVector(glm::vec3& vec, float min, float max)
