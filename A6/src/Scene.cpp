@@ -11,7 +11,7 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 	HitResult hit;
 	for (auto& object : allObjects) {
 		if (object->Hit(ray, hit)) {
-			// If hit was successfull (i.e. found a new tMin), store a reference to the object
+			// If hit was successful (i.e. found a new tMin), store a reference to the object
 			hit.hitObject = object;
 			// TODO problem: do I need a tMax in the Hit function if this only returns true when it finds something smaller
 			// than the default value of t in the hit? I.e. instead of setting tMax at a number, just set the default value of t
@@ -58,26 +58,41 @@ glm::vec3 Scene::ComputeRayColor(Ray3D ray)
 
 void Scene::BuildSceneFromFile(std::string filename)
 {
-	// Hard-code a sphere into the middle of the scene
-	shared_ptr<SceneObject> testSphere1 = make_shared<Sphere>();
-	testSphere1->CreateTransformMtx(Transform(
-		vec4(-1, 0, 0, 1),
-		vec3(0, 0, .75),
-		vec3(.5, 1, 1)));
-	testSphere1->SetDiffuseColor(vec3(1.0, 0.0, 0.0));
-	allObjects.push_back(testSphere1);
-
-	shared_ptr<SceneObject> testSphere2 = make_shared<Sphere>();
-	testSphere2->CreateTransformMtx(Transform(
-		vec4(1, 0, 0, 1),
-		vec3(0, 0, 0),
-		vec3(0.5, 1.5, 1)));
-	testSphere2->SetDiffuseColor(vec3(0.0, 1.0, 0.0));
-	allObjects.push_back(testSphere2);
-
+	// Red ellipse
+	allObjects.push_back(
+		make_shared<Sphere>(
+			Transform(
+				vec4(-1, 0, 0, 1),
+				vec3(0, 0, .75),
+				vec3(.5, 1, 1)
+			),
+			Material(
+				vec3(1.0, 0.0, 0.0),
+				vec3(1.0, 1.0, 0.5),
+				vec3(0.1, 0.1, 0.1),
+				100.0f
+			)
+		)
+	);
+	// Green ellipse
+	allObjects.push_back(
+		make_shared<Sphere>(
+			Transform(
+				vec4(1, 0, 0, 1),
+				vec3(0, 0, 0),
+				vec3(.5, 1.5, 1)
+			),
+			Material(
+				vec3(0.0, 1.0, 0.0),
+				vec3(1.0, 1.0, 0.5),
+				vec3(0.1, 0.1, 0.1),
+				100.0f
+			)
+		)
+	);
 	
 	allLights.push_back(PointLight(vec4(-2, 1, 2, 1), 1.0));
-	//allLights.push_back(PointLight(vec4(5, 0, 0, 1), 1.0));
+	allLights.push_back(PointLight(vec4(5, 0, 0, 1), 1.0));
 }
 
 void Scene::ClampVector(glm::vec3& vec, float min, float max)

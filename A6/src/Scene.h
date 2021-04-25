@@ -25,6 +25,7 @@ public:
 	// using this Hit() function
 
 private:
+	// Make this a vector of shared_ptrs since the hitResult object needs to be able to point to them
 	std::vector<std::shared_ptr<SceneObject> > allObjects;
 	std::vector<PointLight> allLights;
 

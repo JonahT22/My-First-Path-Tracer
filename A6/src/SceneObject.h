@@ -10,11 +10,9 @@
 
 class SceneObject {
 public:
-	SceneObject() = default;
+	// Assign material and calculate the transformation matrix
+	SceneObject(Transform _transf, Material _mat);
 
-	// Calcualte the transformation matrix for this object
-	void CreateTransformMtx(Transform _transf);
-	void SetDiffuseColor(glm::vec3 color) { mat.kd = color; }
 	Material GetMaterial() { return mat; }
 
 	// By default, hits go from 0 to inf unless override is specified
@@ -26,7 +24,6 @@ public:
 
 protected:
 	bool SelectSmallestInRange(double a, double b, double min, double max, double& result);
-
 	// The transformation matrix to convert this object from local->world space
 	glm::mat4 transMtx = glm::mat4(1.0f);
 	// TODO: is this variable necessary after finding transMtx?

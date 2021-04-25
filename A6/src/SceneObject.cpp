@@ -3,13 +3,15 @@
 
 using namespace glm;
 
-void SceneObject::CreateTransformMtx(Transform _transf) {
+SceneObject::SceneObject(Transform _transf, Material _mat) {
 	// Since all objects in this project are static and independent, the MatrixStack class is not required
 	// (We can just calculate the transformations once, no need for hierarchies or dynamic transf calculations)
 	transform = _transf;
 	transMtx *= translate(glm::mat4(1.0f), vec3(_transf.loc));
 	transMtx *= eulerAngleXYZ(_transf.rot.x, _transf.rot.y, _transf.rot.z);
 	transMtx *= scale(glm::mat4(1.0f), _transf.scale);
+
+	mat = _mat;
 }
 
 bool SceneObject::Hit(Ray3D ray, HitResult& outHit, double tMin, double tMax) {
