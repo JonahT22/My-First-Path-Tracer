@@ -94,9 +94,9 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera)
 	char buf[1024];
 	while (file.getline(buf, 1024)) {
 		istringstream ss(buf);
-		string objectType;
-		ss >> objectType;
+		string objectType = ReadValue<string>(ss);
 		if (objectType == "Camera") {
+			// TODO: fov is wrong
 			//camera.SetPosition(dvec4(ReadVec3(ss), 1));
 			//camera.SetRotation(ReadVec3(ss));
 			//camera.SetFOV(ReadValue<double>(ss));
@@ -111,22 +111,14 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera)
 			}
 		}
 		else if (objectType == "Light") {
-			allLights.push_back(
-				PointLight(
-					ReadValue<string>(ss),  // Name
-					dvec4(ReadVec3(ss), 1), // Position
-					ReadValue<double>(ss)   // Intensity
-				)
-			);
+			string name = ReadValue<string>(ss);
+			dvec4 pos = dvec4(ReadVec3(ss), 1);
+			double intensity = ReadValue<double>(ss);
+			allLights.push_back(PointLight(name, pos, intensity));
 		}
 	}
-
-	cout << "done!" << endl;
-	for (auto obj : allObjects) {
-		cout << obj->name << endl;
-	}
 	// Red sphere
-	allObjects.push_back(
+	/*allObjects.push_back(
 		make_shared<Sphere>(
 			"Red_sphere_2",
 			Transform(
@@ -141,7 +133,7 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera)
 				100.0
 			)
 		)
-	);
+	);*/
 	//// Green sphere
 	//allObjects.push_back(
 	//	make_shared<Sphere>(
@@ -175,7 +167,7 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera)
 	//	)
 	//);
 
-	//allLights.push_back(PointLight(dvec4(-2, 1, 1, 1), 1.0, "Light_1"));
+	//allLights.push_back(PointLight("Light_1", dvec4(-2, 1, 1, 1), 1.0));
 	
 	//// Red ellipsoid
 	//allObjects.push_back(
@@ -232,7 +224,7 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera)
 	//allLights.push_back(PointLight(dvec4(1, 2, 2, 1), 0.5, "Light_1"));
 	//allLights.push_back(PointLight(dvec4(-1, 2, -1, 1), 0.5, "Light_2"));
 
-
+	cout << "done!" << endl;
 }
 
 void Scene::ClampVector(glm::dvec3& vec, double min, double max)

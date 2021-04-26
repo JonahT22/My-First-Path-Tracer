@@ -60,19 +60,17 @@ inline T Scene::ReadValue(std::istringstream& stream) {
 
 template<class ObjectType>
 inline std::shared_ptr<ObjectType> Scene::ReadObject(std::istringstream& stream) {
-	shared_ptr<ObjectType> temp = std::make_shared<ObjectType>(
-		ReadValue<std::string>(stream), // Name
-		Transform(
-			glm::dvec4(ReadVec3(stream), 1), // Position
-			ReadVec3(stream),                // Rotation
-			ReadVec3(stream)                 // Scale
-		),
-		Material(
-			ReadVec3(stream),         // Kd
-			ReadVec3(stream),         // Ks
-			ReadVec3(stream),         // Ka
-			ReadValue<double>(stream) // Exp
-		)
-	);
+	// Need to store each of these values in a temporary varible before calling the object's constructor.
+	// Since the order of argument evaluation is undefined in c++, you can't pass the Read(stream) functions straight to the constructor
+	std::string name = ReadValue<std::string>(stream);
+	dvec4 pos = dvec4(ReadVec3(stream), 1);
+	dvec3 rot = ReadVec3(stream);
+	dvec3 scale = ReadVec3(stream);
+	dvec3 kd = ReadVec3(stream);
+	dvec3 ks = ReadVec3(stream);
+	dvec3 ka = ReadVec3(stream);
+	double exp = ReadValue<double>(stream);
+	
+	shared_ptr<ObjectType> temp = std::make_shared<ObjectType>(name, Transform(pos, rot, scale), Material(kd, ks, ka, exp));
 	return temp;
 }
