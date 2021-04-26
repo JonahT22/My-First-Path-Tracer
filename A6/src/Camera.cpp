@@ -3,17 +3,18 @@
 
 using namespace glm;
 
-Camera::Camera(int imageWidth, int imageHeight, glm::dvec4 location, double fovy) :
-	pos(location),
-	fovY(fovy),
-	aspect(imageWidth / imageHeight),
+Camera::Camera(int imageWidth, int imageHeight, glm::dvec4 _pos, glm::dvec3 _rot, double _fovY) :
 	imageWidth(imageWidth),
 	imageHeight(imageHeight),
+	aspect(imageWidth / (double)imageHeight),
+	pos(_pos),
+	rot(_rot),
+	fovY(_fovY),
 	// Set the distance to the image plane so that the image coords go from -1 to 1
 	imagePlaneDist(1.0 / tan(fovY / 2.0)) {}
 
-// Create a ray from the camera position to the center of a given pixel
 Ray3D Camera::CreateCameraRay(int rowNum, int colNum) {
+	// TODO: need to take rotation into account
 	// u and v are in normalized image coords, -1 to 1
 	double v = (2.0 * ((double)rowNum + 0.5) / (double)imageHeight) - 1.0;
 	double u = (2.0 * ((double)colNum + 0.5) / (double)imageWidth) - 1.0;
