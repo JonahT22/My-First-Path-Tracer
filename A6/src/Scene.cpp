@@ -88,9 +88,14 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera)
 	// Light <Name> <Pos X/Y/Z> <Intensity>
 	// ... Multiple lights here
 
-	cout << "Reading scene data from " << filename << " ...";
+	cout << "Reading scene data from " << filename << " ... ";
 
 	ifstream file(filename);
+	if (!file.good()) {
+		cerr << endl << "ERROR: Unable to find a description for the provided scene file: " << filename << endl;
+		return;
+	}
+
 	char buf[1024];
 	while (file.getline(buf, 1024)) {
 		istringstream ss(buf);
