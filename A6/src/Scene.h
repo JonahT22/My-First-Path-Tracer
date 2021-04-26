@@ -9,6 +9,7 @@
 #include "Ray3D.h"
 #include "Material.h"
 #include "PointLight.h"
+#include "Plane.h"
 
 class Scene {
 public:
