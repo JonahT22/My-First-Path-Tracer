@@ -77,24 +77,71 @@ bool Scene::IsPointInShadow(dvec4& hitLoc, PointLight& light) const
 	return false;
 }
 
-void Scene::BuildSceneFromFile(std::string filename)
+void Scene::BuildSceneFromFile(std::string filename, Camera& camera)
 {
-	//// Red sphere
-	//allObjects.push_back(
-	//	make_shared<Sphere>(
-	//		Transform(
-	//			dvec4(-0.5, -1, 1, 1),
-	//			dvec3(0, 0, 0),
-	//			dvec3(1, 1, 1)
-	//		),
-	//		Material(
-	//			dvec3(1.0, 0.0, 0.0),
-	//			dvec3(1.0, 1.0, 0.5),
-	//			dvec3(0.1, 0.1, 0.1),
-	//			100.0
-	//		)
-	//	)
-	//);
+	// File format (X/Y/Z) means 3 space-separated entries for X, Y, and Z:
+	// Items can be in any order
+
+	// Camera <Pos X/Y/Z> <Rot X/Y/Z> <FovY (degrees)>
+	// SceneObject <Subclass> <Name (no spaces)> <Pos X/Y/Z> <Rot X/Y/Z> <Scale X/Y/Z> <Kd R/G/B> <Ks R/G/B> <Ka R/G/B> <Exp>
+	// ... Multiple sceneobjects here
+	// Light <Name> <Pos X/Y/Z> <Intensity>
+	// ... Multiple lights here
+
+	cout << "Reading scene data from " << filename << " ...";
+
+	ifstream file(filename);
+	char buf[1024];
+	while (file.getline(buf, 1024)) {
+		istringstream ss(buf);
+		string objectType;
+		ss >> objectType;
+		if (objectType == "Camera") {
+			//camera.SetPosition(dvec4(ReadVec3(ss), 1));
+			//camera.SetRotation(ReadVec3(ss));
+			//camera.SetFOV(ReadValue<double>(ss));
+		}
+		else if (objectType == "SceneObject") {
+			string subclass = ReadValue<string>(ss);
+			if (subclass == "Sphere") {
+				allObjects.push_back(ReadObject<Sphere>(ss));
+			}
+			else if (subclass == "Plane") {
+				allObjects.push_back(ReadObject<Plane>(ss));
+			}
+		}
+		else if (objectType == "Light") {
+			allLights.push_back(
+				PointLight(
+					ReadValue<string>(ss),  // Name
+					dvec4(ReadVec3(ss), 1), // Position
+					ReadValue<double>(ss)   // Intensity
+				)
+			);
+		}
+	}
+
+	cout << "done!" << endl;
+	for (auto obj : allObjects) {
+		cout << obj->name << endl;
+	}
+	// Red sphere
+	allObjects.push_back(
+		make_shared<Sphere>(
+			"Red_sphere_2",
+			Transform(
+				dvec4(-0.5, -1, 1, 1),
+				dvec3(0, 0, 0),
+				dvec3(1, 1, 1)
+			),
+			Material(
+				dvec3(1.0, 0.0, 0.0),
+				dvec3(1.0, 1.0, 0.5),
+				dvec3(0.1, 0.1, 0.1),
+				100.0
+			)
+		)
+	);
 	//// Green sphere
 	//allObjects.push_back(
 	//	make_shared<Sphere>(
@@ -199,4 +246,13 @@ void Scene::ClampDouble(double& num, double min, double max)
 {
 	if (num < min) num = min;
 	if (num > max) num = max;
+}
+
+dvec3 Scene::ReadVec3(istringstream& stream)
+{
+	dvec3 output;
+	stream >> output.x;
+	stream >> output.y;
+	stream >> output.z;
+	return output;
 }
