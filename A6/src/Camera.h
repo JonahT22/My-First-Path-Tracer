@@ -6,11 +6,11 @@
 
 class Camera {
 public:
-	// Location, rotation, and fov args are optional, usually set by reading a scene file
+	// Location, rotation, and fov args are optional, usually set by reading a scene file. FOV is in degrees
 	Camera(int imageWidth, int imageHeight,
 		glm::dvec4 _pos = glm::dvec4(0, 0, 5, 1), 
 		glm::dvec3 _rot = glm::dvec3(0, 0, 0), 
-		double _fovY = (45.0 * glm::pi<double>() / 180.0));
+		double _fov = 45.0);
 
 	// Create a ray from the camera position to the center of a given pixel
 	Ray3D CreateCameraRay(int rowNum, int colNum);
@@ -18,7 +18,7 @@ public:
 	// Setter functions
 	void SetPosition(glm::dvec4 _pos) { pos = _pos; }
 	void SetRotation(glm::dvec3 _rot) { rot = _rot; }
-	void SetFOV(double _fov);
+	void SetFOVDegrees(double _fov);
 
 private:
 	glm::dvec4 pos;

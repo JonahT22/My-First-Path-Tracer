@@ -101,10 +101,9 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera)
 		istringstream ss(buf);
 		string objectType = ReadValue<string>(ss);
 		if (objectType == "Camera") {
-			// TODO: fov is wrong
-			//camera.SetPosition(dvec4(ReadVec3(ss), 1));
-			//camera.SetRotation(ReadVec3(ss));
-			//camera.SetFOV(ReadValue<double>(ss));
+			camera.SetPosition(dvec4(ReadVec3(ss), 1));
+			camera.SetRotation(ReadVec3(ss));
+			camera.SetFOVDegrees(ReadValue<double>(ss));
 		}
 		else if (objectType == "SceneObject") {
 			string subclass = ReadValue<string>(ss);
