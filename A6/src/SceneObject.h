@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
+#include <string>
 #include "Ray3D.h"
 #include "Transform.h"
 #include "HitResult.h"
@@ -11,7 +12,7 @@
 class SceneObject {
 public:
 	// Assign material and calculate the transformation matrix
-	SceneObject(Transform _transf, Material _mat);
+	SceneObject(Transform _transf, Material _mat, std::string _name);
 
 	Material GetMaterial() { return mat; }
 
@@ -22,6 +23,7 @@ public:
 	// Check intersection in local space, return true if found an intersection that is closer than the hit's t value
 	virtual bool IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, double tMax) = 0;
 
+	std::string name;
 protected:
 	// Checks 2 numbers against a given range, places the smaller # in the range into result, or returns false if neither are in the range
 	bool SelectSmallestInRange(double a, double b, double min, double max, double& result);

@@ -4,7 +4,7 @@
 using namespace std;
 using namespace glm;
 
-SceneObject::SceneObject(Transform _transf, Material _mat) {
+SceneObject::SceneObject(Transform _transf, Material _mat, string _name) {
 	// Since all objects in this project are static and independent, the MatrixStack class is not required
 	// (We can just calculate the transformations once, no need for hierarchies or dynamic transf calculations)
 	transform = _transf;
@@ -13,6 +13,7 @@ SceneObject::SceneObject(Transform _transf, Material _mat) {
 	transMtx *= scale(glm::dmat4(1.0f), _transf.scale);
 
 	mat = _mat;
+	name = _name;
 }
 
 bool SceneObject::Hit(Ray3D ray, HitResult& outHit, double tMin, double tMax) {
