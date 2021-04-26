@@ -30,7 +30,6 @@ glm::dmat4 SceneObject::GetInverseTranspose()
 	return transpose(inverse(transMtx));
 }
 
-// Checks 2 numbers against a given range, places the smaller # in the range into result, or returns false if neither are in the range
 bool SceneObject::SelectSmallestInRange(double a, double b, double min, double max, double& result)
 {
 	bool aValid = (a > min && a < max);
