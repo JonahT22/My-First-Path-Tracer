@@ -1,4 +1,5 @@
-// TODO: add 'const' to functions when applicable
+// TODO: add 'const' to functions when applicable, pass vec4's  by reference when possible
+// TODO: check bracket placement everywhere
 
 #include <iostream>
 #include <string>
@@ -7,6 +8,7 @@
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
+#include <glm/ext/scalar_constants.hpp>
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
@@ -42,16 +44,14 @@ int main(int argc, char **argv)
 		cout << "Usage: ./A6 <SCENENUMBER> <IMAGE SIZE> <IMAGE FILENAME>" << endl;
 		return 0;
 	}
+	// TODO: maybe remove this?
 	int sceneNum = atoi(argv[1]);
 	int height = atoi(argv[2]);
 	int width = height;
 	string fileName(argv[3]);
 	shared_ptr<Image> outputImage = make_shared<Image>(width, height);
 
-	Camera camera (
-		dvec4(0, 0, 5, 1),
-		45.0 * pi<double>() / 180.0, 
-		width, height);
+	Camera camera (width, height);
 
 	Scene scene;
 	scene.BuildSceneFromFile("null");
