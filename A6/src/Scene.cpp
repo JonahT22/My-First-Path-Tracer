@@ -143,7 +143,8 @@ void Scene::BuildSceneFromFile(std::string filename)
 				dvec3(1.0, 1.0, 0.5),
 				dvec3(0.1, 0.1, 0.1),
 				100.0
-			)
+			),
+			"Red Sphere"
 		)
 	);
 	// Green sphere
@@ -159,7 +160,8 @@ void Scene::BuildSceneFromFile(std::string filename)
 				dvec3(1.0, 1.0, 0.5),
 				dvec3(0.1, 0.1, 0.1),
 				100.0
-			)
+			),
+			"Green Sphere"
 		)
 	);
 	// White Plane
@@ -175,12 +177,15 @@ void Scene::BuildSceneFromFile(std::string filename)
 				dvec3(0.0, 0.0, 0.0),
 				dvec3(0.1, 0.1, 0.1),
 				0.0
-			)
+			),
+			"White Plane"
 		)
 	);
 	
 	allLights.push_back(PointLight(dvec4(1, 2, 2, 1), 0.5));
 	allLights.push_back(PointLight(dvec4(-1, 2, -1, 1), 0.5));
+
+
 }
 
 void Scene::ClampVector(glm::dvec3& vec, double min, double max)
