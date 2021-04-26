@@ -20,7 +20,7 @@ public:
 	Scene() = default;
 	
 	// Iterate over all objects/lights in the scene to find the color of the given ray, returns dvec3 with rgb values from 0 to 1
-	glm::dvec3 ComputeRayColor(Ray3D ray);
+	glm::dvec3 ComputeRayColor(Ray3D ray, int depth = 0);
 	void BuildSceneFromFile(std::string filename, Camera& camera);
 
 	// TODO: add another function for finding shadow intersections. Makes a new ray
@@ -34,7 +34,13 @@ private:
 	std::vector<std::shared_ptr<SceneObject> > allObjects;
 	std::vector<PointLight> allLights;
 
+	glm::dvec3 background_color = glm::dvec3(0, 0, 0);
+	// "Fudge Factor" to avoid self-intersection on shadow/reflection ray hits
 	const double epsilon = 0.00001; // 1e-5
+	// Threshold for skipping blinnphong/reflection calculations in ComputeRayColor()
+	const double roughnessThreshold = 0.00001; //1e-5
+	// Maximum number of times the ComputeRayColor can recurse before forcibly returning
+	const int maxReflectionDepth = 5;
 
 	// Run an intersection check on the ray to a given light, but return false immediately if a hit is found
 	bool IsPointInShadow(glm::dvec4& hitLoc, PointLight& light) const;
@@ -69,8 +75,11 @@ inline std::shared_ptr<ObjectType> Scene::ReadObject(std::istringstream& stream)
 	dvec3 kd = ReadVec3(stream);
 	dvec3 ks = ReadVec3(stream);
 	dvec3 ka = ReadVec3(stream);
-	double exp = ReadValue<double>(stream);
+	// TODO: read from file
+	double roughness = 0.5;
+	double specular = ReadValue<double>(stream);
 	
-	shared_ptr<ObjectType> temp = std::make_shared<ObjectType>(name, Transform(pos, rot, scale), Material(kd, ks, ka, exp));
+	shared_ptr<ObjectType> temp = std::make_shared<ObjectType>(
+		name, Transform(pos, rot, scale), Material(kd, ks, ka, roughness, specular));
 	return temp;
 }

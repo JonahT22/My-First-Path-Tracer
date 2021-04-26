@@ -5,11 +5,16 @@ using namespace glm;
 using namespace std;
 
 // Main render loop
-glm::dvec3 Scene::ComputeRayColor(Ray3D ray)
+glm::dvec3 Scene::ComputeRayColor(Ray3D ray, int depth)
 {
+	// Before anything else, make sure I haven't passed the recursion depth
+	if (depth > maxReflectionDepth) {
+		return background_color;
+	}
+
 	HitResult hit;
 	for (auto& object : allObjects) {
-		if (object->Hit(ray, hit)) {
+		if (object->Hit(ray, hit, epsilon)) {
 			// If hit was successful (i.e. found a new tMin), store a reference to the object
 			hit.hitObject = object;
 		}
@@ -33,17 +38,29 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D ray)
 		Material mat = hit.hitObject->GetMaterial();
 		dvec3 color = mat.ka;
 
-		// Calculate contribution of each light using Blinn-phong shading
-		for (auto& light : allLights) {
-			if (!IsPointInShadow(hit.loc, light)) {
-				color += mat.ShadeBlinnPhong(ray, hit, light);
+		// Calculate blinn-phong color (don't need to do this if the material is 100% reflective)
+		if (mat.roughness > (0.0 + roughnessThreshold)) {
+			// Calculate contribution from each light
+			for (auto& light : allLights) {
+				if (!IsPointInShadow(hit.loc, light)) {
+					color += mat.ShadeBlinnPhong(ray, hit, light);
+				}
 			}
 		}
+
+		// Calculate contribution from reflection rays
+		if (mat.roughness < (1.0 - roughnessThreshold)) {
+			// Create a ray with the new reflection direction
+			Ray3D reflectionRay(hit.loc, glm::reflect(ray.dir, hit.nor));
+			color += ComputeRayColor(reflectionRay, depth + 1);
+		}
+
 
 		// Make sure the color isn't clipping
 		ClampVector(color, 0.0f, 1.0f);
 		return color;
 
+		//// TODO: Remove
 		//// Color with normals
 		//// Normal -> color conversion taken from assigment handout
 		//double r = 0.5 * hit.nor.x + 0.5;
@@ -51,8 +68,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D ray)
 		//double b = 0.5 * hit.nor.z + 0.5;
 		//return dvec3(r, g, b);
 	}
-	// Background color
-	else return glm::dvec3(0, 0, 0);
+	else return background_color;
 }
 
 bool Scene::IsPointInShadow(dvec4& hitLoc, PointLight& light) const
@@ -83,7 +99,7 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera)
 	// Items can be in any order
 
 	// Camera <Pos X/Y/Z> <Rot X/Y/Z> <FovY (degrees)>
-	// SceneObject <Subclass> <Name (no spaces)> <Pos X/Y/Z> <Rot X/Y/Z> <Scale X/Y/Z> <Kd R/G/B> <Ks R/G/B> <Ka R/G/B> <Exp>
+	// SceneObject <Subclass> <Name> <Pos X/Y/Z> <Rot X/Y/Z> <Scale X/Y/Z> <Kd R/G/B> <Ks R/G/B> <Ka R/G/B> <Roughness> <Specular Exp>
 	// ... Multiple sceneobjects here
 	// Light <Name> <Pos X/Y/Z> <Intensity>
 	// ... Multiple lights here
