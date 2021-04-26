@@ -128,62 +128,62 @@ void Scene::BuildSceneFromFile(std::string filename)
 	//	)
 	//);
 
-	//allLights.push_back(PointLight(dvec4(-2, 1, 1, 1), 1.0));
+	//allLights.push_back(PointLight(dvec4(-2, 1, 1, 1), 1.0, "Light_1"));
 	
-	// Red ellipsoid
-	allObjects.push_back(
-		make_shared<Sphere>(
-			Transform(
-				dvec4(0.5, 0, 0.5, 1),
-				dvec3(0, 0, 0),
-				dvec3(0.5, 0.6, 0.2)
-			),
-			Material(
-				dvec3(1.0, 0.0, 0.0),
-				dvec3(1.0, 1.0, 0.5),
-				dvec3(0.1, 0.1, 0.1),
-				100.0
-			),
-			"Red Sphere"
-		)
-	);
-	// Green sphere
-	allObjects.push_back(
-		make_shared<Sphere>(
-			Transform(
-				dvec4(-0.5, 0, -0.5, 1),
-				dvec3(0, 0, 0),
-				dvec3(1, 1, 1)
-			),
-			Material(
-				dvec3(0.0, 1.0, 0.0),
-				dvec3(1.0, 1.0, 0.5),
-				dvec3(0.1, 0.1, 0.1),
-				100.0
-			),
-			"Green Sphere"
-		)
-	);
-	// White Plane
-	allObjects.push_back(
-		make_shared<Plane>(
-			Transform(
-				dvec4(0, -1, 0, 1),
-				dvec3(0, 0, 0),
-				dvec3(1, 1, 1)
-			),
-			Material(
-				dvec3(1.0, 1.0, 1.0),
-				dvec3(0.0, 0.0, 0.0),
-				dvec3(0.1, 0.1, 0.1),
-				0.0
-			),
-			"White Plane"
-		)
-	);
-	
-	allLights.push_back(PointLight(dvec4(1, 2, 2, 1), 0.5));
-	allLights.push_back(PointLight(dvec4(-1, 2, -1, 1), 0.5));
+	//// Red ellipsoid
+	//allObjects.push_back(
+	//	make_shared<Sphere>(
+	//		Transform(
+	//			dvec4(0.5, 0, 0.5, 1),
+	//			dvec3(0, 0, 0),
+	//			dvec3(0.5, 0.6, 0.2)
+	//		),
+	//		Material(
+	//			dvec3(1.0, 0.0, 0.0),
+	//			dvec3(1.0, 1.0, 0.5),
+	//			dvec3(0.1, 0.1, 0.1),
+	//			100.0
+	//		),
+	//		"Red_Sphere"
+	//	)
+	//);
+	//// Green sphere
+	//allObjects.push_back(
+	//	make_shared<Sphere>(
+	//		Transform(
+	//			dvec4(-0.5, 0, -0.5, 1),
+	//			dvec3(0, 0, 0),
+	//			dvec3(1, 1, 1)
+	//		),
+	//		Material(
+	//			dvec3(0.0, 1.0, 0.0),
+	//			dvec3(1.0, 1.0, 0.5),
+	//			dvec3(0.1, 0.1, 0.1),
+	//			100.0
+	//		),
+	//		"Green_Sphere"
+	//	)
+	//);
+	//// White Plane
+	//allObjects.push_back(
+	//	make_shared<Plane>(
+	//		Transform(
+	//			dvec4(0, -1, 0, 1),
+	//			dvec3(0, 0, 0),
+	//			dvec3(1, 1, 1)
+	//		),
+	//		Material(
+	//			dvec3(1.0, 1.0, 1.0),
+	//			dvec3(0.0, 0.0, 0.0),
+	//			dvec3(0.1, 0.1, 0.1),
+	//			0.0
+	//		),
+	//		"White_Plane"
+	//	)
+	//);
+	//
+	//allLights.push_back(PointLight(dvec4(1, 2, 2, 1), 0.5, "Light_1"));
+	//allLights.push_back(PointLight(dvec4(-1, 2, -1, 1), 0.5, "Light_2"));
 
 
 }
