@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 	Camera camera (width, height);
 
 	Scene scene;
-	scene.BuildSceneFromFile("null");
+	scene.BuildSceneFromFile("../resources/scene" + string(argv[1]) + ".txt", camera);
 	
 	// Generate rays from the camera to the center of each pixel
 	for (int row = 0; row < height; row++) {
