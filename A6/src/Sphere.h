@@ -9,7 +9,7 @@
 class Sphere : public SceneObject {
 public:
 	// Call parent constructor to create transform matrix and apply material
-	Sphere(Transform _transf, Material _mat, std::string _name) : SceneObject(_transf, _mat, _name) {};
+	Sphere(std::string _name, Transform _transf, Material _mat) : SceneObject(_name, _transf, _mat) {};
 
 	bool IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, double tMax) override;
 };

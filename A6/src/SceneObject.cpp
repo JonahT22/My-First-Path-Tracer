@@ -4,7 +4,7 @@
 using namespace std;
 using namespace glm;
 
-SceneObject::SceneObject(Transform _transf, Material _mat, string _name) {
+SceneObject::SceneObject(std::string _name, Transform _transf, Material _mat) {
 	// Since all objects in this project are static and independent, the MatrixStack class is not required
 	// (We can just calculate the transformations once, no need for hierarchies or dynamic transf calculations)
 	transform = _transf;

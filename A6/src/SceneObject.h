@@ -12,7 +12,7 @@
 class SceneObject {
 public:
 	// Assign material and calculate the transformation matrix
-	SceneObject(Transform _transf, Material _mat, std::string _name);
+	SceneObject(std::string _name, Transform _transf, Material _mat);
 
 	Material GetMaterial() { return mat; }
 
