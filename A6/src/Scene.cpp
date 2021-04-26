@@ -91,7 +91,7 @@ void Scene::BuildSceneFromFile(std::string filename)
 	//			dvec3(1.0, 0.0, 0.0),
 	//			dvec3(1.0, 1.0, 0.5),
 	//			dvec3(0.1, 0.1, 0.1),
-	//			100.0f
+	//			100.0
 	//		)
 	//	)
 	//);
@@ -107,7 +107,7 @@ void Scene::BuildSceneFromFile(std::string filename)
 	//			dvec3(0.0, 1.0, 0.0),
 	//			dvec3(1.0, 1.0, 0.5),
 	//			dvec3(0.1, 0.1, 0.1),
-	//			100.0f
+	//			100.0
 	//		)
 	//	)
 	//);
@@ -123,11 +123,45 @@ void Scene::BuildSceneFromFile(std::string filename)
 	//			dvec3(0.0, 0.0, 1.0),
 	//			dvec3(1.0, 1.0, 0.5),
 	//			dvec3(0.1, 0.1, 0.1),
-	//			100.0f
+	//			100.0
 	//		)
 	//	)
 	//);
 
+	//allLights.push_back(PointLight(dvec4(-2, 1, 1, 1), 1.0));
+	
+	// Red ellipsoid
+	allObjects.push_back(
+		make_shared<Sphere>(
+			Transform(
+				dvec4(0.5, 0, 0.5, 1),
+				dvec3(0, 0, 0),
+				dvec3(0.5, 0.6, 0.2)
+			),
+			Material(
+				dvec3(1.0, 0.0, 0.0),
+				dvec3(1.0, 1.0, 0.5),
+				dvec3(0.1, 0.1, 0.1),
+				100.0
+			)
+		)
+	);
+	// Green sphere
+	allObjects.push_back(
+		make_shared<Sphere>(
+			Transform(
+				dvec4(-0.5, 0, -0.5, 1),
+				dvec3(0, 0, 0),
+				dvec3(1, 1, 1)
+			),
+			Material(
+				dvec3(0.0, 1.0, 0.0),
+				dvec3(1.0, 1.0, 0.5),
+				dvec3(0.1, 0.1, 0.1),
+				100.0
+			)
+		)
+	);
 	// White Plane
 	allObjects.push_back(
 		make_shared<Plane>(
@@ -138,14 +172,15 @@ void Scene::BuildSceneFromFile(std::string filename)
 			),
 			Material(
 				dvec3(1.0, 1.0, 1.0),
-				dvec3(1.0, 1.0, 0.5),
+				dvec3(0.0, 0.0, 0.0),
 				dvec3(0.1, 0.1, 0.1),
-				100.0f
+				0.0
 			)
 		)
 	);
 	
-	allLights.push_back(PointLight(dvec4(-2, 1, 1, 1), 1.0));
+	allLights.push_back(PointLight(dvec4(1, 2, 2, 1), 0.5));
+	allLights.push_back(PointLight(dvec4(-1, 2, -1, 1), 0.5));
 }
 
 void Scene::ClampVector(glm::dvec3& vec, double min, double max)
