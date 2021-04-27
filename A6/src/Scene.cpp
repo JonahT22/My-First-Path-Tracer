@@ -122,8 +122,9 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera)
 		string objectType = ReadValue<string>(ss);
 		if (objectType == "Camera") {
 			camera.SetPosition(dvec4(ReadVec3(ss), 1));
-			camera.SetRotation(ReadVec3(ss));
+			camera.SetRotationDegrees(ReadVec3(ss));
 			camera.SetFOVDegrees(ReadValue<double>(ss));
+			camera.Setup();
 		}
 		else if (objectType == "SceneObject") {
 			string subclass = ReadValue<string>(ss);

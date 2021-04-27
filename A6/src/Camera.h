@@ -1,6 +1,8 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
 #include <glm/ext/scalar_constants.hpp>
 #include "Ray3D.h"
 
@@ -15,14 +17,20 @@ public:
 	// Create a ray from the camera position to the center of a given pixel
 	Ray3D CreateCameraRay(int rowNum, int colNum);
 	
-	// Setter functions
+	// Create a transformation matrix from the pos/rot, and calculate the image plane distance
+	void Setup();
+
+	// Setter functions - NOTE: need to call Setup after running any of these
 	void SetPosition(glm::dvec4 _pos) { pos = _pos; }
-	void SetRotation(glm::dvec3 _rot) { rot = _rot; }
-	void SetFOVDegrees(double _fov);
+	void SetRotationDegrees(glm::dvec3 _rot) { rot = _rot * glm::pi<double>() / 180.0; }
+	void SetFOVDegrees(double _fov) { fovY = _fov * glm::pi<double>() / 180.0; }
+	
 
 private:
 	glm::dvec4 pos;
 	glm::dvec3 rot;
+	// Don't need to store the whole view mtx, only the inverse mtx for rotations
+	glm::dmat4 inv_rotMtx;
 	double fovY;
 	double aspect;
 	int imageWidth;
