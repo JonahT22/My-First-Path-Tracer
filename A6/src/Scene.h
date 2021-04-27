@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+
 #include "Camera.h"
 #include "SceneObject.h"
 #include "Sphere.h"
@@ -14,6 +15,7 @@
 #include "Material.h"
 #include "PointLight.h"
 #include "Plane.h"
+#include "TriangleMesh.h"
 
 class Scene {
 public:

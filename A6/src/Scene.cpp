@@ -133,6 +133,9 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera)
 			else if (subclass == "Plane") {
 				allObjects.push_back(ReadObject<Plane>(ss));
 			}
+			else if (subclass == "TriangleMesh") {
+				allObjects.push_back(ReadObject<TriangleMesh>(ss));
+			}
 		}
 		else if (objectType == "Light") {
 			string name = ReadValue<string>(ss);
