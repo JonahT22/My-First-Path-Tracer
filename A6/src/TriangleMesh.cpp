@@ -6,24 +6,35 @@ using namespace glm;
 
 bool TriangleMesh::IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, double tMax) {
 	// Run a collision check against the bounding sphere, immediately exit if it did not hit
-	if (!boundingSphere->Hit(ray, outHit)) {
+	// Temporary variable for storing the output from the sphere intersection, to be discarded once hit is done
+	HitResult junkHit;
+	if (!boundingSphere->Hit(ray, junkHit)) {
 		return false;
 	}
+
+	// Since we need to check over ALL tri's (don't just return immediately when the 1st hit is found), we'll use this temp variable
+	bool foundNewHit = false;
 	// Iterate over each triangle in the list, running its intersection function
 	// Get the t value from the intersection function, and check if its within the bounds/smaller than hit's minT
 	for (auto& tri : allTriangles) {
 		double t, u, v;
 		if (tri->IntersectTriangle(ray, t, u, v)) {
-			return true;
+			if (tMin < t && t < tMax) {
+				if (outHit.UpdateTMin(t)) {
+					// If the new t is valid, and it is less than the current tmin...
+					double baryCoords[3];
+					outHit.nor = tri->baryInterpNorm(baryCoords);
+					foundNewHit = true;
+				}
+			}
 		}
 	}
 	// If so, run barycentric interpolation to get the normal and store in hitresult
 
 	// return false if:
-	// - discriminant was negative
 	// - No t values were found within the given range
 	// - No valid t values were found that were less than the hitResult's tmin (hitresult wasn't updated)
-	return false;
+	return foundNewHit;
 }
 
 void TriangleMesh::LoadMeshFile(std::string filename) {
@@ -82,7 +93,6 @@ void TriangleMesh::LoadMeshFile(std::string filename) {
 			}
 		}
 	}
-	cout << "Number of vertices: " << posBuf.size() / 3 << endl;
 	//^ Starter code ends here ^
 
 	// Read through the pos buf, creating the triangles
@@ -102,5 +112,4 @@ void TriangleMesh::LoadMeshFile(std::string filename) {
 		);
 		allTriangles.push_back(newTri);
 	}
-	cout << "Number of triangles: " << allTriangles.size() << endl;
 }
