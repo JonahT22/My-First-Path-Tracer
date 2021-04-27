@@ -75,8 +75,7 @@ inline std::shared_ptr<ObjectType> Scene::ReadObject(std::istringstream& stream)
 	dvec3 kd = ReadVec3(stream);
 	dvec3 ks = ReadVec3(stream);
 	dvec3 ka = ReadVec3(stream);
-	// TODO: read from file
-	double roughness = 0.5;
+	double roughness = ReadValue<double>(stream);
 	double specular = ReadValue<double>(stream);
 	
 	shared_ptr<ObjectType> temp = std::make_shared<ObjectType>(
