@@ -8,7 +8,7 @@ using namespace std;
 glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 	// Before anything else, make sure I haven't passed the recursion depth
 	if (depth > maxReflectionDepth) {
-		return background_color;
+		return backgroundColor;
 	}
 
 	HitResult hit;
@@ -62,7 +62,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 		ClampVector(color, 0.0f, 1.0f);
 		return color;
 	}
-	else return background_color;
+	else return backgroundColor;
 }
 
 bool Scene::IsPointInShadow(dvec4& hitLoc, PointLight& light) const {

@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
 
 	Camera camera (width, height);
 
-	Scene scene;
+	Scene scene(dvec3(0, 0, 0));
 	scene.BuildSceneFromFile("../resources/scene" + string(argv[1]) + ".txt", camera);
 	
 	// Generate rays from the camera to the center of each pixel

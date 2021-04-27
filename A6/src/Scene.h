@@ -19,7 +19,7 @@
 
 class Scene {
 public:
-	Scene() = default;
+	Scene(glm::dvec3 _bgColor) : backgroundColor(_bgColor) {}
 	
 	// Iterate over all objects/lights in the scene to find the color of the given ray, returns dvec3 with rgb values from 0 to 1
 	glm::dvec3 ComputeRayColor(Ray3D& ray, int depth = 0);
@@ -30,7 +30,8 @@ private:
 	std::vector<std::shared_ptr<SceneObject> > allObjects;
 	std::vector<PointLight> allLights;
 
-	glm::dvec3 background_color = glm::dvec3(0, 0, 0);
+	glm::dvec3 backgroundColor = glm::dvec3(0, 0, 0);
+
 	// "Fudge Factor" to avoid self-intersection on shadow/reflection ray hits
 	const double epsilon = 0.00001; // 1e-5
 	// Threshold for skipping blinnphong/reflection calculations in ComputeRayColor()
