@@ -58,18 +58,9 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 			color += (1.0 - mat.roughness) * ComputeRayColor(reflectionRay, depth + 1);
 		}
 
-
 		// Make sure the color isn't clipping
 		ClampVector(color, 0.0f, 1.0f);
 		return color;
-
-		//// TODO: Remove
-		//// Color with normals
-		//// Normal -> color conversion taken from assigment handout
-		//double r = 0.5 * hit.nor.x + 0.5;
-		//double g = 0.5 * hit.nor.y + 0.5;
-		//double b = 0.5 * hit.nor.z + 0.5;
-		//return dvec3(r, g, b);
 	}
 	else return background_color;
 }

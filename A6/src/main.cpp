@@ -1,5 +1,3 @@
-// TODO: add 'const' to functions when applicable, pass vec4's  by reference when possible
-// TODO: check bracket placement everywhere
 // TODO: optimize the plane intersection for a constant position/normal
 // TODO: remove the testing .obj files
 // TODO: cache the inverse matrix and the inverse transpose matrix
@@ -41,8 +39,6 @@ void PrintVec4(dvec4 vec) {
 }
 
 int main(int argc, char **argv) {
-	// TODO: make background color an editable property 
-
 	if(argc < 4) {
 		cout << "Usage: ./A6 <SCENENUMBER> <IMAGE SIZE> <IMAGE FILENAME>" << endl;
 		return 0;

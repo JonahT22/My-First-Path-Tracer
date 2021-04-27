@@ -11,7 +11,6 @@ struct HitResult {
 	std::shared_ptr<SceneObject> hitObject = nullptr;
 	glm::dvec4 loc = glm::dvec4(0, 0, 0, 1);
 	glm::dvec4 nor = glm::dvec4(0, 0, 0, 0);
-	// TODO: Material properties
 	bool UpdateTMin(double newT) {
 		if (newT < t) {
 			t = newT;
