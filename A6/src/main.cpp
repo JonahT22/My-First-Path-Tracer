@@ -1,4 +1,3 @@
-// TODO: remove the testing .obj files
 // TODO: cache the inverse matrix and the inverse transpose matrix
 
 #include <iostream>
