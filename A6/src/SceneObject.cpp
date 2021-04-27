@@ -8,26 +8,27 @@ SceneObject::SceneObject(std::string _name, Transform _transf, Material _mat) {
 	// Since all objects in this project are static and independent, the MatrixStack class is not required
 	// (We can just calculate the transformations once, no need for hierarchies or dynamic transf calculations)
 	transform = _transf;
-	transMtx *= translate(glm::dmat4(1.0f), dvec3(_transf.loc));
-	transMtx *= eulerAngleXYZ(_transf.rot.x, _transf.rot.y, _transf.rot.z);
-	transMtx *= scale(glm::dmat4(1.0f), _transf.scale);
+	// The transformation matrix to convert this object from local->world space
+	glm::dmat4 modelMtx = glm::dmat4(1.0f);
+	modelMtx *= translate(glm::dmat4(1.0f), dvec3(_transf.loc));
+	modelMtx *= eulerAngleXYZ(_transf.rot.x, _transf.rot.y, _transf.rot.z);
+	modelMtx *= scale(glm::dmat4(1.0f), _transf.scale);
 
+	// For this assignment, we don't actually need the model matrix since all of our transformations will be converting
+	// rays to object space
+	invMtx = inverse(modelMtx);
+	invTranspMtx = transpose(invMtx);
 	mat = _mat;
 	name = _name;
 }
 
 bool SceneObject::Hit(Ray3D& ray, HitResult& outHit, double tMin, double tMax) {
 	// Apply transformations to the ray to change it to local space
-	dmat4 invMtx = inverse(transMtx);
 	Ray3D localRay(invMtx * ray.start, invMtx * ray.dir);
 
 	// Check intersection (NOTE: localRay direction is NOT normalized)
 	// Since I didn't normalize the ray direction vector, the t distance stored in outHit is in world space
 	return IntersectLocal(localRay, outHit, tMin, tMax);
-}
-
-glm::dmat4 SceneObject::GetInverseTranspose() {
-	return transpose(inverse(transMtx));
 }
 
 bool SceneObject::SelectSmallestInRange(double a, double b, double min, double max, double& result) {

@@ -18,7 +18,7 @@ public:
 
 	// By default, hits go from 0 to inf unless override is specified
 	bool Hit(Ray3D& ray, HitResult& outHit, double tMin = 0, double tMax = std::numeric_limits<double>::max());
-	glm::dmat4 GetInverseTranspose();
+	glm::dmat4 GetInverseTranspose() { return invTranspMtx; }
 
 	// Check intersection in local space, return true if found an intersection that is closer than the hit's t value
 	virtual bool IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tMax) = 0;
@@ -27,8 +27,11 @@ public:
 protected:
 	// Checks 2 numbers against a given range, places the smaller # in the range into result, or returns false if neither are in the range
 	bool SelectSmallestInRange(double a, double b, double min, double max, double& result);
-	// The transformation matrix to convert this object from local->world space
-	glm::dmat4 transMtx = glm::dmat4(1.0f);
+	// Matrix for converting rays from world->local space (inverse of model matrix)
+	glm::dmat4 invMtx;
+	// Matrix for converting normals from local->world space
+	glm::dmat4 invTranspMtx;
+
 	// TODO: is this variable necessary after finding transMtx?
 	Transform transform;
 	Material mat;

@@ -1,5 +1,3 @@
-// TODO: cache the inverse matrix and the inverse transpose matrix
-
 #include <iostream>
 #include <string>
 #include <limits>
