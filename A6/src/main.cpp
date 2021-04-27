@@ -22,18 +22,6 @@
 using namespace std;
 using namespace glm;
 
-// TODO: remove
-void PrintMat4(dmat4 mat) {
-	cout << mat[3][3] << " " << mat[3][2] << " " << mat[3][1] << " " << mat[3][0] << endl;
-	cout << mat[2][3] << " " << mat[2][2] << " " << mat[2][1] << " " << mat[2][0] << endl;
-	cout << mat[1][3] << " " << mat[1][2] << " " << mat[1][1] << " " << mat[1][0] << endl;
-	cout << mat[0][3] << " " << mat[0][2] << " " << mat[0][1] << " " << mat[0][0] << endl;
-}
-
-void PrintVec4(dvec4 vec) {
-	cout << "(" << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << ")" << endl;
-}
-
 int main(int argc, char **argv) {
 	if(argc < 4) {
 		cout << "Usage: ./A6 <SCENENUMBER> <IMAGE SIZE> <IMAGE FILENAME>" << endl;
