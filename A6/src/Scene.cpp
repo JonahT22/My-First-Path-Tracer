@@ -67,21 +67,23 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 
 bool Scene::IsPointInShadow(dvec4& hitLoc, PointLight& light) const {
 	HitResult shadowHit;
-	// Start the tval at the light distance, so nothing past the light will count as a hit
-	shadowHit.t = glm::length(light.pos - hitLoc);
-	// TODO problem: do I need a tMax in the Hit function if it only returns true when it finds something smaller
-	// than the default value of t in the hit? I.e. instead of setting tMax to light distance, just set the 
-	// default value of t to that number
-
 	// Shadow ray is located at the hit position, goes to the light
 	Ray3D shadowRay(hitLoc, glm::normalize(light.pos - hitLoc));
+
+	// Check to see if there are any objects between the hit location and the light
 	for (auto& object : allObjects) {
-		// Add an epsilon to this hit calculation to avoid self-shadowing
-		if (object->Hit(shadowRay, shadowHit, epsilon)) {
+		// Set tMin to epsilon to avoid self-shadowing, and set tMax to the light's distance
+		if (object->Hit(shadowRay, shadowHit, epsilon, glm::length(light.pos - hitLoc))) {
 			// If I hit anything, immediately return true, no further action required
 			return true;
 		}
 	}
+
+	/* NOTE: Another way to accomplish the tMax behavior in Hit() (i.e. don't count intersections past the light location) 
+	could be to initialize shadowHit.t = <light distance>. The Hit function only returns true if the HitResult actually finds
+	a new t value that is smaller than its current t value. This would reduce the complexity of the code a bit (no longer
+	need to check for tMax in intersectLocal). But that's a bit harder to understand at a glance, so I decided to keep 
+	the tMax parameter for the sake of readability */
 
 	return false;
 }
