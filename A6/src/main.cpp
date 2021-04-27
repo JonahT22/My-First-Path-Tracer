@@ -2,6 +2,8 @@
 // TODO: check bracket placement everywhere
 // TODO: optimize the plane intersection for a constant position/normal
 // TODO: make reflection/blinnphong code take the roughness factor into account when adding reflection and bp colors
+// TODO: remove the testing .obj files
+// TODO: cache the inverse matrix and the inverse transpose matrix
 
 #include <iostream>
 #include <string>
