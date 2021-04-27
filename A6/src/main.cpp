@@ -1,4 +1,3 @@
-// TODO: optimize the plane intersection for a constant position/normal
 // TODO: remove the testing .obj files
 // TODO: cache the inverse matrix and the inverse transpose matrix
 
