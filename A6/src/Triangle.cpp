@@ -4,7 +4,8 @@
 using namespace glm;
 using namespace std;
 
-dvec4 Triangle::baryInterpNorm(double (&baryCoords)[3]) {
+dvec4 Triangle::BaryInterpNorm(double (&baryCoords)[3]) {
+	//TODO remove
 	////keep a tally of how much each vertex norm has contributed to the total norm
 	//float x = 0, y = 0, z = 0;
 	//for (int i = 0; i < 3; i++) {
@@ -13,14 +14,23 @@ dvec4 Triangle::baryInterpNorm(double (&baryCoords)[3]) {
 	//	z += norms[i].z * baryCoords[i];
 	//}
 	//return dvec4(x, y, z, 0); //construct a vector from the totals
-	return norms[1];
+	
+	dvec4 interp(0, 0, 0, 0);
+	for (int i = 0; i < 3; i++) {
+		// Assume this is component-wise multiplication TODO: check that it is
+		interp += norms[i] * baryCoords[i];
+	}
+
+	interp = normalize(interp);
+
+	return interp;
 }
 
 void Triangle::print()
 {
 	std::cout << "Triangle(";
 	for (int i = 0; i < 3; i++) {
-		std::cout << " <" << locations[i].x << " , " << locations[i].y << " , " << locations[i].z << ">, ";
+		std::cout << " <" << locations[i].x << " , " << locations[i].y << " , " << locations[i].z << "> ";
 		//std::cout << " <" << norms[i].x << " , " << norms[i].y << " , " << norms[i].z << ">, ";
 	}
 	std::cout << ")" << std::endl;

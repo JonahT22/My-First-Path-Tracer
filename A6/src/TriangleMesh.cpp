@@ -22,8 +22,8 @@ bool TriangleMesh::IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, dou
 			if (tMin < t && t < tMax) {
 				if (outHit.UpdateTMin(t)) {
 					// If the new t is valid, and it is less than the current tmin...
-					double baryCoords[3];
-					outHit.nor = tri->baryInterpNorm(baryCoords);
+					double coords[3] = { (1.0 - u - v), u, v };
+					outHit.nor = tri->BaryInterpNorm(coords);
 					foundNewHit = true;
 				}
 			}
@@ -39,10 +39,11 @@ bool TriangleMesh::IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, dou
 
 void TriangleMesh::LoadMeshFile(std::string filename) {
 	// TODO: remove magic number
-	double boundRadius = 2.0;
+	double boundRadius = 1.0;
+	double yOffset = 1.0;
 	boundingSphere = make_unique<Sphere>(
 		"Bounding_Sphere",
-		Transform(dvec4(0, 0, 0, 1), dvec3(0, 0, 0), dvec3(boundRadius, boundRadius, boundRadius)),
+		Transform(dvec4(0, yOffset, 0, 1), dvec3(0, 0, 0), dvec3(boundRadius, boundRadius, boundRadius)),
 		Material(dvec3(0, 0, 0), dvec3(0, 0, 0), dvec3(0.1, 0.1, 0.1), 1, 0)
 	);
 
