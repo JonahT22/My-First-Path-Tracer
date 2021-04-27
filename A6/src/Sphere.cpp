@@ -4,7 +4,7 @@
 using namespace std;
 using namespace glm;
 
-bool Sphere::IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, double tMax) {
+bool Sphere::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tMax) {
 	// Assume sphere is at origin with radius 1
 	double a = dot(dvec3(ray.dir), dvec3(ray.dir));
 	double b = 2.0 * dot(dvec3(ray.dir), dvec3(ray.start));

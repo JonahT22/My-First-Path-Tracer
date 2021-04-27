@@ -16,7 +16,7 @@ SceneObject::SceneObject(std::string _name, Transform _transf, Material _mat) {
 	name = _name;
 }
 
-bool SceneObject::Hit(Ray3D ray, HitResult& outHit, double tMin, double tMax) {
+bool SceneObject::Hit(Ray3D& ray, HitResult& outHit, double tMin, double tMax) {
 	// Apply transformations to the ray to change it to local space
 	dmat4 invMtx = inverse(transMtx);
 	Ray3D localRay(invMtx * ray.start, invMtx * ray.dir);

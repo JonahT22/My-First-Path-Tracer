@@ -20,7 +20,7 @@ public:
 	TriangleMesh(std::string _name, Transform _transf, Material _mat) : SceneObject(_name, _transf, _mat) {}
 	void LoadMeshFile(std::string filename);
 
-	bool IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, double tMax) override;
+	bool IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tMax) override;
 
 private:
 

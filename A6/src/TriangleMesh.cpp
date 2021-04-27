@@ -4,7 +4,7 @@
 using namespace std;
 using namespace glm;
 
-bool TriangleMesh::IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, double tMax) {
+bool TriangleMesh::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tMax) {
 	// For the sake of this assignment, a bounding sphere is hard-coded to fit around the bunny.obj. For any other obj
 	// files, don't run a sphere collision check first. In a more flexible implementation, the sphere would be caluclated
 	// from the obj file's vertex coordinates
@@ -52,8 +52,8 @@ void TriangleMesh::LoadMeshFile(std::string filename) {
 		Material(dvec3(0, 0, 0), dvec3(0, 0, 0), dvec3(0.1, 0.1, 0.1), 1, 0)
 	);
 
-//LOAD GEOMETRY
-//v Starter Code begins here v
+	//LOAD GEOMETRY
+	//v Starter Code begins here v
 	vector<float> posBuf; // list of vertex positions
 	vector<float> norBuf; // list of vertex normals
 	vector<float> texBuf; // list of vertex texture coords

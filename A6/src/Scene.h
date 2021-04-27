@@ -22,7 +22,7 @@ public:
 	Scene() = default;
 	
 	// Iterate over all objects/lights in the scene to find the color of the given ray, returns dvec3 with rgb values from 0 to 1
-	glm::dvec3 ComputeRayColor(Ray3D ray, int depth = 0);
+	glm::dvec3 ComputeRayColor(Ray3D& ray, int depth = 0);
 	void BuildSceneFromFile(std::string filename, Camera& camera);
 
 	// TODO: add another function for finding shadow intersections. Makes a new ray

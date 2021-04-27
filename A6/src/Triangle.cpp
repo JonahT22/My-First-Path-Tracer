@@ -35,21 +35,21 @@ void Triangle::print() {
 	std::cout << ")" << std::endl;
 }
 
-void Triangle::SetLocations(dvec4 v0, dvec4 v1, dvec4 v2) {
+void Triangle::SetLocations(dvec4& v0, dvec4& v1, dvec4& v2) {
 	//set vertex locations
 	locations[0] = v0;
 	locations[1] = v1;
 	locations[2] = v2;
 }
 
-void Triangle::SetNorms(dvec4 n0, dvec4 n1, dvec4 n2) {
+void Triangle::SetNorms(dvec4& n0, dvec4& n1, dvec4& n2) {
 	norms[0] = n0;
 	norms[1] = n1;
 	norms[2] = n2;
 }
 
 //TODO: remove commented code
-bool Triangle::IntersectTriangle(Ray3D ray, double& t, double& u, double& v) {
+bool Triangle::IntersectTriangle(Ray3D& ray, double& t, double& u, double& v) {
 	const double EPSILON = 0.000001;
 //	double edge1[3], edge2[3], tvec[3], pvec[3], qvec[3];
 	dvec3 edge1, edge2, tvec, pvec, qvec;

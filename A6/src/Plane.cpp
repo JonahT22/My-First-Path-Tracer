@@ -4,7 +4,7 @@
 using namespace std;
 using namespace glm;
 
-bool Plane::IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, double tMax) {
+bool Plane::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tMax) {
 	// Just like the sphere, the ray will be transformed into the local space of this plane, so
 	// assume plane is at the origin, parallel with x-z plane, with no transformations applied 
 	dvec4 n(0, 1, 0, 0); // normal

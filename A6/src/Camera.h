@@ -21,8 +21,8 @@ public:
 	void Setup();
 
 	// Setter functions - NOTE: need to call Setup after running any of these
-	void SetPosition(glm::dvec4 _pos) { pos = _pos; }
-	void SetRotationDegrees(glm::dvec3 _rot) { rot = _rot * glm::pi<double>() / 180.0; }
+	void SetPosition(glm::dvec4& _pos) { pos = _pos; }
+	void SetRotationDegrees(glm::dvec3& _rot) { rot = _rot * glm::pi<double>() / 180.0; }
 	void SetFOVDegrees(double _fov) { fovY = _fov * glm::pi<double>() / 180.0; }
 	
 

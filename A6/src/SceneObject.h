@@ -17,11 +17,11 @@ public:
 	Material GetMaterial() { return mat; }
 
 	// By default, hits go from 0 to inf unless override is specified
-	bool Hit(Ray3D ray, HitResult& outHit, double tMin = 0, double tMax = std::numeric_limits<double>::max());
+	bool Hit(Ray3D& ray, HitResult& outHit, double tMin = 0, double tMax = std::numeric_limits<double>::max());
 	glm::dmat4 GetInverseTranspose();
 
 	// Check intersection in local space, return true if found an intersection that is closer than the hit's t value
-	virtual bool IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, double tMax) = 0;
+	virtual bool IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tMax) = 0;
 
 	std::string name;
 protected:
