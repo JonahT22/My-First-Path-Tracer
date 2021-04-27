@@ -5,14 +5,15 @@ using namespace glm;
 using namespace std;
 
 dvec4 Triangle::baryInterpNorm(double (&baryCoords)[3]) {
-	//keep a tally of how much each vertex norm has contributed to the total norm
-	float x = 0, y = 0, z = 0;
-	for (int i = 0; i < 3; i++) {
-		x += norms[i].x * baryCoords[i];
-		y += norms[i].y * baryCoords[i];
-		z += norms[i].z * baryCoords[i];
-	}
-	return dvec4(x, y, z, 0); //construct a Vector3D from the totals
+	////keep a tally of how much each vertex norm has contributed to the total norm
+	//float x = 0, y = 0, z = 0;
+	//for (int i = 0; i < 3; i++) {
+	//	x += norms[i].x * baryCoords[i];
+	//	y += norms[i].y * baryCoords[i];
+	//	z += norms[i].z * baryCoords[i];
+	//}
+	//return dvec4(x, y, z, 0); //construct a vector from the totals
+	return norms[1];
 }
 
 void Triangle::print()
@@ -20,6 +21,7 @@ void Triangle::print()
 	std::cout << "Triangle(";
 	for (int i = 0; i < 3; i++) {
 		std::cout << " <" << locations[i].x << " , " << locations[i].y << " , " << locations[i].z << ">, ";
+		//std::cout << " <" << norms[i].x << " , " << norms[i].y << " , " << norms[i].z << ">, ";
 	}
 	std::cout << ")" << std::endl;
 }
@@ -39,7 +41,7 @@ void Triangle::SetNorms(dvec4 n0, dvec4 n1, dvec4 n2)
 	norms[2] = n2;
 }
 
-
+//TODO: remove commented code
 bool Triangle::IntersectTriangle(Ray3D ray, double& t, double& u, double& v)
 {
 	const double EPSILON = 0.000001;
