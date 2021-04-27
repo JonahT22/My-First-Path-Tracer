@@ -47,7 +47,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D ray, int depth)
 			// Calculate contribution from each light
 			for (auto& light : allLights) {
 				if (!IsPointInShadow(hit.loc, light)) {
-					color += mat.ShadeBlinnPhong(ray, hit, light);
+					color += mat.roughness * mat.ShadeBlinnPhong(ray, hit, light);
 				}
 			}
 		}
@@ -56,7 +56,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D ray, int depth)
 		if (mat.roughness < (1.0 - roughnessThreshold)) {
 			// Create a ray with the new reflection direction
 			Ray3D reflectionRay(hit.loc, glm::reflect(ray.dir, hit.nor));
-			color += ComputeRayColor(reflectionRay, depth + 1);
+			color += (1.0 - mat.roughness) * ComputeRayColor(reflectionRay, depth + 1);
 		}
 
 
