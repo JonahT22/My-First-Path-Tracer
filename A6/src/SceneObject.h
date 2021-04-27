@@ -32,7 +32,5 @@ protected:
 	// Matrix for converting normals from local->world space
 	glm::dmat4 invTranspMtx;
 
-	// TODO: is this variable necessary after finding transMtx?
-	Transform transform;
 	Material mat;
 };

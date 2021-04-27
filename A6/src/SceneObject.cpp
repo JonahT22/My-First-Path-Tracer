@@ -7,7 +7,7 @@ using namespace glm;
 SceneObject::SceneObject(std::string _name, Transform _transf, Material _mat) {
 	// Since all objects in this project are static and independent, the MatrixStack class is not required
 	// (We can just calculate the transformations once, no need for hierarchies or dynamic transf calculations)
-	transform = _transf;
+	
 	// The transformation matrix to convert this object from local->world space
 	glm::dmat4 modelMtx = glm::dmat4(1.0f);
 	modelMtx *= translate(glm::dmat4(1.0f), dvec3(_transf.loc));
