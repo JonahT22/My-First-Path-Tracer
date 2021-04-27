@@ -4,11 +4,6 @@
 using namespace std;
 using namespace glm;
 
-TriangleMesh::TriangleMesh(std::string _name, Transform _transf, Material _mat)
-	: SceneObject(_name, _transf, _mat) {
-	Init();
-}
-
 bool TriangleMesh::IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, double tMax) {
 	// Run a collision check against the bounding sphere, immediately exit if it did not hit
 	if (!boundingSphere->Hit(ray, outHit)) {
@@ -31,18 +26,15 @@ bool TriangleMesh::IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, dou
 	return false;
 }
 
-void TriangleMesh::Init() {
+void TriangleMesh::LoadMeshFile(std::string filename) {
 	// TODO: remove magic number
 	double boundRadius = 2.0;
 	boundingSphere = make_unique<Sphere>(
 		"Bounding_Sphere",
 		Transform(dvec4(0, 0, 0, 1), dvec3(0, 0, 0), dvec3(boundRadius, boundRadius, boundRadius)),
 		Material(dvec3(0, 0, 0), dvec3(0, 0, 0), dvec3(0.1, 0.1, 0.1), 1, 0)
-		);
-	PopulateTriangleArray("../resources/tri.obj");
-}
+	);
 
-void TriangleMesh::PopulateTriangleArray(std::string filename) {
 //LOAD GEOMETRY
 //v Starter Code begins here v
 	vector<float> posBuf; // list of vertex positions

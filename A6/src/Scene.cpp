@@ -135,6 +135,7 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera)
 			}
 			else if (subclass == "TriangleMesh") {
 				allObjects.push_back(ReadObject<TriangleMesh>(ss));
+				dynamic_pointer_cast<TriangleMesh>(allObjects.back())->LoadMeshFile(ReadValue<string>(ss));
 			}
 		}
 		else if (objectType == "Light") {
