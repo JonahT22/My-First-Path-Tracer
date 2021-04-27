@@ -40,8 +40,7 @@ void PrintVec4(dvec4 vec) {
 	cout << "(" << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << ")" << endl;
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
 	// TODO: make background color an editable property 
 
 	if(argc < 4) {

@@ -26,13 +26,11 @@ bool SceneObject::Hit(Ray3D ray, HitResult& outHit, double tMin, double tMax) {
 	return IntersectLocal(localRay, outHit, tMin, tMax);
 }
 
-glm::dmat4 SceneObject::GetInverseTranspose()
-{
+glm::dmat4 SceneObject::GetInverseTranspose() {
 	return transpose(inverse(transMtx));
 }
 
-bool SceneObject::SelectSmallestInRange(double a, double b, double min, double max, double& result)
-{
+bool SceneObject::SelectSmallestInRange(double a, double b, double min, double max, double& result) {
 	bool aValid = (a > min && a < max);
 	bool bValid = (b > min && b < max);
 	if (aValid || bValid) {

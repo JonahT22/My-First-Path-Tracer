@@ -5,8 +5,7 @@ using namespace glm;
 using namespace std;
 
 // Main render loop
-glm::dvec3 Scene::ComputeRayColor(Ray3D ray, int depth)
-{
+glm::dvec3 Scene::ComputeRayColor(Ray3D ray, int depth) {
 	// Before anything else, make sure I haven't passed the recursion depth
 	if (depth > maxReflectionDepth) {
 		return background_color;
@@ -75,8 +74,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D ray, int depth)
 	else return background_color;
 }
 
-bool Scene::IsPointInShadow(dvec4& hitLoc, PointLight& light) const
-{
+bool Scene::IsPointInShadow(dvec4& hitLoc, PointLight& light) const {
 	HitResult shadowHit;
 	// Start the tval at the light distance, so nothing past the light will count as a hit
 	shadowHit.t = glm::length(light.pos - hitLoc);
@@ -97,8 +95,7 @@ bool Scene::IsPointInShadow(dvec4& hitLoc, PointLight& light) const
 	return false;
 }
 
-void Scene::BuildSceneFromFile(std::string filename, Camera& camera)
-{
+void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
 	// File format:
 
 	// Camera <Pos X/Y/Z> <Rot X/Y/Z> <FovY (degrees)>
@@ -151,21 +148,18 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera)
 	cout << "done!" << endl;
 }
 
-void Scene::ClampVector(glm::dvec3& vec, double min, double max)
-{
+void Scene::ClampVector(glm::dvec3& vec, double min, double max) {
 	ClampDouble(vec.x, min, max);
 	ClampDouble(vec.y, min, max);
 	ClampDouble(vec.z, min, max);
 }
 
-void Scene::ClampDouble(double& num, double min, double max)
-{
+void Scene::ClampDouble(double& num, double min, double max) {
 	if (num < min) num = min;
 	if (num > max) num = max;
 }
 
-dvec3 Scene::ReadVec3(istringstream& stream)
-{
+dvec3 Scene::ReadVec3(istringstream& stream) {
 	dvec3 output;
 	stream >> output.x;
 	stream >> output.y;

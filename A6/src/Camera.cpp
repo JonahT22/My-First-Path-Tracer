@@ -23,8 +23,7 @@ Ray3D Camera::CreateCameraRay(int rowNum, int colNum) {
 	return Ray3D(pos, rayDir);
 }
 
-void Camera::Setup()
-{
+void Camera::Setup() {
 	imagePlaneDist = 1.0 / tan(fovY / 2.0);
 	inv_rotMtx = inverse(eulerAngleXYZ(rot.x, rot.y, rot.z));
 }
