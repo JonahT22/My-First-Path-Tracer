@@ -27,4 +27,7 @@ private:
 	// List of triangles
 	std::vector<std::shared_ptr<Triangle> > allTriangles;
 	std::unique_ptr<Sphere> boundingSphere;
+
+	// Name of file that is loaded (used for hard-coded bounding sphere for bunny)
+	std::string objFile;
 };

@@ -5,11 +5,17 @@ using namespace std;
 using namespace glm;
 
 bool TriangleMesh::IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, double tMax) {
+	// For the sake of this assignment, a bounding sphere is hard-coded to fit around the bunny.obj. For any other obj
+	// files, don't run a sphere collision check first. In a more flexible implementation, the sphere would be caluclated
+	// from the obj file's vertex coordinates
+
 	// Run a collision check against the bounding sphere, immediately exit if it did not hit
-	// Temporary variable for storing the output from the sphere intersection, to be discarded once hit is done
-	HitResult junkHit;
-	if (!boundingSphere->Hit(ray, junkHit)) {
-		return false;
+	if (objFile == "../resources/bunny.obj") {
+		// Temporary variable for storing the output from the sphere intersection, to be discarded once hit is done
+		HitResult junkHit;
+		if (!boundingSphere->Hit(ray, junkHit)) {
+			return false;
+		}
 	}
 
 	// Since we need to check over ALL tri's (don't just return immediately when the 1st hit is found), we'll use this temp variable
@@ -38,12 +44,11 @@ bool TriangleMesh::IntersectLocal(Ray3D ray, HitResult& outHit, double tMin, dou
 }
 
 void TriangleMesh::LoadMeshFile(std::string filename) {
-	// TODO: remove magic number
-	double boundRadius = 1.0;
-	double yOffset = 1.0;
+	// Create a bounding sphere - hard-coded to wrap tightly around the bunny mesh
+	objFile = filename;
 	boundingSphere = make_unique<Sphere>(
 		"Bounding_Sphere",
-		Transform(dvec4(0, yOffset, 0, 1), dvec3(0, 0, 0), dvec3(boundRadius, boundRadius, boundRadius)),
+		Transform(dvec4(-0.2, 1.1, 0, 1), dvec3(0, 0, 0), dvec3(1, 1, 1)),
 		Material(dvec3(0, 0, 0), dvec3(0, 0, 0), dvec3(0.1, 0.1, 0.1), 1, 0)
 	);
 
