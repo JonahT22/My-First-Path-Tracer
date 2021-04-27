@@ -14,9 +14,10 @@ SceneObject::SceneObject(std::string _name, Transform _transf, Material _mat) {
 	modelMtx *= eulerAngleXYZ(_transf.rot.x, _transf.rot.y, _transf.rot.z);
 	modelMtx *= scale(glm::dmat4(1.0f), _transf.scale);
 
-	// For this assignment, we don't actually need the model matrix since all of our transformations will be converting
-	// rays to object space
+	// For this implementation, you  don't actually need the model matrix. We convert rays from world space -> object space,
+	// but we never have to convert any locations from object->world since it uses the t value to find world hit locations
 	invMtx = inverse(modelMtx);
+	// Still need the inverse transpose to convert normals from object->world, though
 	invTranspMtx = transpose(invMtx);
 	mat = _mat;
 	name = _name;
