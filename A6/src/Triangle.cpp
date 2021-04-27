@@ -40,7 +40,7 @@ void Triangle::SetNorms(dvec4 n0, dvec4 n1, dvec4 n2)
 }
 
 
-bool Triangle::IntersectTriangle(Ray3D ray, dvec4 verts[3], double& t, double& u, double& v)
+bool Triangle::IntersectTriangle(Ray3D ray, double& t, double& u, double& v)
 {
 	const double EPSILON = 0.000001;
 //	double edge1[3], edge2[3], tvec[3], pvec[3], qvec[3];
@@ -48,8 +48,8 @@ bool Triangle::IntersectTriangle(Ray3D ray, dvec4 verts[3], double& t, double& u
 	double det, inv_det;
 
 	// Find vectors for two edges sharing vert0
-	edge1 = verts[1] - verts[0];
-	edge2 = verts[2] - verts[0];
+	edge1 = locations[1] - locations[0];
+	edge2 = locations[2] - locations[0];
 
 	// begin calculating determinant - also used to calculate U parameter
 //  CROSS(pvec, dir, edge2);
@@ -61,7 +61,7 @@ bool Triangle::IntersectTriangle(Ray3D ray, dvec4 verts[3], double& t, double& u
 
 	// calculate distance from vert0 to ray origin
 //	SUB(tvec, orig, vert0);
-	tvec = ray.start - verts[0];
+	tvec = ray.start - locations[0];
 	inv_det = 1.0 / det;
 
 	if (det > EPSILON)
