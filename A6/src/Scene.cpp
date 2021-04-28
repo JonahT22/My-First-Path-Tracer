@@ -40,22 +40,22 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 			// Only add ambient color on the first raycast, don't keep adding it for reflection rays
 			color += mat.ka;
 		}
-
+		
 		// Calculate blinn-phong color (don't need to do this if the material is 100% reflective)
-		if (mat.roughness > (0.0 + roughnessThreshold)) {
+		if (mat.reflective < (1.0 - reflectiveThreshold)) {
 			// Calculate contribution from each light
 			for (auto& light : allLights) {
 				if (!IsPointInShadow(hit.loc, light)) {
-					color += mat.roughness * mat.ShadeBlinnPhong(ray, hit, light);
+					color += (1.0 - mat.reflective) * mat.ShadeBlinnPhong(ray, hit, light);
 				}
 			}
 		}
 
 		// Calculate contribution from reflection rays
-		if (mat.roughness < (1.0 - roughnessThreshold)) {
+		if (mat.reflective > (0.0 + reflectiveThreshold)) {
 			// Create a ray with the new reflection direction
 			Ray3D reflectionRay(hit.loc, glm::reflect(ray.dir, hit.nor));
-			color += (1.0 - mat.roughness) * ComputeRayColor(reflectionRay, depth + 1);
+			color += mat.reflective * ComputeRayColor(reflectionRay, depth + 1);
 		}
 
 		// Make sure the color isn't clipping

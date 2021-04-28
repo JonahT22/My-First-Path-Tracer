@@ -9,8 +9,8 @@ struct Material {
 	glm::dvec3 kd;
 	glm::dvec3 ks;
 	glm::dvec3 ka;
-	// 0-1 value, where 0 = perfectly reflective, 1 = perfectly diffuse
-	double roughness;
+	// 0-1 value, where 1 = perfectly reflective, 0 = perfectly diffuse
+	double reflective;
 	// 'width/strength' of specular highlights
 	double specularExp;
 
@@ -18,14 +18,14 @@ struct Material {
 		kd(glm::dvec3(1.0, 1.0, 1.0)),
 		ks(glm::dvec3(1.0, 1.0, 1.0)),
 		ka(glm::dvec3(0.1, 0.1, 0.1)),
-		roughness(1.0),
+		reflective(0.0),
 		specularExp(100.0)
 	{}
-	Material(glm::dvec3 _kd, glm::dvec3 _ks, glm::dvec3 _ka, double _roughness, double _specularExp) :
+	Material(glm::dvec3 _kd, glm::dvec3 _ks, glm::dvec3 _ka, double _reflective, double _specularExp) :
 		kd(_kd),
 		ks(_ks),
 		ka(_ka),
-		roughness(_roughness),
+		reflective(_reflective),
 		specularExp(_specularExp)
 	{}
 

@@ -35,7 +35,7 @@ private:
 	// "Fudge Factor" to avoid self-intersection on shadow/reflection ray hits
 	const double epsilon = 0.00001; // 1e-5
 	// Threshold for skipping blinnphong/reflection calculations in ComputeRayColor()
-	const double roughnessThreshold = 0.00001; //1e-5
+	const double reflectiveThreshold = 0.00001; //1e-5
 	// Maximum number of times the ComputeRayColor can recurse before forcibly returning
 	const int maxReflectionDepth = 5;
 
