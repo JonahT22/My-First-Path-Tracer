@@ -90,14 +90,12 @@ bool Scene::IsPointInShadow(dvec4& hitLoc, PointLight& light) const {
 
 void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
 	// File format:
-
-	// Camera <Pos X/Y/Z> <Rot X/Y/Z> <FovY (degrees)>
+	// Camera <Pos X/Y/Z> <Rot X/Y/Z> <FovY>
 	// SceneObject <Subclass> <Name> <Pos X/Y/Z> <Rot X/Y/Z> <Scale X/Y/Z> <Kd R/G/B> <Ks R/G/B> <Ka R/G/B> <Roughness> <Specular Exp>
 	// Light <Name> <Pos X/Y/Z> <Intensity>
 
-
 	// (X/Y/Z) means 3 space-separated entries for X, Y, and Z
-	// Items can be in any order, rotations in degrees
+	// Items can be in any order, rotations and fov in degrees
 	// There should only be 1 entry for camera, but SceneObjects and Lights can be repeated as necessary
 
 	cout << "Reading scene data from " << filename << " ... ";
