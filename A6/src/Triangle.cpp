@@ -90,7 +90,3 @@ bool Triangle::IntersectTriangle(Ray3D& ray, double& t, double& u, double& v) {
 
 	return true;
 }
-
-
-
-

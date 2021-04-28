@@ -1,3 +1,4 @@
+// TODO: credit triangle intersection code in README
 #include <iostream>
 #include <string>
 #include <limits>

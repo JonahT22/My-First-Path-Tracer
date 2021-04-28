@@ -23,6 +23,8 @@ bool TriangleMesh::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, do
 	// Iterate over each triangle in the list, running its intersection function
 	// Get the t value from the intersection function, and check if its within the bounds/smaller than hit's minT
 	for (auto& tri : allTriangles) {
+		// t = distance to ray
+		// u, v = barycentric coords corresponding to vert1, vert2
 		double t, u, v;
 		if (tri->IntersectTriangle(ray, t, u, v)) {
 			if (tMin < t && t < tMax) {
