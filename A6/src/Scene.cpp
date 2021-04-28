@@ -137,6 +137,7 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
 			double intensity = ReadValue<double>(ss);
 			allLights.push_back(PointLight(name, pos, intensity));
 		}
+		else if (objectType == "#") continue; // Do nothing for comment lines
 	}
 	cout << "done!" << endl;
 }
