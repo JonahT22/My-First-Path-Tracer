@@ -11,6 +11,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 		return backgroundColor;
 	}
 
+	// Find the nearest object
 	HitResult hit;
 	for (auto& object : allObjects) {
 		if (object->Hit(ray, hit, epsilon)) {
@@ -24,7 +25,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 		// Calculate the hit's properties, now that we know that this hit is the closest one 
 		// (this way, we only have to do these calculations once)
 
-		// New position from tMin
+		// New world-space position from tMin
 		hit.loc = ray.FindLocAtTime(hit.t);
 
 		// During intersection checks, hit.nor is filled with local-space normal. Now, convert to world space
