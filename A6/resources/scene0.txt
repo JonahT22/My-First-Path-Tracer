@@ -1,0 +1,11 @@
+# Cornell Box
+Camera   0 -0.5 5   0 0 0   75
+SceneObject Sphere Reflective_Sphere   -1.5 -2 -0.5   0 0 0   1 1 1   1 1 1   1 1 1   0 0 0   0   100
+SceneObject Sphere White_Sphere   1.5 -2 0.5   0 0 0   1 1 1   1 1 1   1 1 1   0 0 0   1   100
+SceneObject Plane Floor   0 -3 0   0 0 0   1 1 1   1 1 1   1 1 1   0 0 0   1   100
+SceneObject Plane Ceiling   0 3 0   0 0 180   1 1 1   1 1 1   1 1 1   0 0 0   1   100
+SceneObject Plane Right_Wall    3.5 0 0   0 0 90   1 1 1   0.2196 0.4196 0.7804   1 1 1   0 0 0   1   100
+SceneObject Plane Left_Wall   -3.5 0 0   0 0 -90   1 1 1   0.7412 0.2588 0.2588   1 1 1   0 0 0   1   100
+SceneObject Plane Back_Wall   0 0 -3   90 0 0   1 1 1   1 1 1   1 1 1   0 0 0   1   100
+SceneObject Plane Front_Wall 0 0 6   -90 0 0   1 1 1   0 0 0   0 0 0   0 0 0   1   100
+Light Top_Light   0 2.9 0   1 
