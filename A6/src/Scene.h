@@ -71,11 +71,11 @@ inline std::shared_ptr<ObjectType> Scene::ReadObject(std::istringstream& stream)
 	dvec3 scale = ReadVec3(stream);
 	dvec3 kd = ReadVec3(stream);
 	dvec3 ks = ReadVec3(stream);
-	dvec3 ka = ReadVec3(stream);
-	double roughness = ReadValue<double>(stream);
+	dvec3 ke = ReadVec3(stream);
+	double reflective = ReadValue<double>(stream);
 	double specular = ReadValue<double>(stream);
 	
 	shared_ptr<ObjectType> temp = std::make_shared<ObjectType>(
-		name, Transform(pos, rot, scale), Material(kd, ks, ka, roughness, specular));
+		name, Transform(pos, rot, scale), Material(kd, ks, ke, reflective, specular));
 	return temp;
 }

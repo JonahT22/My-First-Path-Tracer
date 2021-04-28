@@ -37,10 +37,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 		// Start with ambient component
 		Material mat = hit.hitObject->GetMaterial();
 		dvec3 color(0, 0, 0);
-		if (depth == 0) {
-			// Only add ambient color on the first raycast, don't keep adding it for reflection rays
-			color += mat.ka;
-		}
+		color += mat.ke;
 		
 		// Calculate blinn-phong color (don't need to do this if the material is 100% reflective)
 		if (mat.reflective < (1.0 - reflectiveThreshold)) {
@@ -56,7 +53,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 		if (mat.reflective > (0.0 + reflectiveThreshold)) {
 			// Create a ray with the new reflection direction
 			Ray3D reflectionRay(hit.loc, glm::reflect(ray.dir, hit.nor));
-			color += mat.reflective * ComputeRayColor(reflectionRay, depth + 1);
+			color += mat.ks * mat.reflective * ComputeRayColor(reflectionRay, depth + 1);
 		}
 
 		// Make sure the color isn't clipping
@@ -92,7 +89,7 @@ bool Scene::IsPointInShadow(dvec4& hitLoc, PointLight& light) const {
 void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
 	// File format:
 	// Camera <Pos X/Y/Z> <Rot X/Y/Z> <FovY>
-	// SceneObject <Subclass> <Name> <Pos X/Y/Z> <Rot X/Y/Z> <Scale X/Y/Z> <Kd R/G/B> <Ks R/G/B> <Ka R/G/B> <Roughness> <Specular Exp>
+	// SceneObject <Subclass> <Name> <Pos X/Y/Z> <Rot X/Y/Z> <Scale X/Y/Z> <Kd R/G/B> <Ks R/G/B> <Ke R/G/B> <Reflectance> <Specular Exp>
 	// Light <Name> <Pos X/Y/Z> <Intensity>
 
 	// (X/Y/Z) means 3 space-separated entries for X, Y, and Z
