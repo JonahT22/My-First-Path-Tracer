@@ -7,7 +7,7 @@ using namespace std;
 // Main render loop
 glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 	// Before anything else, make sure I haven't passed the recursion depth
-	if (depth > maxReflectionDepth) {
+	if (depth > maxRecursionDepth) {
 		return backgroundColor;
 	}
 
