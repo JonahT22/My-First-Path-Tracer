@@ -202,11 +202,3 @@ glm::dvec3 Scene::RandomRayInHemisphere(glm::dvec4& normal)
 
 	return rotate(localDir, angle, axis);
 }
-
-dvec3 Scene::ReadVec3(istringstream& stream) {
-	dvec3 output;
-	stream >> output.x;
-	stream >> output.y;
-	stream >> output.z;
-	return output;
-}

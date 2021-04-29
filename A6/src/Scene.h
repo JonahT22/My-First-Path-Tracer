@@ -42,6 +42,7 @@ private:
 	const int maxRecursionDepth = 2;
 	// Number of rays to use for monte-carlo integration
 	const int numSamples = 10;
+	const int numSamples = 2;
 
 	// Run an intersection check on the ray to a given light, but return false immediately if a hit is found
 	bool IsPointInShadow(glm::dvec4& hitLoc, PointLight& light) const;
@@ -65,6 +66,15 @@ inline T Scene::ReadValue(std::istringstream& stream) {
 	T temp;
 	stream >> temp;
 	return temp;
+}
+
+// This doesn't *have* to be declared in the .h, but putting it here for organization's sake
+inline glm::dvec3 Scene::ReadVec3(std::istringstream& stream) {
+	glm::dvec3 output;
+	stream >> output.x;
+	stream >> output.y;
+	stream >> output.z;
+	return output;
 }
 
 template<class ObjectType>
