@@ -1,12 +1,14 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 #include <vector>
 #include <string>
 #include <memory>
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cstdlib>
 
 #include "Camera.h"
 #include "SceneObject.h"
@@ -38,6 +40,8 @@ private:
 	const double reflectiveThreshold = 0.00001; //1e-5
 	// Maximum number of times the ComputeRayColor can recurse before forcibly returning
 	const int maxReflectionDepth = 5;
+	// Number of rays to use for monte-carlo integration
+	const int numSamples = 10;
 
 	// Run an intersection check on the ray to a given light, but return false immediately if a hit is found
 	bool IsPointInShadow(glm::dvec4& hitLoc, PointLight& light) const;
@@ -45,6 +49,8 @@ private:
 	void ClampVector(glm::dvec3& vec, double min, double max);
 	// Clamps an individual double value to a range
 	void ClampDouble(double& num, double min, double max);
+	// Find a random unit vector from center->surface of a hemisphere with the given normal
+	glm::dvec3 RandomRayInHemisphere(glm::dvec4& normal);
 
 	// Reads the next value and places it into the provided type
 	template<class T> T ReadValue(std::istringstream& stream);

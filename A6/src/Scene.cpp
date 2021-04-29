@@ -34,12 +34,13 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 		hit.nor.w = 0.0;
 		hit.nor = normalize(hit.nor);
 
-		// Start with ambient component
 		Material mat = hit.hitObject->GetMaterial();
 		dvec3 color(0, 0, 0);
+
+		// Emissive Color
 		color += mat.ke;
 		
-		// Calculate blinn-phong color (don't need to do this if the material is 100% reflective)
+		// Blinn-phong color (don't need to do this if the material is ~100% reflective)
 		if (mat.reflective < (1.0 - reflectiveThreshold)) {
 			// Calculate contribution from each light
 			for (auto& light : allLights) {
@@ -49,12 +50,39 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 			}
 		}
 
-		// Calculate contribution from reflection rays
+		// Reflection ray contributions (don't do this if the material is ~0% reflective)
 		if (mat.reflective > (0.0 + reflectiveThreshold)) {
 			// Create a ray with the new reflection direction
 			Ray3D reflectionRay(hit.loc, glm::reflect(ray.dir, hit.nor));
 			color += mat.ks * mat.reflective * ComputeRayColor(reflectionRay, depth + 1);
 		}
+
+		// Find the ambient (global) illumination using monte-carlo integration
+		dvec3 ambientGI(0, 0, 0);
+		for (int i = 0; i < numSamples; i++) {
+			// Full equation: ambient light = 1/N * sum from 1->N of ( 1/p * (f * L * cos(theta)))
+			// Where f = BRDF = kd/pi (use perfect diffuse shading for this model,
+			//     so albedo = kd https://computergraphics.stackexchange.com/questions/350/albedo-vs-diffuse)
+			// L = incoming light, theta = angle btwn incoming (constant) and outgoing (randomized) light rays
+
+			Ray3D ambientRay(hit.loc, dvec4(RandomRayInHemisphere(hit.nor), 0));
+			// The random ray generation uses a cosine-weighted model, where p = cos(theta) / pi
+			// Therefore, when dividing by p the cos(theta) would cancel out with the full eq so we don't mult by cos here
+			ambientGI += ComputeRayColor(ambientRay, depth + 1);
+		}
+
+		// Since BRDF is a constant value for this model, just multiply it at the end
+		const dvec3 BRDF = mat.kd / pi<double>();
+		ambientGI *= BRDF;
+
+		// p is a constant value for this model (after canceling out cos(theta)), so we can wait to divide by p until the end
+		// Store 1/p to save a division op. Note that the cos(theta) term already canceled out earlier, so it's not included here
+		constexpr double p = 1 / pi<double>();
+		// TODO: optimize p to avoid the double division
+		ambientGI /= (double)numSamples;
+		ambientGI /= p;
+
+		color += ambientGI;
 
 		// Make sure the color isn't clipping
 		ClampVector(color, 0.0f, 1.0f);
@@ -147,6 +175,32 @@ void Scene::ClampVector(glm::dvec3& vec, double min, double max) {
 void Scene::ClampDouble(double& num, double min, double max) {
 	if (num < min) num = min;
 	if (num > max) num = max;
+}
+
+glm::dvec3 Scene::RandomRayInHemisphere(glm::dvec4& normal)
+{
+	// Use a cosine-weighted point generation method from https://graphicscompendium.com/raytracing/19-monte-carlo
+	// TODO: cite in readme
+	
+	// Basic idea: generate points uniformly on a disc, then project up onto the hemisphere
+	double u = rand() / (float)RAND_MAX;
+	double v = rand() / (float)RAND_MAX;
+	double r = sqrt(u);
+	double theta = 2.0 * glm::pi<double>() * v;
+
+	// This ray assumes a normal of <0, 1, 0>. Next, transform using the actual normal
+	dvec3 localDir(r * cos(theta), sqrt(1 - u), r * sin(theta));
+
+	// Before rotating, check if the local normal and world normal are parallel
+	dvec3 localUp(0, 1, 0);
+	if (localUp == dvec3(normal)) return localDir;
+	if (localUp == -1.0 * dvec3(normal)) return -1.0 * localDir;
+
+	// dot(u, v) = cos(theta) for unit vectors
+	double angle = acos(dot(localUp, dvec3(normal)));
+	dvec3 axis = cross(localUp, dvec3(normal));
+
+	return rotate(localDir, angle, axis);
 }
 
 dvec3 Scene::ReadVec3(istringstream& stream) {

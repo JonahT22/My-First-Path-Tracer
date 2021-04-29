@@ -3,6 +3,8 @@
 #include <string>
 #include <limits>
 #include <memory>
+#include <ctime>
+#include <cstdlib>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -41,6 +43,8 @@ int main(int argc, char **argv) {
 	Scene scene(dvec3(0, 0, 0));
 	scene.BuildSceneFromFile("../resources/scene" + string(argv[1]) + ".txt", camera);
 	
+	srand(time(NULL));
+
 	// Iterate over every pixel
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
