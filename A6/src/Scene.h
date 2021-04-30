@@ -41,7 +41,6 @@ private:
 	// Maximum number of times the ComputeRayColor can recurse before forcibly returning
 	const int maxRecursionDepth = 2;
 	// Number of rays to use for monte-carlo integration
-	const int numSamples = 10;
 	const int numSamples = 2;
 
 	// Run an intersection check on the ray to a given light, but return false immediately if a hit is found
