@@ -57,19 +57,16 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 			color += mat.ks * mat.reflective * ComputeRayColor(reflectionRay, depth + 1);
 		}
 
-		// Find the ambient (global) illumination using monte-carlo integration
-		dvec3 ambientGI(0, 0, 0);
-		for (int i = 0; i < numSamples; i++) {
-			// Full equation: ambient light = 1/N * sum from 1->N of ( 1/p * (f * L * cos(theta)))
-			// Where f = BRDF = kd/pi (use perfect diffuse shading for this model,
-			//     so albedo = kd https://computergraphics.stackexchange.com/questions/350/albedo-vs-diffuse)
-			// L = incoming light, theta = angle btwn incoming (constant) and outgoing (randomized) light rays
+		// Find the ambient (global) illumination using just 1 extra ray (path tracing)
+		// Full equation: ambient light = 1/N * sum from 1->N of ( 1/p * (f * L * cos(theta)))
+		// Where f = BRDF = kd/pi (use perfect diffuse shading for this model,
+		//     so albedo = kd https://computergraphics.stackexchange.com/questions/350/albedo-vs-diffuse)
+		// L = incoming light, theta = angle btwn incoming (constant) and outgoing (randomized) light rays
 
-			Ray3D ambientRay(hit.loc, dvec4(RandomRayInHemisphere(hit.nor), 0));
-			// The random ray generation uses a cosine-weighted model, where p = cos(theta) / pi
-			// Therefore, when dividing by p the cos(theta) would cancel out with the full eq so we don't mult by cos here
-			ambientGI += ComputeRayColor(ambientRay, depth + 1);
-		}
+		Ray3D ambientRay(hit.loc, dvec4(RandomRayInHemisphere(hit.nor), 0));
+		// The random ray generation uses a cosine-weighted model, where p = cos(theta) / pi
+		// Therefore, when dividing by p the cos(theta) would cancel out with the full eq so we don't mult by cos here
+		dvec3 ambientGI = ComputeRayColor(ambientRay, depth + 1);
 
 		// Since BRDF is a constant value for this model, just multiply it at the end
 		const dvec3 BRDF = mat.kd / pi<double>();
@@ -79,7 +76,6 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 		// Store 1/p to save a division op. Note that the cos(theta) term already canceled out earlier, so it's not included here
 		constexpr double p = 1 / pi<double>();
 		// TODO: optimize p to avoid the double division
-		ambientGI /= (double)numSamples;
 		ambientGI /= p;
 
 		color += ambientGI;
