@@ -47,6 +47,7 @@ int main(int argc, char **argv) {
 
 	// Iterate over every pixel
 	for (int row = 0; row < height; row++) {
+		cout << 100 * (row / (float)height) << "%" << endl;
 		for (int col = 0; col < width; col++) {
 			// Generate rays from the camera to the center of the current pixel
 			Ray3D newRay = camera.CreateCameraRay(row, col);
