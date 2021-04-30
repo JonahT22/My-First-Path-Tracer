@@ -40,8 +40,6 @@ private:
 	const double reflectiveThreshold = 0.00001; //1e-5
 	// Maximum number of times the ComputeRayColor can recurse before forcibly returning
 	const int maxRecursionDepth = 2;
-	// Number of rays to use for monte-carlo integration
-	const int numSamples = 2;
 
 	// Run an intersection check on the ray to a given light, but return false immediately if a hit is found
 	bool IsPointInShadow(glm::dvec4& hitLoc, PointLight& light) const;
