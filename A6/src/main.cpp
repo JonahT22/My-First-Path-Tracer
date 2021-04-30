@@ -1,10 +1,12 @@
 // TODO: credit triangle intersection code in README
+// TODO: credit hemisphere point generation in README
 #include <iostream>
 #include <string>
 #include <limits>
 #include <memory>
 #include <ctime>
 #include <cstdlib>
+#include <chrono>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -26,6 +28,7 @@ using namespace std;
 using namespace glm;
 
 int main(int argc, char **argv) {
+	auto startTime = chrono::high_resolution_clock::now();
 	if(argc < 4) {
 		cout << "Usage: ./A6 <SCENENUMBER> <IMAGE SIZE> <IMAGE FILENAME>" << endl;
 		return 0;
@@ -46,11 +49,11 @@ int main(int argc, char **argv) {
 	srand(time(NULL));
 
 	// Number of samples per pixel for path tracing
-	const int numSamples = 100;
+	const int numSamples = 10;
+	int prevPercent = 0;
 
 	// Iterate over every pixel
 	for (int row = 0; row < height; row++) {
-		cout << 100 * (row / (float)height) << "%" << endl;
 		for (int col = 0; col < width; col++) {
 			// Generate rays from the camera to the center of the current pixel
 			Ray3D newRay = camera.CreateCameraRay(row, col);
@@ -64,9 +67,19 @@ int main(int argc, char **argv) {
 
 			// Store color value
 			outputImage->setPixel(col, row, 255 * rayColor.r, 255 * rayColor.g, 255 * rayColor.b);
+
+			// Print a status update (to the nearest 10%)
+			int percent = std::floor(100 * (row / (float)height));
+			if (percent > prevPercent) {
+				prevPercent = percent;
+				cout << percent << "%" << endl;
+			}
 		}
 	}
 	outputImage->writeToFile(fileName);
-	
+
+	auto stopTime = chrono::high_resolution_clock::now();
+	cout << "Completed in " << chrono::duration_cast<chrono::milliseconds>(stopTime - startTime).count() << " ms" << endl;
+
 	return 0;
 }
