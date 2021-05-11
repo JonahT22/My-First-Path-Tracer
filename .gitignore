@@ -1,4 +1,7 @@
 **/build
+todo.txt
+output.png
+references_and_learning
 
 ## C++ gitignore
 # Prerequisites
@@ -395,4 +398,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-todo.txt
+
