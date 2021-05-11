@@ -12,7 +12,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 	}
 
 	// Find the nearest object
-	HitResult hit;
+	HitResult hit; // default tMin = infinity
 	for (auto& object : allObjects) {
 		if (object->Hit(ray, hit, epsilon)) {
 			// If hit was successful (i.e. found a new tMin), store a reference to the object
@@ -61,7 +61,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 
 		// Full equation: ambient light = 1/N * sum from 1->N of ( 1/p * (f * L * cos(theta)))
 		// Where f = BRDF = kd/pi (use perfect diffuse shading for this model,
-		//     so albedo = kd https://computergraphics.stackexchange.com/questions/350/albedo-vs-diffuse)
+		//     so albedo = kd https://computergraphics.stackexchange.com/questions/350/albedo-vs-diffuse
 		// L = incoming light, theta = angle btwn incoming (constant) and outgoing (randomized) light rays
 		// Using path tracing, so only sending out a single ray
 
@@ -70,7 +70,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 		// Therefore, when dividing by p the cos(theta) would cancel out with the full eq so we don't mult by cos here
 		dvec3 ambientGI = ComputeRayColor(ambientRay, depth + 1);
 
-		// Since BRDF is a constant value for this model, just multiply it at the end
+		// Since BRDF is a constant value for this (lambertian) model, just multiply it at the end
 		const dvec3 BRDF = mat.kd / pi<double>();
 		ambientGI *= BRDF;
 
