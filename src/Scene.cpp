@@ -146,8 +146,12 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
 			else if (subclass == "Plane") {
 				allObjects.push_back(ReadObject<Plane>(ss));
 			}
+			else if (subclass == "Square") {
+				allObjects.push_back(ReadObject<Square>(ss));
+			}
 			else if (subclass == "TriangleMesh") {
 				allObjects.push_back(ReadObject<TriangleMesh>(ss));
+				// Briefly cast the latest "SceneObject" in the allObjects vector back to a TriangleMesh, then call LoadMeshFile on it
 				dynamic_pointer_cast<TriangleMesh>(allObjects.back())->LoadMeshFile(ReadValue<string>(ss));
 			}
 		}

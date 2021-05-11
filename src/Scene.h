@@ -18,6 +18,7 @@
 #include "PointLight.h"
 #include "Plane.h"
 #include "TriangleMesh.h"
+#include "Square.h"
 
 class Scene {
 public:
