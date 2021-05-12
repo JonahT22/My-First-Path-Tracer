@@ -43,8 +43,8 @@ private:
 	// Threshold for skipping blinnphong/reflection calculations in ComputeRayColor()
 	const double reflectiveThreshold = 0.00001; //1e-5
 	// Maximum number of times the ComputeRayColor can recurse before forcibly returning
-	const int maxRecursionDepth = 2;
-
+	const int maxRecursionDepth = 3;
+	
 	// Run an intersection check on the ray to a given light, but return false immediately if a hit is found
 	bool IsPointInShadow(glm::dvec4& hitLoc, glm::dvec4& lightLoc, std::shared_ptr<SceneObject> lightObj = nullptr) const;
 	// Clamps the value of each component of the given ddvec3
