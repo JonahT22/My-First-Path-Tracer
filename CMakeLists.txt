@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 
 # Name of the project
-PROJECT(A6)
+PROJECT(my-first-pathtracer)
 
 # Is this the solution?
 # Override with `cmake -DSOL=ON ..`

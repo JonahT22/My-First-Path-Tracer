@@ -30,7 +30,7 @@ using namespace glm;
 int main(int argc, char **argv) {
 	auto startTime = chrono::high_resolution_clock::now();
 	if(argc < 4) {
-		cout << "Usage: ./A6 <SCENENUMBER> <IMAGE SIZE> <IMAGE FILENAME>" << endl;
+		cout << "Usage: ./my-first-pathtracer <SCENENUMBER> <IMAGE SIZE> <IMAGE FILENAME>" << endl;
 		return 0;
 	}
 	int sceneNum = atoi(argv[1]);
