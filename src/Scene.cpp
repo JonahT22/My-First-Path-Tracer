@@ -69,14 +69,12 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 		// The random ray generation uses a cosine-weighted model, where PDF = cos(theta) / pi
 		// Therefore, when dividing by p the cos(theta) would cancel out with the full eq so we don't mult by cos here
 		dvec3 ambientGI = ComputeRayColor(ambientRay, depth + 1);
-
-		// Since BRDF is a constant value for this (lambertian) model, just multiply it at the end
+		// Constant (lambertian) BRDF
 		const dvec3 BRDF = mat.kd / pi<double>();
 		ambientGI *= BRDF;
-
-		// p is a constant value for this model (after canceling out cos(theta)), so we can wait to divide by p until the end
 		// Store 1/p to save a division op. Note that the cos(theta) term already canceled out earlier, so it's not included here
 		constexpr double pRecip = pi<double>();
+		// Divide by p
 		ambientGI *= pRecip;
 		color += ambientGI;
 
