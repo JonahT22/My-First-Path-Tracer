@@ -55,11 +55,11 @@ int main(int argc, char **argv) {
 	// Iterate over every pixel
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
-			// Generate rays from the camera to the center of the current pixel
-			Ray3D newRay = camera.CreateCameraRay(row, col);
 			// Iterate multiple times over each pixel for path tracing
 			dvec3 rayColor(0, 0, 0);
 			for (int i = 0; i < numSamples; i++) {
+				// Generate random ray directions within the current pixel (for antialiasing)
+				Ray3D newRay = camera.CreateCameraRay(row, col);
 				// Iterate over every item in the scene to find the intersection/color of the ray
 				rayColor += scene.ComputeRayColor(newRay);
 			}
