@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <string>
+#include <cstdlib>
 #include "SceneObject.h"
 #include "Ray3D.h"
 #include "HitResult.h"
@@ -12,6 +13,7 @@ public:
 	Square(std::string _name, Transform _transf, Material _mat) : SceneObject(_name, _transf, _mat) {};
 
 	bool IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tMax) override;
+	glm::dvec4 GetRandomPointOnSurface() override;
 
 private:
 	// Check if the given value is between -0.5 and 0.5

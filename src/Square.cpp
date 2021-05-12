@@ -36,6 +36,14 @@ bool Square::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double t
 	return false;
 }
 
+glm::dvec4 Square::GetRandomPointOnSurface()
+{
+	// Generate random numbers between -0.5 and 0.5
+	double randX = (rand() / (double)RAND_MAX) - 0.5;
+	double randZ = (rand() / (double)RAND_MAX) - 0.5;
+	return modelMtx * dvec4(randX, transf.loc.y, randZ, 1);
+}
+
 bool Square::IsInUnitSquare(const glm::vec4& v) const {
 	return (v.x > -0.5 && v.x < 0.5) && (v.z > -0.5 && v.z < 0.5);
 }

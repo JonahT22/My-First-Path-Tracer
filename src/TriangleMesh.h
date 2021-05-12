@@ -21,7 +21,8 @@ public:
 	void LoadMeshFile(std::string filename);
 
 	bool IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tMax) override;
-
+	glm::dvec4 GetRandomPointOnSurface() override;
+	
 private:
 
 	// List of triangles

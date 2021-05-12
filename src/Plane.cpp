@@ -32,3 +32,10 @@ bool Plane::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tM
 	// - No valid t values were found that were less than the hitResult's tmin (hitresult wasn't updated w/a new value)
 	return false;
 }
+
+glm::dvec4 Plane::GetRandomPointOnSurface()
+{
+	cerr << "WARNING: emissive color defined for infinite plane " << name << ", but no random point generation";
+	cerr << " method defined. Using the object origin instead." << endl;
+	return modelMtx * transf.loc;
+}

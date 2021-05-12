@@ -5,7 +5,7 @@ using namespace glm;
 using namespace std;
 
 // Main render loop
-glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
+glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth, bool specularRay) {
 	// Before anything else, make sure I haven't passed the recursion depth
 	if (depth > maxRecursionDepth) {
 		return backgroundColor;
@@ -38,23 +38,33 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 		dvec3 color(0, 0, 0);
 
 		// Emissive Color
-		color += mat.ke;
+		// Only add this on the first bounce, or if this ray was created from a specular bounce
+		// For diffuse rays (created from the global illumination stuff below), this prevents double-dipping the light 
+		// (i.e. if I'm already calculating contributions from each light in the "Blinn-phong color" loop, and all emissive materials 
+		// are treated as a light, then I don't want to double-dip my sample by also getting the emissive color from my bounce rays)
+		// For reflective rays (created when the mat's reflectance is > 0), I don't actually sample all the lights before sending out 
+		// the bounce rays. Because of this, I still want to get the emissive color of anything that I hit (otherwise, lights
+		// will appear black in mirrors)
+		if (depth == 0 || specularRay) {
+			color += mat.ke;
+		}
+		
+		// Reflection ray contributions (don't do this if the material is ~0% reflective)
+		if (mat.reflective > (0.0 + reflectiveThreshold)) {
+			// Create a ray with the new reflection direction
+			Ray3D reflectionRay(hit.loc, glm::reflect(ray.dir, hit.nor));
+			// Send a new reflection ray, and indicate that the ray was created from a mirror reflection
+			color += mat.ks * mat.reflective * ComputeRayColor(reflectionRay, depth + 1, true);
+		}
 		
 		// Blinn-phong color (don't need to do this if the material is ~100% reflective)
 		if (mat.reflective < (1.0 - reflectiveThreshold)) {
 			// Calculate contribution from each light
 			for (auto& light : allLights) {
-				if (!IsPointInShadow(hit.loc, light)) {
+				if (!IsPointInShadow(hit.loc, light->GetLocation(), light->GetObject())) {
 					color += (1.0 - mat.reflective) * mat.ShadeBlinnPhong(ray, hit, light);
 				}
 			}
-		}
-
-		// Reflection ray contributions (don't do this if the material is ~0% reflective)
-		if (mat.reflective > (0.0 + reflectiveThreshold)) {
-			// Create a ray with the new reflection direction
-			Ray3D reflectionRay(hit.loc, glm::reflect(ray.dir, hit.nor));
-			color += mat.ks * mat.reflective * ComputeRayColor(reflectionRay, depth + 1);
 		}
 
 		// GLOBAL ILLUMINATION
@@ -85,17 +95,22 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth) {
 	else return backgroundColor;
 }
 
-bool Scene::IsPointInShadow(dvec4& hitLoc, PointLight& light) const {
+bool Scene::IsPointInShadow(dvec4& hitLoc, dvec4& lightLoc, std::shared_ptr<SceneObject> lightObj) const {
 	HitResult shadowHit;
 	// Shadow ray is located at the hit position, goes to the light
-	Ray3D shadowRay(hitLoc, glm::normalize(light.pos - hitLoc));
+	Ray3D shadowRay(hitLoc, glm::normalize(lightLoc - hitLoc));
 
 	// Check to see if there are any objects between the hit location and the light
 	for (auto& object : allObjects) {
-		// Set tMin to epsilon to avoid self-shadowing, and set tMax to the light's distance
-		if (object->Hit(shadowRay, shadowHit, epsilon, glm::length(light.pos - hitLoc))) {
-			// If I hit anything, immediately return true, no further action required
-			return true;
+		// First, make sure this object isn't the object that belongs to the light that we're testing
+		// (we don't want to collide with the light source itself)
+		if (object != lightObj) {
+			// Set tMin to epsilon to avoid self-shadowing, and set tMax to the light's distance
+			// TODO: maybe precompute glm::length(lightLoc - hitLoc)?
+			if (object->Hit(shadowRay, shadowHit, epsilon, glm::length(lightLoc - hitLoc))) {
+				// If I hit anything, immediately return true, no further action required
+				return true;
+			}
 		}
 	}
 
@@ -152,14 +167,29 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
 				// Briefly cast the latest "SceneObject" in the allObjects vector back to a TriangleMesh, then call LoadMeshFile on it
 				dynamic_pointer_cast<TriangleMesh>(allObjects.back())->LoadMeshFile(ReadValue<string>(ss));
 			}
+
+			// If the sceneobject has a nonzero emissive component, create a light for it
+			shared_ptr<SceneObject> topObj = allObjects.back();
+			if (glm::length(topObj->GetMaterial().ke) > 0) {
+				allLights.push_back(make_shared<EmissiveLight>(
+					topObj->name + "_EmissiveLight",
+					topObj)
+				);
+			}
 		}
-		else if (objectType == "Light") {
+		/* TODO: re-add point lights
+		else if (objectType == "PointLight") {
 			string name = ReadValue<string>(ss);
 			dvec4 pos = dvec4(ReadVec3(ss), 1);
 			double intensity = ReadValue<double>(ss);
-			allLights.push_back(PointLight(name, pos, intensity));
+			allLights.push_back(make_shared<PointLight>(name, pos, intensity));
 		}
+		*/
 		else if (objectType == "#") continue; // Do nothing for comment lines
+		else {
+			cout << endl <<  "ERROR: Error reading line in scene description: " << endl << "\t";
+			cout << buf << endl;
+		}
 	}
 	cout << "done!" << endl;
 }

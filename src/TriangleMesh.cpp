@@ -45,6 +45,13 @@ bool TriangleMesh::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, do
 	return foundNewHit;
 }
 
+glm::dvec4 TriangleMesh::GetRandomPointOnSurface()
+{
+	cerr << "WARNING: emissive color defined for TriangleMesh " << name << ", but no random point generation";
+	cerr << " method defined. Using the object origin instead." << endl;
+	return modelMtx * transf.loc;
+}
+
 void TriangleMesh::LoadMeshFile(std::string filename) {
 	// Create a bounding sphere - hard-coded to wrap tightly around the bunny mesh
 	objFile = filename;

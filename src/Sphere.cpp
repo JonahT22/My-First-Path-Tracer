@@ -38,3 +38,10 @@ bool Sphere::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double t
 	// - No valid t values were found that were less than the hitResult's tmin (hitresult wasn't updated)
 	return false;
 }
+
+glm::dvec4 Sphere::GetRandomPointOnSurface()
+{
+	cerr << "WARNING: emissive color defined for sphere " << name << ", but no random point generation";
+	cerr << " method defined. Using the object origin instead." << endl;
+	return modelMtx * transf.loc;
+}
