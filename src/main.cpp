@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
 	outputImage->writeToFile(fileName);
 
 	auto stopTime = chrono::high_resolution_clock::now();
-	cout << "Completed in " << chrono::duration_cast<chrono::milliseconds>(stopTime - startTime).count() << " ms" << endl;
+	cout << "Completed in " << chrono::duration_cast<chrono::milliseconds>(stopTime - startTime).count() / 1000.0 << " s" << endl;
 
 	return 0;
 }
