@@ -41,7 +41,7 @@ glm::dvec4 Square::GetRandomPointOnSurface()
 	// Generate random numbers between -0.5 and 0.5
 	double randX = (rand() / (double)RAND_MAX) - 0.5;
 	double randZ = (rand() / (double)RAND_MAX) - 0.5;
-	return modelMtx * dvec4(randX, transf.loc.y, randZ, 1);
+	return modelMtx * dvec4(randX, 0, randZ, 1);
 }
 
 bool Square::IsInUnitSquare(const glm::vec4& v) const {
