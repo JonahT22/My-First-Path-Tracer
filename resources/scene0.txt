@@ -8,5 +8,5 @@ SceneObject Plane Right_Wall    3.5 0 0   0 0 90   1 1 1   0.2196 0.4196 0.7804 
 SceneObject Plane Left_Wall   -3.5 0 0   0 0 -90   1 1 1   0.7412 0.2588 0.2588   0 0 0   0 0 0   0   100
 SceneObject Plane Back_Wall   0 0 -3   90 0 0   1 1 1   1 1 1   0 0 0   0 0 0   0   10
 SceneObject Plane Front_Wall   0 0 6   -90 0 0   1 1 1   0 0 0   0 0 0   0 0 0   0   100
-SceneObject Square Test_Square   0 2.9 -1   180 0 0    2 2 2   1 1 1   0 0 0   1 1 1   0   100
-#Light Top_Light   0 2.9 0   0.6
+SceneObject Square Area_Light   0 2.9 -1   180 0 0    3 1 2   0 0 0   0 0 0   0.6 0.6 0.6   0   100
+# Light Top_Light   0 2.9 0   0.6
