@@ -231,3 +231,33 @@ glm::dvec3 Scene::RandomRayInHemisphere(glm::dvec4& normal)
 
 	return rotate(localDir, angle, axis);
 }
+glm::dvec3 Scene::ReadVec3(const json& j) {
+	return dvec3(
+		j.at(0).get<double>(),
+		j.at(1).get<double>(),
+		j.at(2).get<double>()
+	);
+}
+
+Transform Scene::ReadTransform(const json& j) {
+	return Transform(
+		dvec4(ReadVec3(j.at("Translation")), 1),
+		ReadVec3(j.at("Rotation")),
+		ReadVec3(j.at("Scale"))
+	);
+}
+
+Material Scene::ReadMaterial(const json& j) {
+	dvec3 ke(0, 0, 0);
+	// The emissive color is not included for non-emissive objects, so check before reading emissive color
+	if (j.at("IsEmissive").get<bool>()) {
+		ke = ReadVec3(j.at("EmissiveColor"));
+	}
+	return Material(
+		ReadVec3(j.at("DiffuseColor")),
+		ReadVec3(j.at("SpecularColor")),
+		ke,
+		j.at("Reflectance"),
+		j.at("SpecularExp")
+	);
+}

@@ -55,45 +55,22 @@ private:
 	// Find a random unit vector from center->surface of a hemisphere with the given normal
 	glm::dvec3 RandomRayInHemisphere(glm::dvec4& normal);
 
-	// Reads the next value and places it into the provided type
-	template<class T> T ReadValue(std::istringstream& stream);
 	// Reads the next 3 values from the stream and places them into a dvec3
-	glm::dvec3 ReadVec3(std::istringstream& stream);
+	glm::dvec3 ReadVec3(const nlohmann::json& j);
+	// Reads location, rotation, and scale vectors from a json transform object
+	Transform ReadTransform(const nlohmann::json& j);
+	// Reads diffuse, specular, and emissive colors from a json material object
+	Material ReadMaterial(const nlohmann::json& j);
 	// Reads the parameters for SceneObject construction, then adds it to the allobjects list
-	template<class ObjectType> std::shared_ptr<ObjectType> ReadObject(std::istringstream& stream);
+	template<class ObjectType> std::shared_ptr<ObjectType> ReadObject(const nlohmann::json& j);
 };
 
-template<class T>
-inline T Scene::ReadValue(std::istringstream& stream) {
-	T temp;
-	stream >> temp;
-	return temp;
-}
-
-// This doesn't *have* to be declared in the .h, but putting it here for organization's sake
-inline glm::dvec3 Scene::ReadVec3(std::istringstream& stream) {
-	glm::dvec3 output;
-	stream >> output.x;
-	stream >> output.y;
-	stream >> output.z;
-	return output;
-}
-
 template<class ObjectType>
-inline std::shared_ptr<ObjectType> Scene::ReadObject(std::istringstream& stream) {
-	// Need to store each of these values in a temporary varible before calling the object's constructor.
-	// Since the order of argument evaluation is undefined in c++, you can't pass the Read(stream) functions straight to the constructor
-	std::string name = ReadValue<std::string>(stream);
-	dvec4 pos = dvec4(ReadVec3(stream), 1);
-	dvec3 rot = ReadVec3(stream);
-	dvec3 scale = ReadVec3(stream);
-	dvec3 kd = ReadVec3(stream);
-	dvec3 ks = ReadVec3(stream);
-	dvec3 ke = ReadVec3(stream);
-	double reflective = ReadValue<double>(stream);
-	double specular = ReadValue<double>(stream);
-	
+inline std::shared_ptr<ObjectType> Scene::ReadObject(const nlohmann::json& j) {
 	shared_ptr<ObjectType> temp = std::make_shared<ObjectType>(
-		name, Transform(pos, rot, scale), Material(kd, ks, ke, reflective, specular));
+		j.at("Name").get<std::string>(), 
+		ReadTransform(j.at("Transform")),
+		ReadMaterial(j.at("Material"))
+		);
 	return temp;
 }
