@@ -191,10 +191,28 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
 		camera.SetFOVDegrees(cam.at("Fov").get<double>());
 		camera.Setup();
 
+		// Loop through the lights in the file
+		for (auto& light : j.at("Lights")) {
+			string lightType = light.at("LightType").get<string>();
+			
+			if (lightType == "PointLight") {
+				allLights.push_back(make_shared<PointLight>(
+					light.at("Name").get<string>(),
+					light.at("Linear").get<double>(),
+					light.at("Quadratic").get<double>(),
+					light.at("FalloffDistance").get<double>(),
+					dvec4(ReadVec3(light.at("Translation")), 1),
+					ReadVec3(light.at("Color"))
+					)
+				);
+			}
+		}
+
 		// Loop through the sceneobjects in the file
 		for (auto& object : j.at("SceneObjects")) {
 			// Construct Object based on its subclass
 			string objectType = object.at("ObjectType").get<string>();
+			
 			if (objectType == "Sphere") {
 				allObjects.push_back(ReadObject<Sphere>(object));
 			}
@@ -216,18 +234,19 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
 			}
 			// If object is emissive, also construct a light
 			if (object.at("Material").at("IsEmissive").get<bool>()) {
+				// Get a reference to the object that was just added
 				shared_ptr<SceneObject> topObj = allObjects.back();
+				// Extract the emissive light's properties
+				json lightData = object.at("Material").at("EmissiveProperties");
 				allLights.push_back(make_shared<EmissiveLight>(
 					topObj->name + "_EmissiveLight",
+					lightData.at("Linear").get<double>(),
+					lightData.at("Quadratic").get<double>(),
+					lightData.at("FalloffDistance").get<double>(),
 					topObj)
 				);
 			}
 		}
-
-		//// Loop through the lights in the file
-		//for (auto& light : j.at("Lights")) {
-
-		//}
 	}
 	catch (json::exception& e) {
 		cerr << "ERROR: " << e.what() << endl;
@@ -307,7 +326,7 @@ Material Scene::ReadMaterial(const json& j) {
 	dvec3 ke(0, 0, 0);
 	// The emissive color is not included for non-emissive objects, so check before reading emissive color
 	if (j.at("IsEmissive").get<bool>()) {
-		ke = ReadVec3(j.at("EmissiveColor"));
+		ke = ReadVec3(j.at("EmissiveProperties").at("EmissiveColor"));
 	}
 	return Material(
 		ReadVec3(j.at("DiffuseColor")),

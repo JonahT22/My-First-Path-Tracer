@@ -6,6 +6,17 @@
     },
     "Fov": 75.0
   },
+  "Lights": [
+    {
+      "Name": "Purple Light",
+      "LightType": "PointLight",
+      "Linear": 0.5,
+      "Quadratic": 1,
+      "FalloffDistance": 5,
+      "Translation": [ 3, 0, 0 ],
+      "Color": [ 1, 0, 1 ]
+    }
+  ],
   "SceneObjects": [
     {
       "Name": "White Sphere",
@@ -52,7 +63,12 @@
         "SpecularColor": [ 0, 0, 0 ],
         "SpecularExp": 100,
         "IsEmissive": true,
-        "EmissiveColor": [ 1, 1, 1 ],
+        "EmissiveProperties": {
+          "EmissiveColor": [ 1, 1, 1 ],
+          "Linear": 0.5,
+          "Quadratic": 1,
+          "FalloffDistance": 100
+        },
         "Reflectance": 0
       }
     },
@@ -151,13 +167,6 @@
         "IsEmissive": false,
         "Reflectance": 0
       }
-    }
-  ],
-  "Lights": [
-    {
-      "LightType": "PointLight",
-      "Translation": [ 0, 0, 0 ],
-      "Color": [ 1, 0, 1 ]
     }
   ]
 }                          
