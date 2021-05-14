@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 
 	// Build a scene with a black background color
 	Scene scene(dvec3(0, 0, 0));
-	scene.BuildSceneFromFile("../resources/scene" + string(argv[1]) + ".txt", camera);
+	scene.BuildSceneFromFile("../resources/scene" + string(argv[1]) + ".json", camera);
 	
 	srand(time(NULL));
 

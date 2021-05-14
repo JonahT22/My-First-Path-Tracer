@@ -124,77 +124,6 @@ bool Scene::IsPointInShadow(dvec4& hitLoc, dvec4& lightLoc, std::shared_ptr<Scen
 	return false;
 }
 
-void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
-	// File format:
-	// Camera <Pos X/Y/Z> <Rot X/Y/Z> <FovY>
-	// SceneObject <Subclass> <Name> <Pos X/Y/Z> <Rot X/Y/Z> <Scale X/Y/Z> <Kd R/G/B> <Ks R/G/B> <Ke R/G/B> <Reflectance> <Specular Exp>
-	// Light <Name> <Pos X/Y/Z> <Intensity>
-
-	// (X/Y/Z) means 3 space-separated entries for X, Y, and Z
-	// Items can be in any order, rotations and fov in degrees
-	// There should only be 1 entry for camera, but SceneObjects and Lights can be repeated as necessary
-
-	cout << "Reading scene data from " << filename << " ... ";
-
-	ifstream file(filename);
-	if (!file.good()) {
-		cerr << endl << "ERROR: Unable to find a description for the provided scene file: " << filename << endl;
-		return;
-	}
-
-	char buf[1024];
-	while (file.getline(buf, 1024)) {
-		istringstream ss(buf);
-		string objectType = ReadValue<string>(ss);
-		if (objectType == "Camera") {
-			camera.SetPosition(dvec4(ReadVec3(ss), 1));
-			camera.SetRotationDegrees(ReadVec3(ss));
-			camera.SetFOVDegrees(ReadValue<double>(ss));
-			camera.Setup();
-		}
-		else if (objectType == "SceneObject") {
-			string subclass = ReadValue<string>(ss);
-			if (subclass == "Sphere") {
-				allObjects.push_back(ReadObject<Sphere>(ss));
-			}
-			else if (subclass == "Plane") {
-				allObjects.push_back(ReadObject<Plane>(ss));
-			}
-			else if (subclass == "Square") {
-				allObjects.push_back(ReadObject<Square>(ss));
-			}
-			else if (subclass == "TriangleMesh") {
-				allObjects.push_back(ReadObject<TriangleMesh>(ss));
-				// Briefly cast the latest "SceneObject" in the allObjects vector back to a TriangleMesh, then call LoadMeshFile on it
-				dynamic_pointer_cast<TriangleMesh>(allObjects.back())->LoadMeshFile(ReadValue<string>(ss));
-			}
-
-			// If the sceneobject has a nonzero emissive component, create a light for it
-			shared_ptr<SceneObject> topObj = allObjects.back();
-			if (glm::length(topObj->GetMaterial().ke) > 0) {
-				allLights.push_back(make_shared<EmissiveLight>(
-					topObj->name + "_EmissiveLight",
-					topObj)
-				);
-			}
-		}
-		/* TODO: re-add point lights
-		else if (objectType == "PointLight") {
-			string name = ReadValue<string>(ss);
-			dvec4 pos = dvec4(ReadVec3(ss), 1);
-			double intensity = ReadValue<double>(ss);
-			allLights.push_back(make_shared<PointLight>(name, pos, intensity));
-		}
-		*/
-		else if (objectType == "#") continue; // Do nothing for comment lines
-		else {
-			cout << endl <<  "ERROR: Error reading line in scene description: " << endl << "\t";
-			cout << buf << endl;
-		}
-	}
-	cout << "done!" << endl;
-}
-
 void Scene::ClampVector(glm::dvec3& vec, double min, double max) {
 	ClampDouble(vec.x, min, max);
 	ClampDouble(vec.y, min, max);
@@ -231,6 +160,133 @@ glm::dvec3 Scene::RandomRayInHemisphere(glm::dvec4& normal)
 
 	return rotate(localDir, angle, axis);
 }
+
+void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
+	// File format:
+	// Camera <Pos X/Y/Z> <Rot X/Y/Z> <FovY>
+	// SceneObject <Subclass> <Name> <Pos X/Y/Z> <Rot X/Y/Z> <Scale X/Y/Z> <Kd R/G/B> <Ks R/G/B> <Ke R/G/B> <Reflectance> <Specular Exp>
+	// Light <Name> <Pos X/Y/Z> <Intensity>
+
+	// (X/Y/Z) means 3 space-separated entries for X, Y, and Z
+	// Items can be in any order, rotations and fov in degrees
+	// There should only be 1 entry for camera, but SceneObjects and Lights can be repeated as necessary
+
+	std::cout << "Reading scene data from " << filename << " ... " << endl;
+
+	ifstream file(filename);
+	if (!file.good()) {
+		cerr << endl << "ERROR: Unable to find a description for the provided scene file: " << filename << endl;
+		return;
+	}
+
+	try {
+		// Read the json object from the file
+		json j;
+		file >> j;
+
+		// Set up the Camera
+		json cam = j.at("Camera");
+		camera.SetPosition(dvec4(ReadVec3(cam.at("Transform").at("Translation")), 1));
+		camera.SetRotationDegrees(ReadVec3(cam.at("Transform").at("Rotation")));
+		camera.SetFOVDegrees(cam.at("Fov").get<double>());
+		camera.Setup();
+
+		// Loop through the sceneobjects in the file
+		for (auto& object : j.at("SceneObjects")) {
+			// Construct Object based on its subclass
+			string objectType = object.at("ObjectType").get<string>();
+			if (objectType == "Sphere") {
+				allObjects.push_back(ReadObject<Sphere>(object));
+			}
+			else if (objectType == "Plane") {
+				allObjects.push_back(ReadObject<Plane>(object));
+			}
+			else if (objectType == "Square") {
+				allObjects.push_back(ReadObject<Square>(object));
+			}
+			else if (objectType == "TriangleMesh") {
+				shared_ptr<TriangleMesh> newMesh = ReadObject<TriangleMesh>(object);
+				newMesh->LoadMeshFile(object.at("MeshFile").get<string>());
+				allObjects.push_back(newMesh);
+
+				// TODO: remove this unnecessarily complex implementation
+				//allObjects.push_back(ReadObject<TriangleMesh>(object));
+				// Briefly cast the latest "SceneObject" in the allObjects vector back to a TriangleMesh, then call LoadMeshFile on it
+				//dynamic_pointer_cast<TriangleMesh>(allObjects.back())->LoadMeshFile(object.at("MeshFile").get<string>());
+			}
+			// If object is emissive, also construct a light
+			if (object.at("Material").at("IsEmissive").get<bool>()) {
+				shared_ptr<SceneObject> topObj = allObjects.back();
+				allLights.push_back(make_shared<EmissiveLight>(
+					topObj->name + "_EmissiveLight",
+					topObj)
+				);
+			}
+		}
+
+		//// Loop through the lights in the file
+		//for (auto& light : j.at("Lights")) {
+
+		//}
+	}
+	catch (json::exception& e) {
+		cerr << "ERROR: " << e.what() << endl;
+	}
+	
+
+	//char buf[1024];
+	//while (file.getline(buf, 1024)) {
+	//	istringstream ss(buf);
+	//	string objectType = ReadValue<string>(ss);
+	//	if (objectType == "Camera") {
+	//		camera.SetPosition(dvec4(ReadVec3(ss), 1));
+	//		camera.SetRotationDegrees(ReadVec3(ss));
+	//		camera.SetFOVDegrees(ReadValue<double>(ss));
+	//		camera.Setup();
+	//	}
+	//	else if (objectType == "SceneObject") {
+	//		string subclass = ReadValue<string>(ss);
+	//		if (subclass == "Sphere") {
+	//			allObjects.push_back(ReadObject<Sphere>(ss));
+	//		}
+	//		else if (subclass == "Plane") {
+	//			allObjects.push_back(ReadObject<Plane>(ss));
+	//		}
+	//		else if (subclass == "Square") {
+	//			allObjects.push_back(ReadObject<Square>(ss));
+	//		}
+	//		else if (subclass == "TriangleMesh") {
+	//			allObjects.push_back(ReadObject<TriangleMesh>(ss));
+	//			// Briefly cast the latest "SceneObject" in the allObjects vector back to a TriangleMesh, then call LoadMeshFile on it
+	//			dynamic_pointer_cast<TriangleMesh>(allObjects.back())->LoadMeshFile(ReadValue<string>(ss));
+	//		}
+
+	//		// If the sceneobject has a nonzero emissive component, create a light for it
+	//		shared_ptr<SceneObject> topObj = allObjects.back();
+	//		if (glm::length(topObj->GetMaterial().ke) > 0) {
+	//			allLights.push_back(make_shared<EmissiveLight>(
+	//				topObj->name + "_EmissiveLight",
+	//				topObj)
+	//			);
+	//		}
+	//	}
+	//	/* TODO: re-add point lights
+	//	else if (objectType == "PointLight") {
+	//		string name = ReadValue<string>(ss);
+	//		dvec4 pos = dvec4(ReadVec3(ss), 1);
+	//		double intensity = ReadValue<double>(ss);
+	//		allLights.push_back(make_shared<PointLight>(name, pos, intensity));
+	//	}
+	//	*/
+	//	else if (objectType == "#") continue; // Do nothing for comment lines
+	//	else {
+	//		cout << endl <<  "ERROR: Error reading line in scene description: " << endl << "\t";
+	//		cout << buf << endl;
+	//	}
+	//}
+	std::cout << "done!" << endl;
+}
+
 glm::dvec3 Scene::ReadVec3(const json& j) {
 	return dvec3(
 		j.at(0).get<double>(),
