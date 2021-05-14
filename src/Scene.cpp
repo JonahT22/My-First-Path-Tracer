@@ -251,58 +251,6 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
 	catch (json::exception& e) {
 		cerr << "ERROR: " << e.what() << endl;
 	}
-	
-
-	//char buf[1024];
-	//while (file.getline(buf, 1024)) {
-	//	istringstream ss(buf);
-	//	string objectType = ReadValue<string>(ss);
-	//	if (objectType == "Camera") {
-	//		camera.SetPosition(dvec4(ReadVec3(ss), 1));
-	//		camera.SetRotationDegrees(ReadVec3(ss));
-	//		camera.SetFOVDegrees(ReadValue<double>(ss));
-	//		camera.Setup();
-	//	}
-	//	else if (objectType == "SceneObject") {
-	//		string subclass = ReadValue<string>(ss);
-	//		if (subclass == "Sphere") {
-	//			allObjects.push_back(ReadObject<Sphere>(ss));
-	//		}
-	//		else if (subclass == "Plane") {
-	//			allObjects.push_back(ReadObject<Plane>(ss));
-	//		}
-	//		else if (subclass == "Square") {
-	//			allObjects.push_back(ReadObject<Square>(ss));
-	//		}
-	//		else if (subclass == "TriangleMesh") {
-	//			allObjects.push_back(ReadObject<TriangleMesh>(ss));
-	//			// Briefly cast the latest "SceneObject" in the allObjects vector back to a TriangleMesh, then call LoadMeshFile on it
-	//			dynamic_pointer_cast<TriangleMesh>(allObjects.back())->LoadMeshFile(ReadValue<string>(ss));
-	//		}
-
-	//		// If the sceneobject has a nonzero emissive component, create a light for it
-	//		shared_ptr<SceneObject> topObj = allObjects.back();
-	//		if (glm::length(topObj->GetMaterial().ke) > 0) {
-	//			allLights.push_back(make_shared<EmissiveLight>(
-	//				topObj->name + "_EmissiveLight",
-	//				topObj)
-	//			);
-	//		}
-	//	}
-	//	/* TODO: re-add point lights
-	//	else if (objectType == "PointLight") {
-	//		string name = ReadValue<string>(ss);
-	//		dvec4 pos = dvec4(ReadVec3(ss), 1);
-	//		double intensity = ReadValue<double>(ss);
-	//		allLights.push_back(make_shared<PointLight>(name, pos, intensity));
-	//	}
-	//	*/
-	//	else if (objectType == "#") continue; // Do nothing for comment lines
-	//	else {
-	//		cout << endl <<  "ERROR: Error reading line in scene description: " << endl << "\t";
-	//		cout << buf << endl;
-	//	}
-	//}
 	std::cout << "done!" << endl;
 }
 
