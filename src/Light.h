@@ -9,9 +9,12 @@
 class Light {
 public:
 	Light() = default;
-	Light(std::string _name) : name(_name) {
-		sqrdDist = std::pow(distance, 2.0);
-	}
+	Light(std::string _name, double _L, double _Q, double _falloffDistance) :
+		name(_name),
+		L(_L),
+		Q(_Q),
+		distance(_falloffDistance),
+		sqrdDist(std::pow(distance, 2.0)) {}
 
 	virtual glm::dvec3 GetColor() = 0;
 	virtual glm::dvec4 GetLocation() = 0;
