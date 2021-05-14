@@ -3,6 +3,7 @@
 
 using namespace glm;
 using namespace std;
+using json = nlohmann::json;
 
 // Main render loop
 glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth, bool specularRay) {

@@ -10,6 +10,7 @@
 #include <sstream>
 #include <cstdlib>
 
+#include "nlohmann/json.hpp"
 #include "Camera.h"
 #include "SceneObject.h"
 #include "Sphere.h"
