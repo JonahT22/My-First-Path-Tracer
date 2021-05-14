@@ -17,7 +17,7 @@ public:
 	SceneObject(std::string _name, Transform _transf, Material _mat);
 
 	Material GetMaterial() { return mat; }
-	glm::dvec4 GetLocation() { return transf.loc; }
+	glm::dvec4 GetLocation() { return transf.translation; }
 	glm::dmat4 GetInverseTranspose() { return invTranspMtx; }
 
 	// By default, hits go from 0 to inf unless override is specified

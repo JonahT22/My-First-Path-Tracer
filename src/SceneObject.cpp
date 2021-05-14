@@ -10,8 +10,8 @@ SceneObject::SceneObject(std::string _name, Transform _transf, Material _mat) {
 	
 	// The transformation matrix to convert this object from local->world space
 	modelMtx = glm::dmat4(1.0f);
-	modelMtx *= translate(glm::dmat4(1.0f), dvec3(_transf.loc));
-	modelMtx *= eulerAngleXYZ(_transf.rot.x, _transf.rot.y, _transf.rot.z);
+	modelMtx *= translate(glm::dmat4(1.0f), dvec3(_transf.translation));
+	modelMtx *= eulerAngleXYZ(_transf.rotation.x, _transf.rotation.y, _transf.rotation.z);
 	modelMtx *= scale(glm::dmat4(1.0f), _transf.scale);
 	invMtx = inverse(modelMtx);
 	invTranspMtx = transpose(invMtx);

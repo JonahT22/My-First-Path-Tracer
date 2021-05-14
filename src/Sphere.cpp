@@ -43,5 +43,5 @@ glm::dvec4 Sphere::GetRandomPointOnSurface()
 {
 	cerr << "WARNING: emissive color defined for sphere " << name << ", but no random point generation";
 	cerr << " method defined. Using the object origin instead." << endl;
-	return modelMtx * transf.loc;
+	return modelMtx * transf.translation;
 }

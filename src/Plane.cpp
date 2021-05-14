@@ -37,5 +37,5 @@ glm::dvec4 Plane::GetRandomPointOnSurface()
 {
 	cerr << "WARNING: emissive color defined for infinite plane " << name << ", but no random point generation";
 	cerr << " method defined. Using the object origin instead." << endl;
-	return modelMtx * transf.loc;
+	return modelMtx * transf.translation;
 }
