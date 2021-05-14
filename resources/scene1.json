@@ -1,0 +1,163 @@
+{
+  "Camera": {
+    "Transform": {
+      "Translation": [ 0, -0.5, 5 ],
+      "Rotation": [ 0, 0, 0 ]
+    },
+    "Fov": 75.0
+  },
+  "SceneObjects": [
+    {
+      "Name": "White Sphere",
+      "ObjectType": "Sphere",
+      "Transform": {
+        "Translation": [ 1.5, -2, 0.5 ],
+        "Rotation": [ 0, 0, 0 ],
+        "Scale": [ 1, 1, 1 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 1, 1, 1 ],
+        "SpecularColor": [ 1, 1, 1 ],
+        "SpecularExp": 100,
+        "IsEmissive": false,
+        "Reflectance": 0
+      }
+    },
+    {
+      "Name": "Reflective Sphere",
+      "ObjectType": "Sphere",
+      "Transform": {
+        "Translation": [ -1.5, -2, -0.5 ],
+        "Rotation": [ 0, 0, 0 ],
+        "Scale": [ 1, 1, 1 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 1, 1, 1 ],
+        "SpecularColor": [ 1, 1, 1 ],
+        "SpecularExp": 100,
+        "IsEmissive": false,
+        "Reflectance": 1
+      }
+    },
+    {
+      "Name": "Area Light",
+      "ObjectType": "Square",
+      "Transform": {
+        "Translation": [ 0, 2.99, -1 ],
+        "Rotation": [ 180, 0, 0 ],
+        "Scale": [ 3, 1, 2 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 0, 0, 0 ],
+        "SpecularColor": [ 0, 0, 0 ],
+        "SpecularExp": 100,
+        "IsEmissive": true,
+        "EmissiveColor": [ 1, 1, 1 ],
+        "Reflectance": 0
+      }
+    },
+    {
+      "Name": "Floor",
+      "ObjectType": "Plane",
+      "Transform": {
+        "Translation": [ 0, -3, 0 ],
+        "Rotation": [ 0, 0, 0 ],
+        "Scale": [ 1, 1, 1 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 1, 1, 1 ],
+        "SpecularColor": [ 0, 0, 0 ],
+        "SpecularExp": 1,
+        "IsEmissive": false,
+        "Reflectance": 0
+      }
+    },
+    {
+      "Name": "Ceiling",
+      "ObjectType": "Plane",
+      "Transform": {
+        "Translation": [ 0, 3, 0 ],
+        "Rotation": [ 0, 0, 180 ],
+        "Scale": [ 1, 1, 1 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 1, 1, 1 ],
+        "SpecularColor": [ 0, 0, 0 ],
+        "SpecularExp": 1,
+        "IsEmissive": false,
+        "Reflectance": 0
+      }
+    },
+    {
+      "Name": "Blue Wall",
+      "ObjectType": "Plane",
+      "Transform": {
+        "Translation": [ 3.5, 0, 0 ],
+        "Rotation": [ 0, 0, 90 ],
+        "Scale": [ 1, 1, 1 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 0.2196, 0.4196, 0.7804 ],
+        "SpecularColor": [ 0, 0, 0 ],
+        "SpecularExp": 1,
+        "IsEmissive": false,
+        "Reflectance": 0
+      }
+    },
+    {
+      "Name": "Red Wall",
+      "ObjectType": "Plane",
+      "Transform": {
+        "Translation": [ -3.5, 0, 0 ],
+        "Rotation": [ 0, 0, -90 ],
+        "Scale": [ 1, 1, 1 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 0.7412, 0.2588, 0.2588 ],
+        "SpecularColor": [ 0, 0, 0 ],
+        "SpecularExp": 1,
+        "IsEmissive": false,
+        "Reflectance": 0
+      }
+    },
+    {
+      "Name": "Back Wall",
+      "ObjectType": "Plane",
+      "Transform": {
+        "Translation": [ 0, 0, -3 ],
+        "Rotation": [ 90, 0, 0 ],
+        "Scale": [ 1, 1, 1 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 1, 1, 1 ],
+        "SpecularColor": [ 0, 0, 0 ],
+        "SpecularExp": 1,
+        "IsEmissive": false,
+        "Reflectance": 0
+      }
+    },
+    {
+      "Name": "Front Wall",
+      "ObjectType": "Plane",
+      "Transform": {
+        "Translation": [ 0, 0, 6 ],
+        "Rotation": [ -90, 0, 0 ],
+        "Scale": [ 1, 1, 1 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 0, 0, 0 ],
+        "SpecularColor": [ 0, 0, 0 ],
+        "SpecularExp": 1,
+        "IsEmissive": false,
+        "Reflectance": 0
+      }
+    }
+  ],
+  "Lights": [
+    {
+      "LightType": "PointLight",
+      "Translation": [ 0, 0, 0 ],
+      "Color": [ 1, 0, 1 ]
+    }
+  ]
+}                          
