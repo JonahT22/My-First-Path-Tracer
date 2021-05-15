@@ -19,7 +19,7 @@ bool Square::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double t
 		if (newT > tMin && newT < tMax) {
 			// Check if the hit location is within the bounds of a unit square
 			if (IsInUnitSquare(ray.FindLocAtTime(newT))) {
-				// Try updating the HitResult with whichever t value was the smallest in the range
+				// Try updating the HitResult 
 				if (outHit.UpdateTMin(newT)) {
 					// If the HitResult ended up finding a new minT, update the normal value in the hit result and return true
 					outHit.nor = dvec4(0, 1, 0, 0);

@@ -20,6 +20,7 @@
 #include "Plane.h"
 #include "TriangleMesh.h"
 #include "Square.h"
+#include "Box.h"
 #include "Light.h"
 #include "PointLight.h"
 #include "EmissiveLight.h"

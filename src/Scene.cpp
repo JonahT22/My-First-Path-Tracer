@@ -214,6 +214,9 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
 			else if (objectType == "Square") {
 				allObjects.push_back(ReadObject<Square>(object));
 			}
+			else if (objectType == "Box") {
+				allObjects.push_back(ReadObject<Box>(object));
+			}
 			else if (objectType == "TriangleMesh") {
 				shared_ptr<TriangleMesh> newMesh = ReadObject<TriangleMesh>(object);
 				newMesh->LoadMeshFile(object.at("FileName").get<string>());
