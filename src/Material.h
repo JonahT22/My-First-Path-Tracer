@@ -11,22 +11,22 @@ struct Material {
 	glm::dvec3 ks;
 	glm::dvec3 ke;
 	// 0-1 value, where 1 = perfectly reflective, 0 = perfectly diffuse
-	double reflective;
+	double reflectance;
 	// 'width/strength' of specular highlights
 	double specularExp;
 
 	Material() :
 		kd(glm::dvec3(1.0, 1.0, 1.0)),
 		ks(glm::dvec3(1.0, 1.0, 1.0)),
-		ke(glm::dvec3(0.1, 0.1, 0.1)),
-		reflective(0.0),
+		ke(glm::dvec3(0, 0, 0)),
+		reflectance(0.0),
 		specularExp(100.0)
 	{}
-	Material(glm::dvec3 _kd, glm::dvec3 _ks, glm::dvec3 _ke, double _reflective, double _specularExp) :
+	Material(glm::dvec3 _kd, glm::dvec3 _ks, glm::dvec3 _ke, double _reflectance, double _specularExp) :
 		kd(_kd),
 		ks(_ks),
 		ke(_ke),
-		reflective(_reflective),
+		reflectance(_reflectance),
 		specularExp(_specularExp)
 	{}
 
