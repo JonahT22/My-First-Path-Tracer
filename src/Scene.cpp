@@ -162,15 +162,6 @@ glm::dvec3 Scene::RandomRayInHemisphere(glm::dvec4& normal)
 }
 
 void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
-	// File format:
-	// Camera <Pos X/Y/Z> <Rot X/Y/Z> <FovY>
-	// SceneObject <Subclass> <Name> <Pos X/Y/Z> <Rot X/Y/Z> <Scale X/Y/Z> <Kd R/G/B> <Ks R/G/B> <Ke R/G/B> <Reflectance> <Specular Exp>
-	// Light <Name> <Pos X/Y/Z> <Intensity>
-
-	// (X/Y/Z) means 3 space-separated entries for X, Y, and Z
-	// Items can be in any order, rotations and fov in degrees
-	// There should only be 1 entry for camera, but SceneObjects and Lights can be repeated as necessary
-
 	std::cout << "Reading scene data from " << filename << " ... " << endl;
 
 	ifstream file(filename);
@@ -226,11 +217,6 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
 				shared_ptr<TriangleMesh> newMesh = ReadObject<TriangleMesh>(object);
 				newMesh->LoadMeshFile(object.at("MeshFile").get<string>());
 				allObjects.push_back(newMesh);
-
-				// TODO: remove this unnecessarily complex implementation
-				//allObjects.push_back(ReadObject<TriangleMesh>(object));
-				// Briefly cast the latest "SceneObject" in the allObjects vector back to a TriangleMesh, then call LoadMeshFile on it
-				//dynamic_pointer_cast<TriangleMesh>(allObjects.back())->LoadMeshFile(object.at("MeshFile").get<string>());
 			}
 			// If object is emissive, also construct a light
 			if (object.at("Material").at("IsEmissive").get<bool>()) {
