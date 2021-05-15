@@ -14,7 +14,6 @@ struct PointLight : public Light {
 		color(_color) {}
 
 	glm::dvec3 GetColor() override {
-		// TODO: make sceneobject materials into a shared ptr
 		return color;
 	}
 	glm::dvec4 GetLocation() override {
