@@ -1,0 +1,45 @@
+{
+  "Camera": {
+    "Transform": {
+      "Translation": [ 0, 0, 5 ],
+      "Rotation": [ 0, 0, 0 ]
+    },
+    "Fov": 45.0
+  },
+  "Lights": [
+    {
+      "Name": "Light 1",
+      "LightType": "PointLight",
+      "Linear": 0,
+      "Quadratic": 0,
+      "FalloffDistance": 1,
+      "Translation": [ 1, 1, 2 ],
+      "Color": [ 1, 1, 1 ]
+    }
+  ],
+  "SceneObjects": [
+    {
+      "Name": "Teapot Mesh",
+      "ObjectType": "TriangleMesh",
+      "FileName": "../resources/teapot.obj",
+      "Transform": {
+        "Translation": [ 0, -1, 0 ],
+        "Rotation": [ 0, 0, 0 ],
+        "Scale": [ 1.5, 1.5, 1.5 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 0, 0, 1 ],
+        "SpecularColor": [ 1, 1, 0.5 ],
+        "SpecularExp": 100,
+        "IsEmissive": true,
+        "EmissiveProperties": {
+          "EmissiveColor": [ 0.1, 0.1, 0.1 ],
+          "Linear": 0,
+          "Quadratic": 0,
+          "FalloffDistance": 1
+        },
+        "Reflectance": 0
+      }
+    }
+  ]
+}                          

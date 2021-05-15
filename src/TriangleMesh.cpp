@@ -5,17 +5,11 @@ using namespace std;
 using namespace glm;
 
 bool TriangleMesh::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tMax) {
-	// For the sake of this assignment, a bounding sphere is hard-coded to fit around the bunny.obj. For any other obj
-	// files, don't run a sphere collision check first. In a more flexible implementation, the sphere would be caluclated
-	// from the obj file's vertex coordinates
-
 	// Run a collision check against the bounding sphere, immediately exit if it did not hit
-	if (objFile == "../resources/bunny.obj") {
-		// Temporary variable for storing the output from the sphere intersection, to be discarded once hit is done
-		HitResult junkHit;
-		if (!boundingSphere->Hit(ray, junkHit)) {
-			return false;
-		}
+	// junkHit = temporary variable required for storing the output from the sphere intersection, discarded once hit is done
+	HitResult junkHit;
+	if (!boundingSphere->Hit(ray, junkHit)) {
+		return false;
 	}
 
 	// Since we need to check over ALL tri's (don't just return immediately when the 1st hit is found), we'll use this temp variable
@@ -37,7 +31,6 @@ bool TriangleMesh::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, do
 			}
 		}
 	}
-	// If so, run barycentric interpolation to get the normal and store in hitresult
 
 	// return false if:
 	// - No t values were found within the given range
@@ -53,14 +46,6 @@ glm::dvec4 TriangleMesh::GetRandomPointOnSurface()
 }
 
 void TriangleMesh::LoadMeshFile(std::string filename) {
-	// Create a bounding sphere - hard-coded to wrap tightly around the bunny mesh
-	objFile = filename;
-	boundingSphere = make_unique<Sphere>(
-		"Bounding_Sphere",
-		Transform(dvec4(-0.2, 1.1, 0, 1), dvec3(0, 0, 0), dvec3(1, 1, 1)),
-		Material(dvec3(0, 0, 0), dvec3(0, 0, 0), dvec3(0.1, 0.1, 0.1), 1, 0)
-	);
-
 	//LOAD GEOMETRY
 	//v Starter Code begins here v
 	vector<float> posBuf; // list of vertex positions
@@ -109,6 +94,30 @@ void TriangleMesh::LoadMeshFile(std::string filename) {
 		}
 	}
 	//^ Starter code ends here ^
+
+	// Find the bounds of the model
+	dvec2 xbound(posBuf.at(0), posBuf.at(0));
+	dvec2 ybound(posBuf.at(1), posBuf.at(1));
+	dvec2 zbound(posBuf.at(2), posBuf.at(2));
+	for (int i = 0; i < posBuf.size(); i += 3) {
+		xbound = dvec2(std::min(posBuf.at(i + 0), (float)xbound.x), std::max(posBuf.at(i + 0), (float)xbound.y));
+		ybound = dvec2(std::min(posBuf.at(i + 1), (float)ybound.x), std::max(posBuf.at(i + 1), (float)ybound.y));
+		zbound = dvec2(std::min(posBuf.at(i + 2), (float)zbound.x), std::max(posBuf.at(i + 2), (float)zbound.y));
+	}
+	dvec4 middlePoint((xbound.x + xbound.y) / 2.0, (ybound.x + ybound.y) / 2.0, (zbound.x + zbound.y) / 2.0, 1);
+
+	// Make another trip through the posbuf, finding the furthest vertex from the middle
+	double radius = 0;
+	for (int i = 0; i < posBuf.size(); i += 3) {
+		radius = std::max(radius, length(middlePoint - dvec4(posBuf.at(i + 0), posBuf.at(i + 1), posBuf.at(i + 2), 1)));
+	}
+	// Create a bounding sphere - hard-coded to wrap tightly around the bunny mesh
+	objFile = filename;
+	boundingSphere = make_unique<Sphere>(
+		"Bounding_Sphere",
+		Transform(middlePoint, dvec3(0, 0, 0), dvec3(radius, radius, radius)),
+		Material(dvec3(0, 0, 0), dvec3(0, 0, 0), dvec3(0, 0, 0), 1, 0)
+		);
 
 	// Read through the pos buf, creating the triangles
 	for (int i = 0; i < posBuf.size(); i += 9) {
