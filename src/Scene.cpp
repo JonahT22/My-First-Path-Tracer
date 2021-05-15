@@ -80,8 +80,8 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth, bool specularRay) {
 		// The random ray generation uses a cosine-weighted model, where PDF = cos(theta) / pi
 		// Therefore, when dividing by p the cos(theta) would cancel out with the full eq so we don't mult by cos here
 		dvec3 ambientGI = ComputeRayColor(ambientRay, depth + 1);
-		// Constant (lambertian) BRDF
-		const dvec3 BRDF = mat->kd / pi<double>();
+		// Constant (lambertian) BRDF - reflective component of materials doesn't get GI, so multiply by 1-reflectance
+		const dvec3 BRDF = (1.0 - mat->reflectance) * mat->kd / pi<double>();
 		ambientGI *= BRDF;
 		// Store 1/p to save a division op. Note that the cos(theta) term already canceled out earlier, so it's not included here
 		constexpr double pRecip = pi<double>();

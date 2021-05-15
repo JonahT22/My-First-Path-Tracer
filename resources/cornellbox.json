@@ -43,7 +43,7 @@
         "Scale": [ 1, 1, 1 ]
       },
       "Material": {
-        "DiffuseColor": [ 1, 1, 1 ],
+        "DiffuseColor": [ 0, 1, 0 ],
         "SpecularColor": [ 1, 1, 1 ],
         "SpecularExp": 100,
         "IsEmissive": false,
