@@ -35,7 +35,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth, bool specularRay) {
 		hit.nor.w = 0.0;
 		hit.nor = normalize(hit.nor);
 
-		Material mat = hit.hitObject->GetMaterial();
+		shared_ptr<Material> mat = hit.hitObject->GetMaterial();
 		dvec3 color(0, 0, 0);
 
 		// Emissive Color
@@ -47,23 +47,23 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth, bool specularRay) {
 		// the bounce rays. Because of this, I still want to get the emissive color of anything that I hit (otherwise, lights
 		// will appear black in mirrors)
 		if (depth == 0 || specularRay) {
-			color += mat.ke;
+			color += mat->ke;
 		}
 		
 		// Reflection ray contributions (don't do this if the material is ~0% reflective)
-		if (mat.reflective > (0.0 + reflectiveThreshold)) {
+		if (mat->reflectance > (0.0 + reflectiveThreshold)) {
 			// Create a ray with the new reflection direction
 			Ray3D reflectionRay(hit.loc, glm::reflect(ray.dir, hit.nor));
 			// Send a new reflection ray, and indicate that the ray was created from a mirror reflection
-			color += mat.ks * mat.reflective * ComputeRayColor(reflectionRay, depth + 1, true);
+			color += mat->ks * mat->reflectance * ComputeRayColor(reflectionRay, depth + 1, true);
 		}
 		
 		// Blinn-phong color (don't need to do this if the material is ~100% reflective)
-		if (mat.reflective < (1.0 - reflectiveThreshold)) {
+		if (mat->reflectance < (1.0 - reflectiveThreshold)) {
 			// Calculate contribution from each light
 			for (auto& light : allLights) {
 				if (!IsPointInShadow(hit.loc, light->GetLocation(), light->GetObject())) {
-					color += (1.0 - mat.reflective) * mat.ShadeBlinnPhong(ray, hit, light);
+					color += (1.0 - mat->reflectance) * mat->ShadeBlinnPhong(ray, hit, light);
 				}
 			}
 		}
@@ -81,7 +81,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth, bool specularRay) {
 		// Therefore, when dividing by p the cos(theta) would cancel out with the full eq so we don't mult by cos here
 		dvec3 ambientGI = ComputeRayColor(ambientRay, depth + 1);
 		// Constant (lambertian) BRDF
-		const dvec3 BRDF = mat.kd / pi<double>();
+		const dvec3 BRDF = mat->kd / pi<double>();
 		ambientGI *= BRDF;
 		// Store 1/p to save a division op. Note that the cos(theta) term already canceled out earlier, so it's not included here
 		constexpr double pRecip = pi<double>();
@@ -257,13 +257,13 @@ Transform Scene::ReadTransform(const json& j) {
 	);
 }
 
-Material Scene::ReadMaterial(const json& j) {
+shared_ptr<Material> Scene::ReadMaterial(const json& j) {
 	dvec3 ke(0, 0, 0);
 	// The emissive color is not included for non-emissive objects, so check before reading emissive color
 	if (j.at("IsEmissive").get<bool>()) {
 		ke = ReadVec3(j.at("EmissiveProperties").at("EmissiveColor"));
 	}
-	return Material(
+	return make_shared<Material>(
 		ReadVec3(j.at("DiffuseColor")),
 		ReadVec3(j.at("SpecularColor")),
 		ke,

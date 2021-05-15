@@ -116,7 +116,7 @@ void TriangleMesh::LoadMeshFile(std::string filename) {
 	boundingSphere = make_unique<Sphere>(
 		"Bounding_Sphere",
 		Transform(middlePoint, dvec3(0, 0, 0), dvec3(radius, radius, radius)),
-		Material(dvec3(0, 0, 0), dvec3(0, 0, 0), dvec3(0, 0, 0), 1, 0)
+		make_shared<Material>(dvec3(0, 0, 0), dvec3(0, 0, 0), dvec3(0, 0, 0), 1, 0)
 		);
 
 	// Read through the pos buf, creating the triangles

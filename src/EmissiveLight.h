@@ -15,8 +15,7 @@ public:
 		obj(_obj) {}
 
 	glm::dvec3 GetColor() override {
-		// TODO: make sceneobject materials into a shared ptr
-		return obj->GetMaterial().ke;
+		return obj->GetMaterial()->ke;
 	}
 	glm::dvec4 GetLocation() override {
 		return obj->GetRandomPointOnSurface();

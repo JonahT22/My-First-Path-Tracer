@@ -60,7 +60,7 @@ private:
 	// Reads location, rotation, and scale vectors from a json transform object
 	Transform ReadTransform(const nlohmann::json& j);
 	// Reads diffuse, specular, and emissive colors from a json material object
-	Material ReadMaterial(const nlohmann::json& j);
+	std::shared_ptr<Material> ReadMaterial(const nlohmann::json& j);
 	// Reads the parameters for SceneObject construction, then adds it to the allobjects list
 	template<class ObjectType> std::shared_ptr<ObjectType> ReadObject(const nlohmann::json& j);
 };

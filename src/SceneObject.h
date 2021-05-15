@@ -14,9 +14,9 @@
 class SceneObject {
 public:
 	// Assign material and calculate the transformation matrix
-	SceneObject(std::string _name, Transform _transf, Material _mat);
+	SceneObject(std::string _name, Transform _transf, std::shared_ptr<Material> _mat);
 
-	Material GetMaterial() { return mat; }
+	std::shared_ptr<Material> GetMaterial() { return mat; }
 	glm::dvec4 GetLocation() { return transf.translation; }
 	glm::dmat4 GetInverseTranspose() { return invTranspMtx; }
 
@@ -39,5 +39,6 @@ protected:
 	glm::dmat4 invTranspMtx;
 	// Transformations applied to this object
 	Transform transf;
-	Material mat;
+	// Material properties - Store the material as a shared_ptr since other classes reference it frequently
+	std::shared_ptr<Material> mat;
 };
