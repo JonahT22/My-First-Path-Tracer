@@ -14,7 +14,7 @@
       "Quadratic": 1,
       "FalloffDistance": 5,
       "Translation": [ 3, 0, 0 ],
-      "Color": [ 1, 0, 1 ]
+      "Color": [ 0, 0, 0 ]
     }
   ],
   "SceneObjects": [

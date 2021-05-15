@@ -36,7 +36,7 @@ double FindSecondsSince(chrono::time_point<chrono::steady_clock> startTime) {
 int main(int argc, char **argv) {
 	auto startTime = chrono::high_resolution_clock::now();
 	if(argc < 4) {
-		cout << "Usage: ./my-first-pathtracer <SCENENUMBER> <IMAGE SIZE> <IMAGE FILENAME>" << endl;
+		cout << "Usage: ./my-first-pathtracer <SCENE NAME> <IMAGE SIZE> <IMAGE FILENAME>" << endl;
 		return 0;
 	}
 	string sceneName(argv[1]);
@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
 			if (percent > prevPercent) {
 				prevPercent = percent;
 				double estRem = (FindSecondsSince(startTime) / (double)percent) * (100 - percent);
-				cout << setw(2) << percent << "%, est: " << estRem << endl;
+				cout << setw(2) << percent << "%, est: " << estRem << " s" << endl;
 			}
 		}
 	}
