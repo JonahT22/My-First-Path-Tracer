@@ -45,3 +45,21 @@ glm::dvec4 Sphere::GetRandomPointOnSurface()
 	cerr << " method defined. Using the object origin instead." << endl;
 	return modelMtx * transf.translation;
 }
+
+bool Sphere::SelectSmallestInRange(double a, double b, double min, double max, double& result) {
+	bool aValid = (a > min && a < max);
+	bool bValid = (b > min && b < max);
+	if (aValid || bValid) {
+		// If both are valid, choose the smaller one
+		if (aValid && bValid) {
+			result = (a < b) ? a : b;
+		}
+		// If exec makes it here, ONLY one is valid
+		else if (aValid) result = a;
+		else result = b;
+
+		return true;
+	}
+
+	return false;
+}

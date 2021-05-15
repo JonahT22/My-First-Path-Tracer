@@ -31,9 +31,6 @@ public:
 	std::string name;
 
 protected:
-	// TODO: can this just go into the sphere class?
-	// Checks 2 numbers against a given range, places the smaller # in the range into result, or returns false if neither are in the range
-	bool SelectSmallestInRange(double a, double b, double min, double max, double& result);
 	// Matrix for converting points from local->world space
 	glm::dmat4 modelMtx;
 	// Matrix for converting rays from world->local space (inverse of model matrix)
