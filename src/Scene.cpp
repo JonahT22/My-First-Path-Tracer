@@ -215,7 +215,7 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
 			}
 			else if (objectType == "TriangleMesh") {
 				shared_ptr<TriangleMesh> newMesh = ReadObject<TriangleMesh>(object);
-				newMesh->LoadMeshFile(object.at("MeshFile").get<string>());
+				newMesh->LoadMeshFile(object.at("FileName").get<string>());
 				allObjects.push_back(newMesh);
 			}
 			// If object is emissive, also construct a light

@@ -1,3 +1,0 @@
-Camera   0 0 5   0 0 0   45
-Light Light_1   1 1 2   1
-SceneObject TriangleMesh Bunny_Mesh   0.3 -1.5 0   20 0 0   1.5 1.5 1.5   0 0 1   1 1 .5   0.1 0.1 0.1   0   100 ../resources/bunny.obj

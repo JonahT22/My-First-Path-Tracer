@@ -1,0 +1,70 @@
+{
+  "Camera": {
+    "Transform": {
+      "Translation": [ -3, 0, 0 ],
+      "Rotation": [ 0, -90, 0 ]
+    },
+    "Fov": 60.0
+  },
+  "Lights": [
+    {
+      "Name": "Main Light",
+      "LightType": "PointLight",
+      "Linear": 0,
+      "Quadratic": 0,
+      "FalloffDistance": 1,
+      "Translation": [ -2, 1, 1 ],
+      "Color": [ 1, 1, 1 ]
+    }
+  ],
+  "SceneObjects": [
+    {
+      "Name": "Red Sphere",
+      "ObjectType": "Sphere",
+      "Transform": {
+        "Translation": [ -0.5, -1, 1 ],
+        "Rotation": [ 0, 0, 0 ],
+        "Scale": [ 1, 1, 1 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 1, 0, 0 ],
+        "SpecularColor": [ 1, 1, 0.5 ],
+        "SpecularExp": 100,
+        "IsEmissive": false,
+        "Reflectance": 0
+      }
+    },
+    {
+      "Name": "Green Sphere",
+      "ObjectType": "Sphere",
+      "Transform": {
+        "Translation": [ 0.5, -1, -1 ],
+        "Rotation": [ 0, 0, 0 ],
+        "Scale": [ 1, 1, 1 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 0, 1, 0 ],
+        "SpecularColor": [ 1, 1, 0.5 ],
+        "SpecularExp": 100,
+        "IsEmissive": false,
+        "Reflectance": 0
+      }
+    },
+    {
+      "Name": "Blue Sphere",
+      "ObjectType": "Sphere",
+      "Transform": {
+        "Translation": [ 0, 1, 0 ],
+        "Rotation": [ 0, 0, 0 ],
+        "Scale": [ 1, 1, 1 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 0, 0, 1 ],
+        "SpecularColor": [ 1, 1, 0.5 ],
+        "SpecularExp": 100,
+        "IsEmissive": false,
+        "Reflectance": 0
+      }
+    }
+  ]
+}                          
