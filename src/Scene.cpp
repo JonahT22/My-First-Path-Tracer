@@ -163,7 +163,7 @@ glm::dvec3 Scene::RandomRayInHemisphere(glm::dvec4& normal)
 }
 
 void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
-	std::cout << "Reading scene data from " << filename << " ... " << endl;
+	std::cout << "Reading scene data from " << filename << " ... ";
 
 	ifstream file(filename);
 	if (!file.good()) {
@@ -236,7 +236,8 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
 		}
 	}
 	catch (json::exception& e) {
-		cerr << "ERROR: " << e.what() << endl;
+		cerr << endl << "ERROR: " << e.what() << endl;
+		return;
 	}
 	std::cout << "done!" << endl;
 }
