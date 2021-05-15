@@ -11,7 +11,9 @@
 class Square : public SceneObject {
 public:
 	// Call parent constructor to create transform matrix and apply material
-	Square(std::string _name, Transform _transf, std::shared_ptr<Material> _mat) : SceneObject(_name, _transf, _mat) {};
+	Square(std::string _name, Transform _transf, std::shared_ptr<Material> _mat) : SceneObject(_name, _transf, _mat) {
+		hasRandomPointMethodDefined = true;
+	};
 
 	bool IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tMax) override;
 	glm::dvec4 GetRandomPointOnSurface() override;

@@ -41,9 +41,7 @@ bool Sphere::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double t
 
 glm::dvec4 Sphere::GetRandomPointOnSurface()
 {
-	cerr << "WARNING: emissive color defined for sphere " << name << ", but no random point generation";
-	cerr << " method defined. Using the object origin instead." << endl;
-	return modelMtx * transf.translation;
+	return transf.translation;
 }
 
 bool Sphere::SelectSmallestInRange(double a, double b, double min, double max, double& result) {

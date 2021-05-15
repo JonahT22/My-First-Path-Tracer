@@ -40,9 +40,7 @@ bool TriangleMesh::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, do
 
 glm::dvec4 TriangleMesh::GetRandomPointOnSurface()
 {
-	cerr << "WARNING: emissive color defined for TriangleMesh " << name << ", but no random point generation";
-	cerr << " method defined. Using the object origin instead." << endl;
-	return modelMtx * transf.translation;
+	return transf.translation;
 }
 
 void TriangleMesh::LoadMeshFile(std::string filename) {

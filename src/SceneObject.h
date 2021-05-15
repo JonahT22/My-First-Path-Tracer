@@ -29,7 +29,7 @@ public:
 	virtual glm::dvec4 GetRandomPointOnSurface() = 0;
 
 	std::string name;
-
+	bool hasRandomPointMethodDefined = false;
 protected:
 	// Matrix for converting points from local->world space
 	glm::dmat4 modelMtx;

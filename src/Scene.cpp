@@ -232,6 +232,11 @@ void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
 					lightData.at("FalloffDistance").get<double>(),
 					topObj)
 				);
+				// Send a warning message if the object doesn't have a way to generate random points on its surface
+				if (!topObj->hasRandomPointMethodDefined) {
+					cerr << endl << "WARNING: emissive color defined for SceneObject \"" << topObj->name;
+					cerr << "\", but no random point generation method defined. Using the object origin instead." << endl;
+				}
 			}
 		}
 	}
