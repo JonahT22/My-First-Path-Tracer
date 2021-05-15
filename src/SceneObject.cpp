@@ -28,3 +28,21 @@ bool SceneObject::Hit(Ray3D& ray, HitResult& outHit, double tMin, double tMax) {
 	// Since I didn't normalize the ray direction vector, the t distance stored in outHit is in world space
 	return IntersectLocal(localRay, outHit, tMin, tMax);
 }
+
+bool SceneObject::SelectSmallestInRange(double a, double b, double min, double max, double& result) {
+	bool aValid = (a > min && a < max);
+	bool bValid = (b > min && b < max);
+	if (aValid || bValid) {
+		// If both are valid, choose the smaller one
+		if (aValid && bValid) {
+			result = (a < b) ? a : b;
+		}
+		// If exec makes it here, ONLY one is valid
+		else if (aValid) result = a;
+		else result = b;
+
+		return true;
+	}
+
+	return false;
+}

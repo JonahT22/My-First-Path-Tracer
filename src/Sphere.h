@@ -14,8 +14,4 @@ public:
 
 	bool IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tMax) override;
 	glm::dvec4 GetRandomPointOnSurface() override;
-
-private:
-	// Checks 2 numbers against a given range, places the smaller # in the range into result, or returns false if neither are in the range
-	bool SelectSmallestInRange(double a, double b, double min, double max, double& result);
 };
