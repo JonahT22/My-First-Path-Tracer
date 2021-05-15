@@ -33,7 +33,7 @@
         "SpecularExp": 100,
         "IsEmissive": true,
         "EmissiveProperties": {
-          "EmissiveColor": [ 0.1, 0.1, 0.1 ],
+          "EmissiveColor": [ 0.5, 0.5, 0.5 ],
           "Linear": 0,
           "Quadratic": 0,
           "FalloffDistance": 1

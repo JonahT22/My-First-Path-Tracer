@@ -31,7 +31,13 @@
         "DiffuseColor": [ 0, 0, 1 ],
         "SpecularColor": [ 1, 1, 0.5 ],
         "SpecularExp": 100,
-        "IsEmissive": false,
+        "IsEmissive": true,
+        "EmissiveProperties": {
+          "EmissiveColor": [ 0.1, 0.1, 0.1 ],
+          "Linear": 0,
+          "Quadratic": 0,
+          "FalloffDistance": 1
+        },
         "Reflectance": 0
       }
     }
