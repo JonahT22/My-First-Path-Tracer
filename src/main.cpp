@@ -7,6 +7,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <chrono>
+#include <iomanip>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -26,6 +27,11 @@
 
 using namespace std;
 using namespace glm;
+
+double FindSecondsSince(chrono::time_point<chrono::steady_clock> startTime) {
+	auto stopTime = chrono::high_resolution_clock::now();
+	return chrono::duration_cast<chrono::milliseconds>(stopTime - startTime).count() / 1000.0;
+}
 
 int main(int argc, char **argv) {
 	auto startTime = chrono::high_resolution_clock::now();
@@ -68,18 +74,20 @@ int main(int argc, char **argv) {
 			// Store color value
 			outputImage->setPixel(col, row, 255 * rayColor.r, 255 * rayColor.g, 255 * rayColor.b);
 
-			// Print a status update (to the nearest 10%)
+			// Print a status update (to the nearest 1%)
 			int percent = std::floor(100 * (row / (float)height));
 			if (percent > prevPercent) {
 				prevPercent = percent;
-				cout << percent << "%" << endl;
+				double estRem = (FindSecondsSince(startTime) / (double)percent) * (100 - percent);
+				cout << setw(2) << percent << "%, est: " << estRem << endl;
 			}
 		}
 	}
-	outputImage->writeToFile(fileName);
 
-	auto stopTime = chrono::high_resolution_clock::now();
-	cout << "Completed in " << chrono::duration_cast<chrono::milliseconds>(stopTime - startTime).count() / 1000.0 << " s" << endl;
+	double duration = FindSecondsSince(startTime);
+	cout << "Completed in " << duration << " s" << endl;
+
+	outputImage->writeToFile(fileName);
 
 	return 0;
 }
