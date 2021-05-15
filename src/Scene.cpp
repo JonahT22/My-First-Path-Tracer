@@ -100,6 +100,8 @@ bool Scene::IsPointInShadow(dvec4& hitLoc, dvec4& lightLoc, std::shared_ptr<Scen
 	HitResult shadowHit;
 	// Shadow ray is located at the hit position, goes to the light
 	Ray3D shadowRay(hitLoc, glm::normalize(lightLoc - hitLoc));
+	// Maximum distance that shadow rays should travel
+	double lightDist = glm::length(lightLoc - hitLoc);
 
 	// Check to see if there are any objects between the hit location and the light
 	for (auto& object : allObjects) {
@@ -107,8 +109,7 @@ bool Scene::IsPointInShadow(dvec4& hitLoc, dvec4& lightLoc, std::shared_ptr<Scen
 		// (we don't want to collide with the light source itself)
 		if (object != lightObj) {
 			// Set tMin to epsilon to avoid self-shadowing, and set tMax to the light's distance
-			// TODO: maybe precompute glm::length(lightLoc - hitLoc)?
-			if (object->Hit(shadowRay, shadowHit, epsilon, glm::length(lightLoc - hitLoc))) {
+			if (object->Hit(shadowRay, shadowHit, epsilon, lightDist)) {
 				// If I hit anything, immediately return true, no further action required
 				return true;
 			}
