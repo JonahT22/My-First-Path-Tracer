@@ -29,20 +29,21 @@ bool SceneObject::Hit(Ray3D& ray, HitResult& outHit, double tMin, double tMax) {
 	return IntersectLocal(localRay, outHit, tMin, tMax);
 }
 
-bool SceneObject::SelectSmallestInRange(double a, double b, double min, double max, double& result) {
-	bool aValid = (a > min && a < max);
-	bool bValid = (b > min && b < max);
+int SceneObject::SelectSmallestInRange(double vals[2], double min, double max) {
+	bool aValid = (vals[0] > min && vals[0] < max);
+	bool bValid = (vals[1] > min && vals[1] < max);
 	if (aValid || bValid) {
 		// If both are valid, choose the smaller one
+		int chosenIdx = 0;
 		if (aValid && bValid) {
-			result = (a < b) ? a : b;
+			chosenIdx = (vals[0] < vals[1]) ? 0 : 1;
 		}
 		// If exec makes it here, ONLY one is valid
-		else if (aValid) result = a;
-		else result = b;
+		else if (aValid) chosenIdx = 0;
+		else chosenIdx = 1;
 
-		return true;
+		return chosenIdx;
 	}
 
-	return false;
+	return -1;
 }

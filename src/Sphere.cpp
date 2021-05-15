@@ -14,17 +14,19 @@ bool Sphere::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double t
 
 	if (d2 >= 0) {
 		// 1 or 2 solutions exist
-		double t1 = (-1.0 * b + sqrt(d2)) / (2.0 * a);
-		double t2 = (-1.0 * b - sqrt(d2)) / (2.0 * a);
+		double tvals[2];
+		tvals[0] = (-1.0 * b + sqrt(d2)) / (2.0 * a);
+		tvals[1] = (-1.0 * b - sqrt(d2)) / (2.0 * a);
 		
 		// Choose the smallest t value within the valid range, and check if it's smaller than the value
 		// that's already in outHit. If so, return true
-		double timeToUpdate = std::numeric_limits<double>::max();
-		if (SelectSmallestInRange(t1, t2, tMin, tMax, timeToUpdate)) {
+		int chosenIdx = SelectSmallestInRange(tvals, tMin, tMax);
+		if (chosenIdx != -1) {
 			// Try updating the hit result with whichever t value was the smallest in the range
-			if (outHit.UpdateTMin(timeToUpdate)) {
+			if (outHit.UpdateTMin(tvals[chosenIdx])) {
 				// If it ended up finding a new minT, update the normal value in the hit result
 				dvec4 localPos = ray.FindLocAtTime(outHit.t);
+				//TODO: check on this
 				outHit.nor.w = 0.0; // outHit.nor is a vector, so the w value is always 0
 				outHit.nor = normalize(localPos);
 				return true;

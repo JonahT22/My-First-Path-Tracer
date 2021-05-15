@@ -31,8 +31,8 @@ public:
 	std::string name;
 	bool hasRandomPointMethodDefined = false;
 protected:
-	// Checks 2 numbers against a given range, places the smaller # in the range into result, or returns false if neither are in the range
-	bool SelectSmallestInRange(double a, double b, double min, double max, double& result);
+	// Checks 2 numbers against a given range, returns index of smaller # in the range, or -1 if neither are in the range
+	int SelectSmallestInRange(double vals[2], double min, double max);
 	// Matrix for converting points from local->world space
 	glm::dmat4 modelMtx;
 	// Matrix for converting rays from world->local space (inverse of model matrix)
