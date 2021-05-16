@@ -13,7 +13,7 @@
       "Name": "Reflective Box",
       "ObjectType": "Box",
       "Transform": {
-        "Translation": [ 1.5, -2.25, 0.5 ],
+        "Translation": [ 1.5, -2.25, 0 ],
         "Rotation": [ 0, 30, 0 ],
         "Scale": [ 1.5, 1.5, 1.5 ]
       },
@@ -29,8 +29,8 @@
       "Name": "White Box",
       "ObjectType": "Box",
       "Transform": {
-        "Translation": [ -1.5, -1, -0.5 ],
-        "Rotation": [ 0, 40, 0 ],
+        "Translation": [ -1.5, -1, -1.5 ],
+        "Rotation": [ 0, 30, 0 ],
         "Scale": [ 2, 4, 2 ]
       },
       "Material": {
@@ -47,7 +47,7 @@
       "Transform": {
         "Translation": [ 0, 2.99, -1 ],
         "Rotation": [ 180, 0, 0 ],
-        "Scale": [ 3, 1, 2 ]
+        "Scale": [ 2, 1, 1 ]
       },
       "Material": {
         "DiffuseColor": [ 0, 0, 0 ],
