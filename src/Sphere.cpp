@@ -26,9 +26,9 @@ bool Sphere::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double t
 			if (outHit.UpdateTMin(tvals[chosenIdx])) {
 				// If it ended up finding a new minT, update the normal value in the hit result
 				dvec4 localPos = ray.FindLocAtTime(outHit.t);
-				//TODO: check on this
-				outHit.nor.w = 0.0; // outHit.nor is a vector, so the w value is always 0
-				outHit.nor = normalize(localPos);
+				// Normal of hit is just local position - already normalized b/c radius = 1
+				// BUT outHit.nor is a vector, so set the w value to 0
+				outHit.nor = dvec4(localPos.x, localPos.y, localPos.z, 0);
 				return true;
 			}
 		}
