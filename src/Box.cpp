@@ -17,8 +17,8 @@ bool Box::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tMax
 	// Flip sign of the negative/positive bounds when the ray direction is negative (since far/near sides will be swapped)
 	tvals[0] = ((-0.5 * ray.sign[0]) - ray.start.x) * ray.invDir.x;
 	tvals[1] = (( 0.5 * ray.sign[0]) - ray.start.x) * ray.invDir.x;
-	normals[0] = (double)ray.sign[0] * dvec4( 1, 0, 0, 0);
-	normals[1] = (double)ray.sign[0] * dvec4(-1, 0, 0, 0);
+	normals[0] = (double)ray.sign[0] * dvec4(-1, 0, 0, 0);
+	normals[1] = (double)ray.sign[0] * dvec4( 1, 0, 0, 0);
 
 	// Find min/max t in y direction
 	double tymin = ((-0.5 * ray.sign[1]) - ray.start.y) * ray.invDir.y;
