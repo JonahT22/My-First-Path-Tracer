@@ -40,12 +40,8 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth, bool specularRay) {
 
 		// Emissive Color
 		// Only add this on the first bounce, or if this ray was created from a specular bounce
-		// For diffuse rays (created from the global illumination stuff below), this prevents double-dipping the light 
-		// (i.e. if I'm already calculating contributions from each light in the "Blinn-phong color" loop, and all emissive materials 
-		// are treated as a light, then I don't want to double-dip my sample by also getting the emissive color from my bounce rays)
-		// For reflective rays (created when the mat's reflectance is > 0), I don't actually sample all the lights before sending out 
-		// the bounce rays. Because of this, I still want to get the emissive color of anything that I hit (otherwise, lights
-		// will appear black in mirrors)
+		// Necessary since we're using explicit light sampling
+		// (See https://computergraphics.stackexchange.com/questions/5152/progressive-path-tracing-with-explicit-light-sampling/5153#5153)
 		if (depth == 0 || specularRay) {
 			color += mat->ke;
 		}
@@ -73,7 +69,6 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth, bool specularRay) {
 			// Where f = BRDF = kd/pi (use perfect diffuse shading for this model,
 			//     so albedo = kd https://computergraphics.stackexchange.com/questions/350/albedo-vs-diffuse
 			// L = incoming light, theta = angle btwn incoming (constant) and outgoing (randomized) light rays
-			// Using path tracing, so only sending out a single ray
 
 			Ray3D ambientRay(hit.loc, GetRandomRayInHemisphere(hit.nor));
 			// Constant (lambertian) BRDF
