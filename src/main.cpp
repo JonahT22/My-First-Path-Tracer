@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
 	shared_ptr<Image> outputImage = make_shared<Image>(width, height);
 
 	// Provide image dimensions to camera for aspect ratio & ray calculations
-	Camera camera (width, height);
+	Camera camera (width, height, dvec4(0, 0, -5, 1), dvec3(0, 0, 0), 45, 0.4);
 
 	// Build a scene with a black background color
 	Scene scene(dvec3(0, 0, 0));
@@ -70,7 +70,9 @@ int main(int argc, char **argv) {
 				rayColor += scene.ComputeRayColor(newRay);
 			}
 			rayColor /= (double)numSamples;
-			// Fit the ray color to a tonemapping curve, then clamp it
+
+			// Image processing
+			camera.ApplyExposure(rayColor);
 			camera.ApplyTonemapping(rayColor, Camera::Tonemapper::ACES_APPROX);
 
 			// Store color value

@@ -10,12 +10,13 @@ void Camera::ClampColor(glm::dvec3& color) {
 	ClampDouble(color.z, 0.0, 1.0);
 }
 
-Camera::Camera(int imageWidth, int imageHeight, glm::dvec4 _pos, glm::dvec3 _rot, double _fov) :
+Camera::Camera(int imageWidth, int imageHeight, glm::dvec4 _pos, glm::dvec3 _rot, double _fov, double _exposure) :
 	imageWidth(imageWidth),
 	imageHeight(imageHeight),
 	aspect(imageWidth / (double)imageHeight),
 	pos(_pos),
-	rot(_rot)
+	rot(_rot),
+	exposure(_exposure)
 {
 	Setup();
 }

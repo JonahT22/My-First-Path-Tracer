@@ -18,7 +18,8 @@ public:
 	Camera(int imageWidth, int imageHeight,
 		glm::dvec4 _pos = glm::dvec4(0, 0, 5, 1), 
 		glm::dvec3 _rot = glm::dvec3(0, 0, 0), 
-		double _fov = 45.0);
+		double _fov = 45.0, 
+		double _exposure = 1.0);
 
 	// Create a ray from the camera position to the center of a given pixel
 	Ray3D CreateCameraRay(int rowNum, int colNum);
@@ -31,6 +32,7 @@ public:
 	void SetRotationDegrees(glm::dvec3& _rot) { rot = _rot * glm::pi<double>() / 180.0; }
 	void SetFOVDegrees(double _fov) { fovY = _fov * glm::pi<double>() / 180.0; }
 	
+	void ApplyExposure(glm::dvec3& color) { color *= exposure; }
 	void ApplyTonemapping(glm::dvec3& color, Tonemapper tonemapper);
 
 private:
@@ -47,4 +49,5 @@ private:
 	int imageWidth;
 	int imageHeight;
 	double imagePlaneDist;
+	double exposure;
 };
