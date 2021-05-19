@@ -47,10 +47,6 @@ private:
 	
 	// Run an intersection check on the ray to a given light, but return false immediately if a hit is found
 	bool IsPointInShadow(glm::dvec4& hitLoc, glm::dvec4& lightLoc, std::shared_ptr<SceneObject> lightObj = nullptr) const;
-	// Clamps the value of each component of the given ddvec3
-	void ClampVector(glm::dvec3& vec, double min, double max);
-	// Clamps an individual double value to a range
-	void ClampDouble(double& num, double min, double max);
 	// Find a random unit vector from center->surface of a hemisphere with the given normal
 	glm::dvec4 GetRandomRayInHemisphere(glm::dvec4& normal);
 	// Find a reflection vector, optionally perturbed by a 'roughness' factor (for glossy reflections)

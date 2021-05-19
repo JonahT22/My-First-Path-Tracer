@@ -58,17 +58,18 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth, bool specularRay) {
 			// Send a new reflection ray, and indicate that the ray was created from a mirror reflection
 			color += mat->ks * ComputeRayColor(reflectionRay, depth + 1, true);
 		} else {
-			// Blinn-phong color
-			// Calculate contribution from each light
+			// Non-specular Lighting = Direct Lighting + Ambient Lighting
+
+			// Direct Lighting via Blinn-phong
+			// Explicitly sample each light
 			for (auto& light : allLights) {
+				// Another option - only sample one random light, and multiply its value by the # of lights (PDF = 1/numlights)
 				if (!IsPointInShadow(hit.loc, light->GetLocation(), light->GetObject())) {
 					color += mat->ShadeBlinnPhong(ray, hit, light);
 				}
 			}
 
-			// GLOBAL ILLUMINATION (Diffuse Reflection)
-
-			// Full equation: ambient light = 1/N * sum from 1->N of ( 1/p * (f * L * cos(theta)))
+			// Ambient Lighting = 1/N * sum from 1->N of ( 1/p * (f * L * cos(theta)))
 			// Where f = BRDF = kd/pi (use perfect diffuse shading for this model,
 			//     so albedo = kd https://computergraphics.stackexchange.com/questions/350/albedo-vs-diffuse
 			// L = incoming light, theta = angle btwn incoming (constant) and outgoing (randomized) light rays
@@ -83,8 +84,6 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth, bool specularRay) {
 			// ^NOTE: The random ray generation uses a cosine-weighted model, where PDF = cos(theta) / pi
 			// Therefore, when dividing by p the cos(theta) would cancel out with the full eq so we don't mult by cos here
 		}
-		// Make sure the color isn't clipping
-		ClampVector(color, 0.0f, 1.0f);
 		return color;
 	}
 	else return backgroundColor;
@@ -117,17 +116,6 @@ bool Scene::IsPointInShadow(dvec4& hitLoc, dvec4& lightLoc, std::shared_ptr<Scen
 	the tMax parameter for the sake of readability */
 
 	return false;
-}
-
-void Scene::ClampVector(glm::dvec3& vec, double min, double max) {
-	ClampDouble(vec.x, min, max);
-	ClampDouble(vec.y, min, max);
-	ClampDouble(vec.z, min, max);
-}
-
-void Scene::ClampDouble(double& num, double min, double max) {
-	if (num < min) num = min;
-	if (num > max) num = max;
 }
 
 glm::dvec4 Scene::GetRandomRayInHemisphere(glm::dvec4& normal)
