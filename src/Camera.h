@@ -8,6 +8,8 @@
 
 class Camera {
 public:
+	static void ClampColor(glm::dvec3& color);
+	
 	// Location, rotation, and fov args are optional, usually set by reading a scene file. FOV is in degrees
 	Camera(int imageWidth, int imageHeight,
 		glm::dvec4 _pos = glm::dvec4(0, 0, 5, 1), 
@@ -27,6 +29,8 @@ public:
 	
 
 private:
+	static void ClampDouble(double& num, double min, double max);
+
 	glm::dvec4 pos;
 	glm::dvec3 rot;
 	// Don't need to store the whole view mtx, only the inverse mtx for rotations

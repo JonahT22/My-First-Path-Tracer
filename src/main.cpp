@@ -70,6 +70,8 @@ int main(int argc, char **argv) {
 				rayColor += scene.ComputeRayColor(newRay);
 			}
 			rayColor /= (double)numSamples;
+			// Make sure the color isn't clipping (TODO: Tonemapping)
+			Camera::ClampColor(rayColor);
 
 			// Store color value
 			outputImage->setPixel(col, row, 255 * rayColor.r, 255 * rayColor.g, 255 * rayColor.b);

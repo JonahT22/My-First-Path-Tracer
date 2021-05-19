@@ -4,6 +4,12 @@
 using namespace glm;
 using namespace std;
 
+void Camera::ClampColor(glm::dvec3& color) {
+	ClampDouble(color.x, 0.0, 1.0);
+	ClampDouble(color.y, 0.0, 1.0);
+	ClampDouble(color.z, 0.0, 1.0);
+}
+
 Camera::Camera(int imageWidth, int imageHeight, glm::dvec4 _pos, glm::dvec3 _rot, double _fov) :
 	imageWidth(imageWidth),
 	imageHeight(imageHeight),
@@ -28,3 +34,7 @@ void Camera::Setup() {
 	inv_rotMtx = inverse(eulerAngleXYZ(rot.x, rot.y, rot.z));
 }
 
+void Camera::ClampDouble(double& num, double min, double max) {
+	if (num < min) num = min;
+	if (num > max) num = max;
+}
