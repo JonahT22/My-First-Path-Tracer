@@ -9,7 +9,7 @@ using json = nlohmann::json;
 glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth, bool specularRay) {
 	// Before anything else, make sure I haven't passed the recursion depth
 	if (depth > maxRecursionDepth) {
-		return backgroundColor;
+		return dvec3(0, 0, 0);
 	}
 
 	// Find the nearest object
@@ -77,7 +77,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth, bool specularRay) {
 			Ray3D ambientRay(hit.loc, GetRandomRayInHemisphere(hit.nor));
 			// Constant (lambertian) BRDF
 			const dvec3 BRDF = mat->kd / pi<double>();
-			// Store 1/p to save a division op. Note that the cos(theta) term already canceled out earlier, so it's not included here
+			// Store 1/p to save a division op. Full PDF is cos(theta) / pi, but the cos cancels out (see below)
 			constexpr double pRecip = pi<double>();
 			color += pRecip * BRDF * ComputeRayColor(ambientRay, depth + 1);
 			// ^NOTE: The random ray generation uses a cosine-weighted model, where PDF = cos(theta) / pi
