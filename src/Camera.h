@@ -8,7 +8,11 @@
 
 class Camera {
 public:
-	static void ClampColor(glm::dvec3& color);
+	enum class Tonemapper
+	{
+		SIMPLE_CLAMP,
+		ACES_APPROX
+	};
 	
 	// Location, rotation, and fov args are optional, usually set by reading a scene file. FOV is in degrees
 	Camera(int imageWidth, int imageHeight,
@@ -27,9 +31,12 @@ public:
 	void SetRotationDegrees(glm::dvec3& _rot) { rot = _rot * glm::pi<double>() / 180.0; }
 	void SetFOVDegrees(double _fov) { fovY = _fov * glm::pi<double>() / 180.0; }
 	
+	void ApplyTonemapping(glm::dvec3& color, Tonemapper tonemapper);
 
 private:
-	static void ClampDouble(double& num, double min, double max);
+	void ClampDouble(double& num, double min, double max);
+	void ACESApprox(glm::dvec3& color);
+	void ClampColor(glm::dvec3& color);
 
 	glm::dvec4 pos;
 	glm::dvec3 rot;

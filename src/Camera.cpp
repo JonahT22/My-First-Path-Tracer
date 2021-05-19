@@ -34,7 +34,32 @@ void Camera::Setup() {
 	inv_rotMtx = inverse(eulerAngleXYZ(rot.x, rot.y, rot.z));
 }
 
+void Camera::ApplyTonemapping(glm::dvec3& color, Tonemapper tonemapper)
+{
+	switch (tonemapper) {
+	case Tonemapper::ACES_APPROX:
+		ACESApprox(color);
+		break;
+	case Tonemapper::SIMPLE_CLAMP:
+	default:
+		ClampColor(color);
+		break;
+	}
+}
+
 void Camera::ClampDouble(double& num, double min, double max) {
 	if (num < min) num = min;
 	if (num > max) num = max;
+}
+
+void Camera::ACESApprox(glm::dvec3& color)
+{
+	// Using an approximation of the ACES curve by Krzysztof Narkowicz https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
+	double a = 2.51;
+	double b = 0.03;
+	double c = 2.43;
+	double d = 0.59;
+	double e = 0.14;
+	color = (color * (a * color + b)) / (color * (c * color + d) + e);
+	ClampColor(color);
 }
