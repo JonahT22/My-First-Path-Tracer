@@ -42,8 +42,6 @@ private:
 
 	// "Fudge Factor" to avoid self-intersection on shadow/reflection ray hits
 	const double epsilon = 0.00001; // 1e-5
-	// Threshold for skipping blinnphong/reflection calculations in ComputeRayColor()
-	const double reflectiveThreshold = 0.00001; //1e-5
 	// Maximum number of times the ComputeRayColor can recurse before forcibly returning
 	const int maxRecursionDepth = 3;
 	
@@ -54,7 +52,9 @@ private:
 	// Clamps an individual double value to a range
 	void ClampDouble(double& num, double min, double max);
 	// Find a random unit vector from center->surface of a hemisphere with the given normal
-	glm::dvec3 RandomRayInHemisphere(glm::dvec4& normal);
+	glm::dvec4 GetRandomRayInHemisphere(glm::dvec4& normal);
+	// Find a reflection vector, optionally perturbed by a 'roughness' factor (for glossy reflections)
+	glm::dvec4 GetReflectionRay(glm::dvec4& rayDir, glm::dvec4& hitNor, double roughness = 0.0);
 
 	// Reads the next 3 values from the stream and places them into a dvec3
 	glm::dvec3 ReadVec3(const nlohmann::json& j);

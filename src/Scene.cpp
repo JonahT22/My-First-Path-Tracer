@@ -50,45 +50,43 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth, bool specularRay) {
 			color += mat->ke;
 		}
 		
-		// Reflection ray contributions (don't do this if the material is ~0% reflective)
-		if (mat->reflectance > (0.0 + reflectiveThreshold)) {
+		// Randomly choose between specular and diffuse rays, depending on the material's reflectance
+		if ((rand() / (double)RAND_MAX) < mat->reflectance) {
+			// Glossy reflection (glossiness - based on 'roughness' value)
 			// Create a ray with the new reflection direction
-			Ray3D reflectionRay(hit.loc, glm::reflect(ray.dir, hit.nor));
+			Ray3D reflectionRay(hit.loc, GetReflectionRay(ray.dir, hit.nor, 0.5));
 			// Send a new reflection ray, and indicate that the ray was created from a mirror reflection
-			color += mat->ks * mat->reflectance * ComputeRayColor(reflectionRay, depth + 1, true);
-		}
-		
-		// Blinn-phong color (don't need to do this if the material is ~100% reflective)
-		if (mat->reflectance < (1.0 - reflectiveThreshold)) {
+			color += mat->ks * ComputeRayColor(reflectionRay, depth + 1, true);
+		} else {
+			// Blinn-phong color
 			// Calculate contribution from each light
 			for (auto& light : allLights) {
 				if (!IsPointInShadow(hit.loc, light->GetLocation(), light->GetObject())) {
-					color += (1.0 - mat->reflectance) * mat->ShadeBlinnPhong(ray, hit, light);
+					color += mat->ShadeBlinnPhong(ray, hit, light);
 				}
 			}
+
+			// GLOBAL ILLUMINATION (Diffuse Reflection)
+
+			// Full equation: ambient light = 1/N * sum from 1->N of ( 1/p * (f * L * cos(theta)))
+			// Where f = BRDF = kd/pi (use perfect diffuse shading for this model,
+			//     so albedo = kd https://computergraphics.stackexchange.com/questions/350/albedo-vs-diffuse
+			// L = incoming light, theta = angle btwn incoming (constant) and outgoing (randomized) light rays
+			// Using path tracing, so only sending out a single ray
+
+			Ray3D ambientRay(hit.loc, GetRandomRayInHemisphere(hit.nor));
+			// The random ray generation uses a cosine-weighted model, where PDF = cos(theta) / pi
+			// Therefore, when dividing by p the cos(theta) would cancel out with the full eq so we don't mult by cos here
+			dvec3 ambientGI = ComputeRayColor(ambientRay, depth + 1);
+			// Constant (lambertian) BRDF
+			const dvec3 BRDF = mat->kd / pi<double>();
+			ambientGI *= BRDF;
+			// Store 1/p to save a division op. Note that the cos(theta) term already canceled out earlier, so it's not included here
+			constexpr double pRecip = pi<double>();
+			// Divide by p
+			ambientGI *= pRecip;
+			color += ambientGI;
 		}
-
-		// GLOBAL ILLUMINATION
-
-		// Full equation: ambient light = 1/N * sum from 1->N of ( 1/p * (f * L * cos(theta)))
-		// Where f = BRDF = kd/pi (use perfect diffuse shading for this model,
-		//     so albedo = kd https://computergraphics.stackexchange.com/questions/350/albedo-vs-diffuse
-		// L = incoming light, theta = angle btwn incoming (constant) and outgoing (randomized) light rays
-		// Using path tracing, so only sending out a single ray
-
-		Ray3D ambientRay(hit.loc, dvec4(RandomRayInHemisphere(hit.nor), 0));
-		// The random ray generation uses a cosine-weighted model, where PDF = cos(theta) / pi
-		// Therefore, when dividing by p the cos(theta) would cancel out with the full eq so we don't mult by cos here
-		dvec3 ambientGI = ComputeRayColor(ambientRay, depth + 1);
-		// Constant (lambertian) BRDF - reflective component of materials doesn't get GI, so multiply by 1-reflectance
-		const dvec3 BRDF = (1.0 - mat->reflectance) * mat->kd / pi<double>();
-		ambientGI *= BRDF;
-		// Store 1/p to save a division op. Note that the cos(theta) term already canceled out earlier, so it's not included here
-		constexpr double pRecip = pi<double>();
-		// Divide by p
-		ambientGI *= pRecip;
-		color += ambientGI;
-
 		// Make sure the color isn't clipping
 		ClampVector(color, 0.0f, 1.0f);
 		return color;
@@ -136,7 +134,7 @@ void Scene::ClampDouble(double& num, double min, double max) {
 	if (num > max) num = max;
 }
 
-glm::dvec3 Scene::RandomRayInHemisphere(glm::dvec4& normal)
+glm::dvec4 Scene::GetRandomRayInHemisphere(glm::dvec4& normal)
 {
 	// Use a cosine-weighted point generation method from https://graphicscompendium.com/raytracing/19-monte-carlo
 	// TODO: cite in readme
@@ -152,14 +150,26 @@ glm::dvec3 Scene::RandomRayInHemisphere(glm::dvec4& normal)
 
 	// Before rotating, check if the local normal and world normal are parallel
 	dvec3 localUp(0, 1, 0);
-	if (localUp == dvec3(normal)) return localDir;
-	if (localUp == -1.0 * dvec3(normal)) return -1.0 * localDir;
+	if (localUp == dvec3(normal)) return dvec4(localDir, 0);
+	if (localUp == -1.0 * dvec3(normal)) return dvec4(-1.0 * localDir, 0);
 
 	// dot(u, v) = cos(theta) for unit vectors
 	double angle = acos(dot(localUp, dvec3(normal)));
 	dvec3 axis = cross(localUp, dvec3(normal));
 
-	return rotate(localDir, angle, axis);
+	return dvec4(rotate(localDir, angle, axis), 0);
+}
+
+glm::dvec4 Scene::GetReflectionRay(glm::dvec4& rayDir, glm::dvec4& hitNor, double roughness)
+{
+	// Find the ideal specular reflection direction
+	dvec4 idealDir = glm::reflect(rayDir, hitNor);
+	// Find a random, uniform reflection direction
+	dvec4 diffuseDir = GetRandomRayInHemisphere(hitNor);
+	// Since the random generation function is cosine-weighted, apply a scaling factor
+
+	// 
+	return idealDir;
 }
 
 void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {

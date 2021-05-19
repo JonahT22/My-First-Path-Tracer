@@ -10,8 +10,11 @@ struct Material {
 	glm::dvec3 kd;
 	glm::dvec3 ks;
 	glm::dvec3 ke;
-	// 0-1 value, where 1 = perfectly reflective, 0 = perfectly diffuse
+	// Probability that rays hitting this object will use a reflective BRDF
+	// 1 = All rays are reflected, 0 = All rays use a diffuse/BlinnPhong BRDF
 	double reflectance;
+	// Amount of randomness to apply to reflected rays. 0 = uniform diffuse, 1 = perfect reflection
+	double roughness = 0;
 	// 'width/strength' of specular highlights
 	double specularExp;
 
@@ -43,6 +46,7 @@ struct Material {
 		glm::dvec4 halfVec = glm::normalize(eyeVec + lightVec); // Since it's normalized, it doesn't matter that it's not / 2
 		glm::dvec3 cs = ks * std::pow(std::max(0.0, glm::dot(halfVec, hit.nor)), specularExp);
 
-		return light->GetColor() * light->GetAttenuation(lightDist) * (cd + cs);
+		//return light->GetColor() * light->GetAttenuation(lightDist) * (cd + cs);
+		return light->GetColor() * light->GetAttenuation(lightDist) * cd;
 	}
 };
