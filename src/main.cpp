@@ -36,13 +36,14 @@ double FindSecondsSince(chrono::time_point<chrono::steady_clock> startTime) {
 int main(int argc, char **argv) {
 	auto startTime = chrono::high_resolution_clock::now();
 	if(argc < 4) {
-		cout << "Usage: ./my-first-pathtracer <SCENE NAME> <IMAGE SIZE> <IMAGE FILENAME>" << endl;
+		cout << "Usage: ./my-first-pathtracer <SCENE NAME> <IMAGE SIZE> <NUM SAMPLES> <IMAGE FILENAME>" << endl;
 		return 0;
 	}
 	string sceneName(argv[1]);
 	int height = atoi(argv[2]);
 	int width = height;
-	string fileName(argv[3]);
+	int numSamples = atoi(argv[3]);
+	string fileName(argv[4]);
 	shared_ptr<Image> outputImage = make_shared<Image>(width, height);
 
 	// Provide image dimensions to camera for aspect ratio & ray calculations
@@ -54,8 +55,7 @@ int main(int argc, char **argv) {
 	
 	srand(time(NULL));
 
-	// Number of samples per pixel for path tracing
-	const int numSamples = 10;
+	// Used for counting percentage completion
 	int prevPercent = 0;
 
 	// Iterate over every pixel
