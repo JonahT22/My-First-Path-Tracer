@@ -48,6 +48,24 @@ void Camera::ApplyTonemapping(glm::dvec3& color, Tonemapper tonemapper)
 	}
 }
 
+void Camera::ColorLinearToSRGB(glm::dvec3& color)
+{
+	color.x = DoubleLinearToSRGB(color.x);
+	color.y = DoubleLinearToSRGB(color.y);
+	color.z = DoubleLinearToSRGB(color.z);
+}
+
+double Camera::DoubleLinearToSRGB(double val)
+{
+	// Linear->SRGB formula from https://www.nayuki.io/page/srgb-transform-library
+	if (val < 0.0031308) {
+		return val / 12.92;
+	}
+	else {
+		return (1.055 * pow(val, 1.0 / 2.4)) - 0.055;
+	}
+}
+
 void Camera::ClampDouble(double& num, double min, double max) {
 	if (num < min) num = min;
 	if (num > max) num = max;

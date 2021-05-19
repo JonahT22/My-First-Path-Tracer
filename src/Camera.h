@@ -34,11 +34,14 @@ public:
 	
 	void ApplyExposure(glm::dvec3& color) { color *= exposure; }
 	void ApplyTonemapping(glm::dvec3& color, Tonemapper tonemapper);
+	void ColorLinearToSRGB(glm::dvec3& color);
 
 private:
+	double DoubleLinearToSRGB(double val);
 	void ClampDouble(double& num, double min, double max);
 	void ACESApprox(glm::dvec3& color);
 	void ClampColor(glm::dvec3& color);
+
 
 	glm::dvec4 pos;
 	glm::dvec3 rot;
