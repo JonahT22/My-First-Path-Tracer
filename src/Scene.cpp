@@ -75,17 +75,13 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth, bool specularRay) {
 			// Using path tracing, so only sending out a single ray
 
 			Ray3D ambientRay(hit.loc, GetRandomRayInHemisphere(hit.nor));
-			// The random ray generation uses a cosine-weighted model, where PDF = cos(theta) / pi
-			// Therefore, when dividing by p the cos(theta) would cancel out with the full eq so we don't mult by cos here
-			dvec3 ambientGI = ComputeRayColor(ambientRay, depth + 1);
 			// Constant (lambertian) BRDF
 			const dvec3 BRDF = mat->kd / pi<double>();
-			ambientGI *= BRDF;
 			// Store 1/p to save a division op. Note that the cos(theta) term already canceled out earlier, so it's not included here
 			constexpr double pRecip = pi<double>();
-			// Divide by p
-			ambientGI *= pRecip;
-			color += ambientGI;
+			color += pRecip * BRDF * ComputeRayColor(ambientRay, depth + 1);
+			// ^NOTE: The random ray generation uses a cosine-weighted model, where PDF = cos(theta) / pi
+			// Therefore, when dividing by p the cos(theta) would cancel out with the full eq so we don't mult by cos here
 		}
 		// Make sure the color isn't clipping
 		ClampVector(color, 0.0f, 1.0f);
