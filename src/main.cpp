@@ -90,6 +90,7 @@ int main(int argc, char **argv) {
 	cout << "Completed in " << duration << " s" << endl;
 
 	outputImage->writeToFile(fileName);
+	//outputImage->writeToFile(fileName + to_string(duration) + ".png");
 
 	return 0;
 }
