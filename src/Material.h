@@ -33,10 +33,10 @@ struct Material {
 		specularExp(_specularExp)
 	{}
 
-	glm::dvec3 ShadeBlinnPhong(Ray3D& ray, HitResult& hit, std::shared_ptr<Light> light) const {
+	glm::dvec3 ShadeBlinnPhong(Ray3D& ray, HitResult& hit, std::shared_ptr<Light> light, glm::dvec4& lightLoc) const {
 		// Note: don't handle the ambient component here
 		// Diffuse component
-		glm::dvec4 lightVec = light->GetLocation() - hit.loc;
+		glm::dvec4 lightVec = lightLoc - hit.loc;
 		double lightDist = glm::length(lightVec);
 		lightVec = glm::normalize(lightVec);
 		glm::dvec3 cd = kd * std::max(0.0, glm::dot(lightVec, hit.nor));
@@ -49,8 +49,8 @@ struct Material {
 		return light->GetColor() * light->GetAttenuation(lightDist) * (cd + cs);
 	}
 	
-	glm::dvec3 ShadeDiffuse(Ray3D& ray, HitResult& hit, std::shared_ptr<Light> light) const {
-		glm::dvec4 lightVec = light->GetLocation() - hit.loc;
+	glm::dvec3 ShadeDiffuse(Ray3D& ray, HitResult& hit, std::shared_ptr<Light> light, glm::dvec4& lightLoc) const {
+		glm::dvec4 lightVec = lightLoc - hit.loc;
 		double lightDist = glm::length(lightVec);
 		lightVec = glm::normalize(lightVec);
 		glm::dvec3 cd = kd * std::max(0.0, glm::dot(lightVec, hit.nor));
