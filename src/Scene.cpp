@@ -6,82 +6,91 @@ using namespace std;
 using json = nlohmann::json;
 
 // Main render loop
-glm::dvec3 Scene::ComputeRayColor(Ray3D& ray, int depth, bool specularRay) {
-	// Before anything else, make sure I haven't passed the recursion depth
-	if (depth > maxRecursionDepth) {
-		return dvec3(0, 0, 0);
-	}
-
-	// Find the nearest object
-	HitResult hit; // default tMin = infinity
-	for (auto& object : allObjects) {
-		if (object->Hit(ray, hit, epsilon)) {
-			// If hit was successful (i.e. found a new tMin), store a reference to the object
-			hit.hitObject = object;
+glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
+	dvec3 outputColor(0.0);
+	// Stores the filtered color of each surface as we bounce off of them (i.e. bounce of a red surface, throughput is now 1, 0, 0)
+	dvec3 throughput(1.0);
+	// This variable is true on the first loop so that initial hits on emissive objects return the proper color
+	bool specularBounce = true;
+	
+	for (int i = 0; i < maxBounces; i++) {
+		// Find the nearest object
+		HitResult hit; // default tMin = infinity
+		for (auto& object : allObjects) {
+			if (object->Hit(ray, hit, epsilon)) {
+				// If hit was successful (i.e. found a new tMin), store a reference to the object
+				hit.hitObject = object;
+			}
 		}
-	}
 
-	// Check if the ray actually hit anything
-	if (hit.hitObject != nullptr) {
-		// Calculate the hit's properties, now that we know that this hit is the closest one 
-		// (this way, we only have to do these calculations once)
+		// Check if the ray actually hit anything
+		if (hit.hitObject != nullptr) {
+			// Calculate the hit's properties
+			// New world-space position from tMin
+			hit.loc = ray.FindLocAtTime(hit.t);
+			// During intersection checks, hit.nor is filled with local-space normal. Now, convert to world space
+			hit.nor = hit.hitObject->GetInverseTranspose() * hit.nor;
+			// Multiplying by inverse transpose makes the w component nonzero, so reset it here before normalizing
+			hit.nor.w = 0.0;
+			hit.nor = normalize(hit.nor);
 
-		// New world-space position from tMin
-		hit.loc = ray.FindLocAtTime(hit.t);
+			shared_ptr<Material> mat = hit.hitObject->GetMaterial();
 
-		// During intersection checks, hit.nor is filled with local-space normal. Now, convert to world space
-		hit.nor = hit.hitObject->GetInverseTranspose() * hit.nor;
-		// Multiplying by inverse transpose makes the w component nonzero, so reset it here before normalizing
-		hit.nor.w = 0.0;
-		hit.nor = normalize(hit.nor);
-
-		shared_ptr<Material> mat = hit.hitObject->GetMaterial();
-		dvec3 color(0, 0, 0);
-
-		// Emissive Color
-		// Only add this on the first bounce, or if this ray was created from a specular bounce
-		// Necessary since we're using explicit light sampling
-		// (See https://computergraphics.stackexchange.com/questions/5152/progressive-path-tracing-with-explicit-light-sampling/5153#5153)
-		if (depth == 0 || specularRay) {
-			color += mat->ke;
-		}
-		
-		// Randomly choose between specular and diffuse rays, depending on the material's reflectance
-		if ((rand() / (double)RAND_MAX) < mat->reflectance) {
-			// Glossy reflection (glossiness - based on 'roughness' value)
-			// Create a ray with the new reflection direction
-			Ray3D reflectionRay(hit.loc, GetReflectionRay(ray.dir, hit.nor, 0.5));
-			// Send a new reflection ray, and indicate that the ray was created from a mirror reflection
-			color += mat->ks * ComputeRayColor(reflectionRay, depth + 1, true);
-		} else {
-			// Non-specular Lighting = Direct Lighting + Ambient Lighting
-
-			// Direct Lighting via Blinn-phong
-			// Explicitly sample each light
-			for (auto& light : allLights) {
-				// Another option - only sample one random light, and multiply its value by the # of lights (PDF = 1/numlights)
-				if (!IsPointInShadow(hit.loc, light->GetLocation(), light->GetObject())) {
-					color += mat->ShadeBlinnPhong(ray, hit, light);
-				}
+			// Emissive Color
+			// Only add this on the first bounce, or if this ray was created from a specular bounce
+			// Necessary since we're using explicit light sampling
+			// (See https://computergraphics.stackexchange.com/questions/5152/progressive-path-tracing-with-explicit-light-sampling/5153#5153)
+			if (specularBounce) {
+				outputColor += throughput * mat->ke;
 			}
 
-			// Ambient Lighting = 1/N * sum from 1->N of ( 1/p * (f * L * cos(theta)))
-			// Where f = BRDF = kd/pi (use perfect diffuse shading for this model,
-			//     so albedo = kd https://computergraphics.stackexchange.com/questions/350/albedo-vs-diffuse
-			// L = incoming light, theta = angle btwn incoming (constant) and outgoing (randomized) light rays
+			// Randomly choose between specular and diffuse rays, depending on the material's reflectance
+			if ((rand() / (double)RAND_MAX) < mat->reflectance) {
+				// Glossy reflection (glossiness - based on 'roughness' value)
+				throughput = throughput * mat->ks;
+				// Next ray is a reflection ray
+				specularBounce = true;
+				// Create a new ray with the reflection direction
+				ray = Ray3D(hit.loc, GetReflectionRay(ray.dir, hit.nor, 0.5));
+			}
+			else {
+				// Non-specular Lighting = Direct Lighting + Ambient Lighting
 
-			Ray3D ambientRay(hit.loc, GetRandomRayInHemisphere(hit.nor));
-			// Constant (lambertian) BRDF
-			const dvec3 BRDF = mat->kd / pi<double>();
-			// Store 1/p to save a division op. Full PDF is cos(theta) / pi, but the cos cancels out (see below)
-			constexpr double pRecip = pi<double>();
-			color += pRecip * BRDF * ComputeRayColor(ambientRay, depth + 1);
-			// ^NOTE: The random ray generation uses a cosine-weighted model, where PDF = cos(theta) / pi
-			// Therefore, when dividing by p the cos(theta) would cancel out with the full eq so we don't mult by cos here
+				// Direct Lighting via Blinn-phong
+				// Explicitly sample each light
+				for (auto& light : allLights) {
+					if (!IsPointInShadow(hit.loc, light->GetLocation(), light->GetObject())) {
+						outputColor += throughput * mat->ShadeBlinnPhong(ray, hit, light);
+					}
+				}
+
+				// Ambient Lighting = 1/N * sum from 1->N of ( 1/p * (f * L * cos(theta)))
+				// Where f = BRDF = kd/pi (use perfect diffuse shading for this model,
+				//     so albedo = kd https://computergraphics.stackexchange.com/questions/350/albedo-vs-diffuse
+				// L = incoming light, theta = angle btwn incoming (constant) and outgoing (randomized) light rays
+
+				// Next ray hit will be a diffuse bounce
+				ray = Ray3D(hit.loc, GetRandomRayInHemisphere(hit.nor));
+				specularBounce = false;
+
+				// Attenuate further rays by BRDF / PDF
+				// Constant (lambertian) BRDF
+				const dvec3 BRDF = mat->kd / pi<double>();
+				// Store 1/p to save a division op. Note that the cos(theta) term already canceled out earlier, so it's not included here
+				constexpr double invPdf = pi<double>();
+				throughput *= BRDF * invPdf;
+				// NOTE: normally, throughput would be multiplied by cos(theta), where theta is angle btwn new and old rays
+				// The random ray generation uses a cosine-weighted model, where PDF = cos(theta) / pi
+				// Therefore, when dividing by p the cos(theta) would cancel out with the full eq so we don't mult by it here
+			}
 		}
-		return color;
+		else {
+			// Hit the background, so add the bg color and stop bouncing
+			outputColor += throughput * backgroundColor;
+			return outputColor;
+		}
 	}
-	else return backgroundColor;
+	return outputColor;
 }
 
 bool Scene::IsPointInShadow(dvec4& hitLoc, dvec4& lightLoc, std::shared_ptr<SceneObject> lightObj) const {
@@ -112,6 +121,8 @@ bool Scene::IsPointInShadow(dvec4& hitLoc, dvec4& lightLoc, std::shared_ptr<Scen
 
 	return false;
 }
+
+
 
 glm::dvec4 Scene::GetRandomRayInHemisphere(glm::dvec4& normal)
 {

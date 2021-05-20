@@ -30,7 +30,7 @@ public:
 	Scene(glm::dvec3 _bgColor) : backgroundColor(_bgColor) {}
 	
 	// Iterate over all objects/lights in the scene to find the color of the given ray, returns dvec3 with rgb values from 0 to 1
-	glm::dvec3 ComputeRayColor(Ray3D& ray, int depth = 0, bool specularRay = false);
+	glm::dvec3 ComputeRayColor(Ray3D& ray);
 	void BuildSceneFromFile(std::string filename, Camera& camera);
 
 private:
@@ -42,8 +42,8 @@ private:
 
 	// "Fudge Factor" to avoid self-intersection on shadow/reflection ray hits
 	const double epsilon = 0.00001; // 1e-5
-	// Maximum number of times the ComputeRayColor can recurse before forcibly returning
-	const int maxRecursionDepth = 3;
+	// Maximum number of times the ComputeRayColor can loop before forcibly returning
+	const int  maxBounces = 3;
 	
 	// Run an intersection check on the ray to a given light, but return false immediately if a hit is found
 	bool IsPointInShadow(glm::dvec4& hitLoc, glm::dvec4& lightLoc, std::shared_ptr<SceneObject> lightObj = nullptr) const;

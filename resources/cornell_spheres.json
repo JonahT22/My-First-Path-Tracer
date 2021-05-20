@@ -47,7 +47,7 @@
       "Transform": {
         "Translation": [ 0, 2.99, -1 ],
         "Rotation": [ 180, 0, 0 ],
-        "Scale": [ 3, 1, 2 ]
+        "Scale": [ 2, 1, 1.5 ]
       },
       "Material": {
         "DiffuseColor": [ 0, 0, 0 ],
@@ -56,9 +56,9 @@
         "IsEmissive": true,
         "EmissiveProperties": {
           "EmissiveColor": [ 1, 1, 1 ],
-          "Linear": 0.5,
+          "Linear": 0.0,
           "Quadratic": 1,
-          "FalloffDistance": 100
+          "FalloffDistance": 6
         },
         "Reflectance": 0
       }
