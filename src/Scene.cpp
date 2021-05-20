@@ -7,7 +7,6 @@ using json = nlohmann::json;
 
 // Main render loop
 glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
-	// Iterative method via 'throughput' variable inspired by https://computergraphics.stackexchange.com/questions/5152/progressive-path-tracing-with-explicit-light-sampling/5153#5153
 	dvec3 outputColor(0.0);
 	// Stores the filtered color of each surface as we bounce off of them (i.e. bounce of a red surface, throughput is now 1, 0, 0)
 	dvec3 throughput(1.0);
@@ -39,12 +38,8 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 
 			// Emissive Color
 			// Only add this on the first bounce, or if this ray was created from a specular bounce
-			// For diffuse rays (created from the global illumination stuff below), this prevents double-dipping the light 
-			// (i.e. if I'm already calculating contributions from each light in the "Blinn-phong color" loop, and all emissive materials 
-			// are treated as a light, then I don't want to double-dip my sample by also getting the emissive color from my bounce rays)
-			// For reflective rays (created when the mat's reflectance is > 0), I don't actually sample all the lights before sending out 
-			// the bounce ray. Because of this, I still want to get the emissive color of anything that I hit (otherwise, lights
-			// will appear black in mirrors)
+			// Necessary since we're using explicit light sampling
+			// (See https://computergraphics.stackexchange.com/questions/5152/progressive-path-tracing-with-explicit-light-sampling/5153#5153)
 			if (specularBounce) {
 				outputColor += throughput * mat->ke;
 			}
@@ -59,22 +54,20 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 				ray = Ray3D(hit.loc, GetReflectionRay(ray.dir, hit.nor, 0.5));
 			}
 			else {
-				// Blinn-phong color
-				// Calculate contribution from each light
+				// Non-specular Lighting = Direct Lighting + Ambient Lighting
+
+				// Direct Lighting via Blinn-phong
+				// Explicitly sample each light
 				for (auto& light : allLights) {
 					if (!IsPointInShadow(hit.loc, light->GetLocation(), light->GetObject())) {
 						outputColor += throughput * mat->ShadeBlinnPhong(ray, hit, light);
 					}
 				}
 
-				// GLOBAL ILLUMINATION (Diffuse Reflection)
-
-				// Full equation: ambient light = 1/N * sum from 1->N of ( 1/p * (f * L * cos(theta)))
+				// Ambient Lighting = 1/N * sum from 1->N of ( 1/p * (f * L * cos(theta)))
 				// Where f = BRDF = kd/pi (use perfect diffuse shading for this model,
 				//     so albedo = kd https://computergraphics.stackexchange.com/questions/350/albedo-vs-diffuse
-				// N = number of samples (handled outside of this ray bouncing loop)
-				// L = incoming light, theta = angle btwn incoming (new) and outgoing (previous) light rays
-				// Using path tracing, so only sending out a single ray				
+				// L = incoming light, theta = angle btwn incoming (constant) and outgoing (randomized) light rays
 
 				// Next ray hit will be a diffuse bounce
 				ray = Ray3D(hit.loc, GetRandomRayInHemisphere(hit.nor));
