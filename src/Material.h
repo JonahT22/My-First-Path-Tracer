@@ -46,7 +46,6 @@ struct Material {
 		glm::dvec4 halfVec = glm::normalize(eyeVec + lightVec); // Since it's normalized, it doesn't matter that it's not / 2
 		glm::dvec3 cs = ks * std::pow(std::max(0.0, glm::dot(halfVec, hit.nor)), specularExp);
 
-		//return light->GetColor() * light->GetAttenuation(lightDist) * (cd + cs);
-		return light->GetColor() * light->GetAttenuation(lightDist) * cd;
+		return light->GetColor() * light->GetAttenuation(lightDist) * (cd + cs);
 	}
 };
