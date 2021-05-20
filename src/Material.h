@@ -48,4 +48,13 @@ struct Material {
 
 		return light->GetColor() * light->GetAttenuation(lightDist) * (cd + cs);
 	}
+	
+	glm::dvec3 ShadeDiffuse(Ray3D& ray, HitResult& hit, std::shared_ptr<Light> light) const {
+		glm::dvec4 lightVec = light->GetLocation() - hit.loc;
+		double lightDist = glm::length(lightVec);
+		lightVec = glm::normalize(lightVec);
+		glm::dvec3 cd = kd * std::max(0.0, glm::dot(lightVec, hit.nor));
+
+		return light->GetColor() * light->GetAttenuation(lightDist) * cd;
+	}
 };

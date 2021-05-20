@@ -60,7 +60,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 				// Explicitly sample each light
 				for (auto& light : allLights) {
 					if (!IsPointInShadow(hit.loc, light->GetLocation(), light->GetObject())) {
-						outputColor += throughput * mat->ShadeBlinnPhong(ray, hit, light);
+						outputColor += throughput * mat->ShadeDiffuse(ray, hit, light);
 					}
 				}
 
@@ -74,10 +74,11 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 				specularBounce = false;
 
 				// Attenuate further rays by BRDF / PDF
-				// Constant (lambertian) BRDF
-				const dvec3 BRDF = mat->kd / pi<double>();
-				// Store 1/p to save a division op. Note that the cos(theta) term already canceled out earlier, so it's not included here
-				constexpr double invPdf = pi<double>();
+				// Constant (lambertian) BRDF. Usually albedo / pi, but the pi cancels out w/pdf
+				const dvec3 BRDF = mat->kd;
+				// Store 1/p to save some operations
+				// Proper PDF is cos(theta) / pi, but both the cos and the pi cancel out with the BRDF / lighting equation
+				constexpr double invPdf = 1.0;
 				throughput *= BRDF * invPdf;
 				// NOTE: normally, throughput would be multiplied by cos(theta), where theta is angle btwn new and old rays
 				// The random ray generation uses a cosine-weighted model, where PDF = cos(theta) / pi
