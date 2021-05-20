@@ -31,7 +31,8 @@
         "SpecularColor": [ 1, 1, 0.5 ],
         "SpecularExp": 100,
         "IsEmissive": false,
-        "Reflectance": 0
+        "Reflectance": 0,
+        "Roughness": 1
       }
     },
     {
@@ -47,7 +48,8 @@
         "SpecularColor": [ 1, 1, 0.5 ],
         "SpecularExp": 100,
         "IsEmissive": false,
-        "Reflectance": 0
+        "Reflectance": 0,
+        "Roughness": 1
       }
     },
     {
@@ -63,7 +65,8 @@
         "SpecularColor": [ 1, 1, 0.5 ],
         "SpecularExp": 100,
         "IsEmissive": false,
-        "Reflectance": 0
+        "Reflectance": 0,
+        "Roughness": 1
       }
     }
   ]

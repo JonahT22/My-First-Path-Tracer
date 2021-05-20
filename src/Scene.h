@@ -49,8 +49,6 @@ private:
 	bool IsPointInShadow(glm::dvec4& hitLoc, glm::dvec4& lightLoc, std::shared_ptr<SceneObject> lightObj = nullptr) const;
 	// Find a random unit vector from center->surface of a hemisphere with the given normal
 	glm::dvec4 GetRandomRayInHemisphere(glm::dvec4& normal);
-	// Find a reflection vector, optionally perturbed by a 'roughness' factor (for glossy reflections)
-	glm::dvec4 GetReflectionRay(glm::dvec4& rayDir, glm::dvec4& hitNor, double roughness = 0.0);
 
 	// Reads the next 3 values from the stream and places them into a dvec3
 	glm::dvec3 ReadVec3(const nlohmann::json& j);

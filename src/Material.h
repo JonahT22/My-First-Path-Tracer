@@ -13,8 +13,8 @@ struct Material {
 	// Probability that rays hitting this object will use a reflective BRDF
 	// 1 = All rays are reflected, 0 = All rays use a diffuse/BlinnPhong BRDF
 	double reflectance;
-	// Amount of randomness to apply to reflected rays. 0 = uniform diffuse, 1 = perfect reflection
-	double roughness = 0;
+	// Amount of randomness to apply to reflected rays. 1 = uniform diffuse, 0 = perfect reflection
+	double roughness;
 	// 'width/strength' of specular highlights
 	double specularExp;
 
@@ -23,14 +23,16 @@ struct Material {
 		ks(glm::dvec3(1.0, 1.0, 1.0)),
 		ke(glm::dvec3(0, 0, 0)),
 		reflectance(0.0),
-		specularExp(100.0)
+		specularExp(100.0),
+		roughness(0.0)
 	{}
-	Material(glm::dvec3 _kd, glm::dvec3 _ks, glm::dvec3 _ke, double _reflectance, double _specularExp) :
+	Material(glm::dvec3 _kd, glm::dvec3 _ks, glm::dvec3 _ke, double _reflectance, double _specularExp, double _roughness) :
 		kd(_kd),
 		ks(_ks),
 		ke(_ke),
 		reflectance(_reflectance),
-		specularExp(_specularExp)
+		specularExp(_specularExp),
+		roughness(_roughness)
 	{}
 
 	glm::dvec3 ShadeBlinnPhong(const Ray3D& ray, const HitResult& hit, const std::shared_ptr<Light> light) const {

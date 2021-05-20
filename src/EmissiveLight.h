@@ -12,7 +12,8 @@ public:
 	// Call parent constructor
 	EmissiveLight(std::string _name, double _L, double _Q, double _falloffDistance, std::shared_ptr<SceneObject> _obj) :
 		Light(_name, _L, _Q, _falloffDistance),
-		obj(_obj) {}
+		obj(_obj),
+		sampledLocation(_obj->GetLocation()) {}
 
 	double RandomizeLocation() override {
 		// initialize pdf as 1.0, in case the obj doesn't have a randomization point method defined

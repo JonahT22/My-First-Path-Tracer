@@ -44,14 +44,20 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 				outputColor += throughput * mat->ke;
 			}
 
+			// find the direction that a diffuse bounce would take (used by both the specular and diffuse reflections)
+			dvec4 diffuseRayDir(GetRandomRayInHemisphere(hit.nor));
+
 			// Randomly choose between specular and diffuse rays, depending on the material's reflectance
 			if ((rand() / (double)RAND_MAX) < mat->reflectance) {
 				// Glossy reflection (glossiness - based on 'roughness' value)
 				throughput = throughput * mat->ks;
 				// Next ray is a reflection ray
 				specularBounce = true;
+				dvec4 idealReflectDir = glm::reflect(ray.dir, hit.nor);
+				// Interpolate between a perfect specular reflection and a diffuse reflection based on roughness
+				dvec4 specularRayDir = (mat->roughness * diffuseRayDir) + ((1.0 - mat->roughness) * idealReflectDir);
 				// Create a new ray with the reflection direction
-				ray = Ray3D(hit.loc, GetReflectionRay(ray.dir, hit.nor, 0.5));
+				ray = Ray3D(hit.loc, specularRayDir);
 			}
 			else {
 				// Non-specular Lighting = Direct Lighting + Ambient Lighting
@@ -72,7 +78,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 				// L = incoming light, theta = angle btwn incoming (constant) and outgoing (randomized) light rays
 
 				// Next ray hit will be a diffuse bounce
-				ray = Ray3D(hit.loc, GetRandomRayInHemisphere(hit.nor));
+				ray = Ray3D(hit.loc, diffuseRayDir);
 				specularBounce = false;
 
 				// Attenuate further rays by BRDF / PDF
@@ -163,18 +169,6 @@ glm::dvec4 Scene::GetRandomRayInHemisphere(glm::dvec4& normal)
 	dvec3 axis = cross(localUp, dvec3(normal));
 
 	return dvec4(rotate(localDir, angle, axis), 0);
-}
-
-glm::dvec4 Scene::GetReflectionRay(glm::dvec4& rayDir, glm::dvec4& hitNor, double roughness)
-{
-	// Find the ideal specular reflection direction
-	dvec4 idealDir = glm::reflect(rayDir, hitNor);
-	// Find a random, uniform reflection direction
-	dvec4 diffuseDir = GetRandomRayInHemisphere(hitNor);
-	// Since the random generation function is cosine-weighted, apply a scaling factor
-
-	// 
-	return idealDir;
 }
 
 void Scene::BuildSceneFromFile(std::string filename, Camera& camera) {
@@ -292,6 +286,7 @@ shared_ptr<Material> Scene::ReadMaterial(const json& j) {
 		Camera::ColorSRGBToLinear(ReadVec3(j.at("SpecularColor"))),
 		ke,
 		j.at("Reflectance"),
-		j.at("SpecularExp")
+		j.at("SpecularExp"),
+		j.at("Roughness")
 	);
 }

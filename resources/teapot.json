@@ -38,7 +38,8 @@
           "Quadratic": 0,
           "FalloffDistance": 1
         },
-        "Reflectance": 0
+        "Reflectance": 0,
+        "Roughness": 1
       }
     }
   ]
