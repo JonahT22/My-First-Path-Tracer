@@ -11,8 +11,8 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 	dvec3 outputColor(0.0);
 	// Stores the filtered color of each surface as we bounce off of them (i.e. bounce of a red surface, throughput is now 1, 0, 0)
 	dvec3 throughput(1.0);
-	// This variable is true on the first loop and after specular bounces, false otherwise
-	bool collectEmissive = true;
+	// This variable is true on the first loop so that initial hits on emissive objects return the proper color
+	bool specularBounce = true;
 	
 	for (int i = 0; i < maxBounces; i++) {
 		// Find the nearest object
@@ -45,7 +45,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 			// For reflective rays (created when the mat's reflectance is > 0), I don't actually sample all the lights before sending out 
 			// the bounce ray. Because of this, I still want to get the emissive color of anything that I hit (otherwise, lights
 			// will appear black in mirrors)
-			if (collectEmissive) {
+			if (specularBounce) {
 				outputColor += throughput * mat->ke;
 			}
 
@@ -53,8 +53,8 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 			if ((rand() / (double)RAND_MAX) < mat->reflectance) {
 				// Glossy reflection (glossiness - based on 'roughness' value)
 				throughput = throughput * mat->ks;
-				// Since the next ray is a reflection ray, collect the emissive value if we hit an emissive material
-				collectEmissive = true;
+				// Next ray is a reflection ray
+				specularBounce = true;
 				// Create a new ray with the reflection direction
 				ray = Ray3D(hit.loc, GetReflectionRay(ray.dir, hit.nor, 0.5));
 			}
@@ -78,7 +78,7 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 
 				// Next ray hit will be a diffuse bounce
 				ray = Ray3D(hit.loc, GetRandomRayInHemisphere(hit.nor));
-				collectEmissive = false;
+				specularBounce = false;
 
 				// Attenuate further rays by BRDF / PDF
 				// Constant (lambertian) BRDF
