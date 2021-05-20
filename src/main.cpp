@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
 	shared_ptr<Image> outputImage = make_shared<Image>(width, height);
 
 	// Provide image dimensions to camera for aspect ratio & ray calculations
-	Camera camera (width, height, dvec4(0, 0, -5, 1), dvec3(0, 0, 0), 45, 0.4);
+	Camera camera (width, height, dvec4(0, 0, -5, 1), dvec3(0, 0, 0), 45, 1.0);
 
 	// Build a scene with a black background color
 	Scene scene(dvec3(0, 0, 0));
@@ -72,9 +72,9 @@ int main(int argc, char **argv) {
 			rayColor /= (double)numSamples;
 
 			// Image processing
-			camera.ApplyExposure(rayColor);
-			camera.ApplyTonemapping(rayColor, Camera::Tonemapper::ACES_APPROX);
-			camera.ColorLinearToSRGB(rayColor);
+			rayColor *= camera.GetExposure();
+			rayColor = Camera::ApplyTonemapping(rayColor, Camera::Tonemapper::ACES_APPROX);
+			rayColor = Camera::ColorLinearToSRGB(rayColor);
 
 			// Store color value
 			outputImage->setPixel(col, row, 255 * rayColor.r, 255 * rayColor.g, 255 * rayColor.b);

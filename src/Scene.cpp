@@ -270,11 +270,11 @@ shared_ptr<Material> Scene::ReadMaterial(const json& j) {
 	dvec3 ke(0, 0, 0);
 	// The emissive color is not included for non-emissive objects, so check before reading emissive color
 	if (j.at("IsEmissive").get<bool>()) {
-		ke = ReadVec3(j.at("EmissiveProperties").at("EmissiveColor"));
+		ke = Camera::ColorSRGBToLinear(ReadVec3(j.at("EmissiveProperties").at("EmissiveColor")));
 	}
 	return make_shared<Material>(
-		ReadVec3(j.at("DiffuseColor")),
-		ReadVec3(j.at("SpecularColor")),
+		Camera::ColorSRGBToLinear(ReadVec3(j.at("DiffuseColor"))),
+		Camera::ColorSRGBToLinear(ReadVec3(j.at("SpecularColor"))),
 		ke,
 		j.at("Reflectance"),
 		j.at("SpecularExp")

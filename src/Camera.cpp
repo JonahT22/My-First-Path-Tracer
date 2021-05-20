@@ -1,13 +1,17 @@
 #pragma once
+#include <iostream>
 #include "Camera.h"
 
 using namespace glm;
 using namespace std;
 
-void Camera::ClampColor(glm::dvec3& color) {
-	ClampDouble(color.x, 0.0, 1.0);
-	ClampDouble(color.y, 0.0, 1.0);
-	ClampDouble(color.z, 0.0, 1.0);
+dvec3 Camera::ClampColor(glm::dvec3& color) {
+	return dvec3(
+		ClampDouble(color.x, 0.0, 1.0),
+		ClampDouble(color.y, 0.0, 1.0),
+		ClampDouble(color.z, 0.0, 1.0)
+	);
+
 }
 
 Camera::Camera(int imageWidth, int imageHeight, glm::dvec4 _pos, glm::dvec3 _rot, double _fov, double _exposure) :
@@ -35,24 +39,35 @@ void Camera::Setup() {
 	inv_rotMtx = inverse(eulerAngleXYZ(rot.x, rot.y, rot.z));
 }
 
-void Camera::ApplyTonemapping(glm::dvec3& color, Tonemapper tonemapper)
+dvec3 Camera::ApplyTonemapping(glm::dvec3& color, Tonemapper tonemapper)
 {
 	switch (tonemapper) {
 	case Tonemapper::ACES_APPROX:
-		ACESApprox(color);
+		return ACESApprox(color);
 		break;
 	case Tonemapper::SIMPLE_CLAMP:
 	default:
-		ClampColor(color);
+		return ClampColor(color);
 		break;
 	}
 }
 
-void Camera::ColorLinearToSRGB(glm::dvec3& color)
+dvec3 Camera::ColorLinearToSRGB(glm::dvec3& linearColor)
 {
-	color.x = DoubleLinearToSRGB(color.x);
-	color.y = DoubleLinearToSRGB(color.y);
-	color.z = DoubleLinearToSRGB(color.z);
+	return dvec3(
+		DoubleLinearToSRGB(linearColor.x),
+		DoubleLinearToSRGB(linearColor.y),
+		DoubleLinearToSRGB(linearColor.z)
+	);
+}
+
+dvec3 Camera::ColorSRGBToLinear(glm::dvec3& srgbColor)
+{
+	return dvec3(
+		DoubleSRGBToLinear(srgbColor.x),
+		DoubleSRGBToLinear(srgbColor.y),
+		DoubleSRGBToLinear(srgbColor.z)
+	);
 }
 
 double Camera::DoubleLinearToSRGB(double val)
@@ -66,12 +81,24 @@ double Camera::DoubleLinearToSRGB(double val)
 	}
 }
 
-void Camera::ClampDouble(double& num, double min, double max) {
-	if (num < min) num = min;
-	if (num > max) num = max;
+double Camera::DoubleSRGBToLinear(double val)
+{
+	// SRGB->Linear formula from https://www.nayuki.io/page/srgb-transform-library
+	if (val < 0.04045) {
+		return val / 12.92;
+	}
+	else {
+		return pow((val + 0.055) / 1.055, 2.4);
+	}
 }
 
-void Camera::ACESApprox(glm::dvec3& color)
+double Camera::ClampDouble(double num, double min, double max) {
+	if (num < min) return min;
+	if (num > max) return max;
+	return num;
+}
+
+dvec3 Camera::ACESApprox(glm::dvec3& color)
 {
 	// Using an approximation of the ACES curve by Krzysztof Narkowicz https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
 	double a = 2.51;
@@ -79,6 +106,6 @@ void Camera::ACESApprox(glm::dvec3& color)
 	double c = 2.43;
 	double d = 0.59;
 	double e = 0.14;
-	color = (color * (a * color + b)) / (color * (c * color + d) + e);
-	ClampColor(color);
+	dvec3 testColor =  (color * (a * color + b)) / (color * (c * color + d) + e);
+	return ClampColor(testColor);
 }

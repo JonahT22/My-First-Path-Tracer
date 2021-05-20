@@ -32,15 +32,17 @@ public:
 	void SetRotationDegrees(glm::dvec3& _rot) { rot = _rot * glm::pi<double>() / 180.0; }
 	void SetFOVDegrees(double _fov) { fovY = _fov * glm::pi<double>() / 180.0; }
 	
-	void ApplyExposure(glm::dvec3& color) { color *= exposure; }
-	void ApplyTonemapping(glm::dvec3& color, Tonemapper tonemapper);
-	void ColorLinearToSRGB(glm::dvec3& color);
+	double GetExposure() { return exposure; }
+	static glm::dvec3 ApplyTonemapping(glm::dvec3& color, Tonemapper tonemapper);
+	static glm::dvec3 ColorLinearToSRGB(glm::dvec3& linearColor);
+	static glm::dvec3 ColorSRGBToLinear(glm::dvec3& srgbColor);
 
 private:
-	double DoubleLinearToSRGB(double val);
-	void ClampDouble(double& num, double min, double max);
-	void ACESApprox(glm::dvec3& color);
-	void ClampColor(glm::dvec3& color);
+	static double DoubleLinearToSRGB(double val);
+	static double DoubleSRGBToLinear(double val);
+	static double ClampDouble(double num, double min, double max);
+	static glm::dvec3 ACESApprox(glm::dvec3& color);
+	static glm::dvec3 ClampColor(glm::dvec3& color);
 
 
 	glm::dvec4 pos;
