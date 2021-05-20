@@ -13,17 +13,26 @@ struct PointLight : public Light {
 		loc(_loc),
 		color(_color) {}
 
-	glm::dvec3 GetColor() override {
-		return color;
+	glm::dvec3 SampleLight(glm::dvec4 hitLocation) override {
+		double distance = glm::length(hitLocation - loc);
+		return GetColor() * GetDistanceAttenuation(distance);
 	}
-	glm::dvec4 GetLocation(double& pdf) override {
+
+	double RandomizeLocation() override {
 		// Not randomly sampling location, so pdf is just 1
-		pdf = 1.0;
+		return 1.0;
+	}
+
+	glm::dvec4 GetLocation() override {
 		return loc;
 	}
 	// Returns null, since point lights are not attached to a particular object
 	std::shared_ptr<SceneObject> GetObject() override {
 		return nullptr;
+	}
+
+	glm::dvec3 GetColor() override {
+		return color;
 	}
 private:
 	glm::dvec4 loc = glm::dvec4(0, 0, 0, 1);

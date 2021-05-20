@@ -59,11 +59,10 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 				// Direct Lighting
 				// Explicitly sample each light
 				for (auto& light : allLights) {
-					double pdf;
-					// Since light location is randomized for emissive objects, need to precompute it and pass to the next 2 functions
-					dvec4 lightLoc = light->GetLocation(pdf);
-					if (!IsPointInShadow(hit.loc, lightLoc, light->GetObject())) {
-						outputColor += throughput * mat->ShadeDiffuse(ray, hit, light, lightLoc) / pdf;
+					// If this light is an area light, choose a new random location on its surface
+					double pdf = light->RandomizeLocation();
+					if (!IsPointInShadow(hit.loc, light->GetLocation(), light->GetObject())) {
+						outputColor += throughput * mat->ShadeDiffuse(ray, hit, light) / pdf;
 					}
 				}
 

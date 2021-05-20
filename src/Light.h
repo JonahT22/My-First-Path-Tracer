@@ -15,19 +15,26 @@ public:
 		Q(_Q),
 		distance(_falloffDistance),
 		sqrdDist(std::pow(distance, 2.0)) {}
-
-	virtual glm::dvec3 GetColor() = 0;
-	virtual glm::dvec4 GetLocation(double& pdf) = 0;
+	
+	// If this is an area/emissive light, store a random point on the light's surface, and return the pdf
+	virtual double RandomizeLocation() = 0;
+	// Get the light's loc, or the most recently chosen random position on an area light
+	virtual glm::dvec4 GetLocation() = 0;
+	// Find this light's color contribution, given the most recently-sampled loc on the light and a point in the world
+	virtual glm::dvec3 SampleLight(glm::dvec4 hitLocation) = 0;
 	// If this light is attached to a sceneobject (i.e. emissive lights), return it. Else, return nullptr
 	virtual std::shared_ptr<SceneObject> GetObject() = 0;
-	double GetAttenuation(double r) {
+	virtual glm::dvec3 GetColor() = 0;
+	std::string name;
+
+protected:
+	// Use the blender model of light attenuation
+	double GetDistanceAttenuation(double r) {
 		double linear = distance / (distance + L * r);
 		double quad = sqrdDist / (sqrdDist + Q * std::pow(r, 2.0));
 		return linear * quad;
 	}
-	std::string name;
 
-private:
 	// Use the blender model of light attenuation: A = (dist / (dist + L * r)) * (dist^2 / (dist^2 + Q * r^2))
 	// https://docs.blender.org/manual/en/2.79/render/blender_render/lighting/lights/attenuation.html
 	// Linear attenuation factor
