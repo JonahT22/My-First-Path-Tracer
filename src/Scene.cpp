@@ -86,6 +86,18 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 				// The random ray generation uses a cosine-weighted model, where PDF = cos(theta) / pi
 				// Therefore, when dividing by p the cos(theta) would cancel out with the full eq so we don't mult by it here
 			}
+
+			// Russian Roulette path termination
+			// Method from https://computergraphics.stackexchange.com/questions/2316/is-russian-roulette-really-the-answer
+			// Use throughput (color contribution modifier) as the terminating condition
+			double p = std::max(throughput.x, std::max(throughput.y, throughput.z));
+			// the lower the max value of throughput, the more likely execution will go here and break the loop
+			if ((rand() / (double)RAND_MAX) >= p) {
+				// ^Note: >= since rand / rand_max can return 0, which should still break when p = 0
+				break;
+			}
+			// If the ray makes it here, boost it by p to make up for the rays that have already been terminated by this point
+			throughput *= 1 / p;
 		}
 		else {
 			// Hit the background, so add the bg color and stop bouncing

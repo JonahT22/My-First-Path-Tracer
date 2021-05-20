@@ -42,8 +42,8 @@ private:
 
 	// "Fudge Factor" to avoid self-intersection on shadow/reflection ray hits
 	const double epsilon = 0.00001; // 1e-5
-	// Maximum number of times the ComputeRayColor can loop before forcibly returning
-	const int  maxBounces = 5;
+	// Maximum number of times ComputeRayColor can loop before forcibly returning
+	const int  maxBounces = 10;
 	
 	// Run an intersection check on the ray to a given light, but return false immediately if a hit is found
 	bool IsPointInShadow(glm::dvec4& hitLoc, glm::dvec4& lightLoc, std::shared_ptr<SceneObject> lightObj = nullptr) const;
