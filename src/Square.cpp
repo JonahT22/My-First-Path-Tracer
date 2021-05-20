@@ -36,11 +36,13 @@ bool Square::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double t
 	return false;
 }
 
-glm::dvec4 Square::GetRandomPointOnSurface()
+glm::dvec4 Square::GetRandomPointOnSurface(double& pdf)
 {
 	// Generate random numbers between -0.5 and 0.5
 	double randX = (rand() / (double)RAND_MAX) - 0.5;
 	double randZ = (rand() / (double)RAND_MAX) - 0.5;
+	// PDF = 1/area, since this is a uniform distribution
+	pdf = 1.0 / (transf.scale.x * transf.scale.z);
 	return modelMtx * dvec4(randX, 0, randZ, 1);
 }
 

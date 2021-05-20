@@ -41,7 +41,7 @@ bool Sphere::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double t
 	return false;
 }
 
-glm::dvec4 Sphere::GetRandomPointOnSurface()
+glm::dvec4 Sphere::GetRandomPointOnSurface(double& pdf)
 {
 	return transf.translation;
 }

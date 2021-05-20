@@ -25,8 +25,8 @@ public:
 
 	// Check intersection in local space, return true if found an intersection that is closer than the hit's t value
 	virtual bool IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tMax) = 0;
-	// Returns the world-space location of a random point on the object's surface
-	virtual glm::dvec4 GetRandomPointOnSurface() = 0;
+	// Returns the world-space location of a random point on the object's surface, and return the pdf by reference
+	virtual glm::dvec4 GetRandomPointOnSurface(double& pdf) = 0;
 
 	std::string name;
 	bool hasRandomPointMethodDefined = false;

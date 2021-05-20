@@ -56,13 +56,14 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 			else {
 				// Non-specular Lighting = Direct Lighting + Ambient Lighting
 
-				// Direct Lighting via Blinn-phong
+				// Direct Lighting
 				// Explicitly sample each light
 				for (auto& light : allLights) {
-						outputColor += throughput * mat->ShadeDiffuse(ray, hit, light);
+					double pdf;
 					// Since light location is randomized for emissive objects, need to precompute it and pass to the next 2 functions
 					dvec4 lightLoc = light->GetLocation(pdf);
 					if (!IsPointInShadow(hit.loc, lightLoc, light->GetObject())) {
+						outputColor += throughput * mat->ShadeDiffuse(ray, hit, light, lightLoc) / pdf;
 					}
 				}
 

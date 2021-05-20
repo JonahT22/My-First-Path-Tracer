@@ -17,8 +17,9 @@ public:
 	glm::dvec3 GetColor() override {
 		return obj->GetMaterial()->ke;
 	}
-	glm::dvec4 GetLocation() override {
-		return obj->GetRandomPointOnSurface();
+	glm::dvec4 GetLocation(double& pdf) override {
+		pdf = 1.0;
+		return obj->GetRandomPointOnSurface(pdf);
 	}
 	std::shared_ptr<SceneObject> GetObject() override {
 		return obj;

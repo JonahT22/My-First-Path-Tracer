@@ -16,7 +16,9 @@ struct PointLight : public Light {
 	glm::dvec3 GetColor() override {
 		return color;
 	}
-	glm::dvec4 GetLocation() override {
+	glm::dvec4 GetLocation(double& pdf) override {
+		// Not randomly sampling location, so pdf is just 1
+		pdf = 1.0;
 		return loc;
 	}
 	// Returns null, since point lights are not attached to a particular object

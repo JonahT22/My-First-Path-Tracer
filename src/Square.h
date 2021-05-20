@@ -16,7 +16,7 @@ public:
 	};
 
 	bool IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tMax) override;
-	glm::dvec4 GetRandomPointOnSurface() override;
+	glm::dvec4 GetRandomPointOnSurface(double& pdf) override;
 
 private:
 	// Check if the given value is between -0.5 and 0.5

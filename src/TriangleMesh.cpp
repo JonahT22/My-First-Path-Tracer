@@ -38,7 +38,7 @@ bool TriangleMesh::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, do
 	return foundNewHit;
 }
 
-glm::dvec4 TriangleMesh::GetRandomPointOnSurface()
+glm::dvec4 TriangleMesh::GetRandomPointOnSurface(double& pdf)
 {
 	return transf.translation;
 }
