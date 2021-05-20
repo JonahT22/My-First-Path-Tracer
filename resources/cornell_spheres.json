@@ -18,7 +18,7 @@
         "Scale": [ 1, 1, 1 ]
       },
       "Material": {
-        "DiffuseColor": [ 1, 1, 1 ],
+        "DiffuseColor": [ 0.7, 0.7, 0.7 ],
         "SpecularColor": [ 1, 1, 1 ],
         "SpecularExp": 100,
         "IsEmissive": false,
@@ -72,7 +72,7 @@
         "Scale": [ 1, 1, 1 ]
       },
       "Material": {
-        "DiffuseColor": [ 1, 1, 1 ],
+        "DiffuseColor": [ 0.7, 0.7, 0.7 ],
         "SpecularColor": [ 0, 0, 0 ],
         "SpecularExp": 1,
         "IsEmissive": false,
@@ -88,7 +88,7 @@
         "Scale": [ 1, 1, 1 ]
       },
       "Material": {
-        "DiffuseColor": [ 1, 1, 1 ],
+        "DiffuseColor": [ 0.7, 0.7, 0.7 ],
         "SpecularColor": [ 0, 0, 0 ],
         "SpecularExp": 1,
         "IsEmissive": false,
@@ -136,7 +136,7 @@
         "Scale": [ 1, 1, 1 ]
       },
       "Material": {
-        "DiffuseColor": [ 1, 1, 1 ],
+        "DiffuseColor": [ 0.7, 0.7, 0.7 ],
         "SpecularColor": [ 0, 0, 0 ],
         "SpecularExp": 1,
         "IsEmissive": false,
