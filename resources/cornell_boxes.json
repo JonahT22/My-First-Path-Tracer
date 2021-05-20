@@ -10,15 +10,47 @@
   ],
   "SceneObjects": [
     {
+      "Name": "Reflective Sphere",
+      "ObjectType": "Sphere",
+      "Transform": {
+        "Translation": [ 0.95, -0.25, 0 ],
+        "Rotation": [ 0, 0, 0 ],
+        "Scale": [ 1, 1, 1 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 0.8, 0.5, 0.5 ],
+        "SpecularColor": [ 0, 1, 1 ],
+        "SpecularExp": 100,
+        "IsEmissive": false,
+        "Reflectance": 1
+      }
+    },
+    {
+      "Name": "Tall Box",
+      "ObjectType": "Box",
+      "Transform": {
+        "Translation": [ -1.05, -1.25, -0.5 ],
+        "Rotation": [ 0, 25, 0 ],
+        "Scale": [ 1.5, 3.5, 1.5 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 0.8, 0.8, 0.8 ],
+        "SpecularColor": [ 1, 1, 1 ],
+        "SpecularExp": 100,
+        "IsEmissive": false,
+        "Reflectance": 0
+      }
+    },
+    {
       "Name": "Small Box",
       "ObjectType": "Box",
       "Transform": {
-        "Translation": [ 0.75, -2.125, 0 ],
+        "Translation": [ 0.95, -2.125, 0 ],
         "Rotation": [ 0, -25, 0 ],
         "Scale": [ 1.75, 1.75, 1.5 ]
       },
       "Material": {
-        "DiffuseColor": [ 0.7, 0.8, 0.8 ],
+        "DiffuseColor": [ 0.8, 0.8, 0.8 ],
         "SpecularColor": [ 1, 1, 1 ],
         "SpecularExp": 100,
         "IsEmissive": false,
@@ -29,7 +61,7 @@
       "Name": "Tall Box",
       "ObjectType": "Box",
       "Transform": {
-        "Translation": [ -1.25, -1.25, -0.5 ],
+        "Translation": [ -1.05, -1.25, -0.5 ],
         "Rotation": [ 0, 25, 0 ],
         "Scale": [ 1.5, 3.5, 1.5 ]
       },
@@ -58,7 +90,7 @@
           "EmissiveColor": [ 1.3, 1.3, 1.3 ],
           "Linear": 0.5,
           "Quadratic": 1,
-          "FalloffDistance": 2
+          "FalloffDistance": 3
         },
         "Reflectance": 0
       }
@@ -104,7 +136,7 @@
         "Scale": [ 1, 1, 1 ]
       },
       "Material": {
-        "DiffuseColor": [ 0.4, 0.8, 0.2 ],
+        "DiffuseColor": [ 0.5, 0.75, 0.2 ],
         "SpecularColor": [ 0, 0, 0 ],
         "SpecularExp": 1,
         "IsEmissive": false,

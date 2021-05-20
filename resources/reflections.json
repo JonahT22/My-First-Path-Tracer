@@ -1,8 +1,8 @@
 {
   "Camera": {
     "Transform": {
-      "Translation": [ 0, 0, 5 ],
-      "Rotation": [ 0, 0, 0 ]
+      "Translation": [ 2, 0, 5 ],
+      "Rotation": [ 0, 20, 0 ]
     },
     "Fov": 45.0
   },
@@ -10,20 +10,11 @@
     {
       "Name": "Light 1",
       "LightType": "PointLight",
-      "Linear": 0,
-      "Quadratic": 0,
-      "FalloffDistance": 1,
-      "Translation": [ -1, 2, 1 ],
-      "Color": [ 0.5, 0.5, 0.5 ]
-    },
-    {
-      "Name": "Light 2",
-      "LightType": "PointLight",
-      "Linear": 0,
-      "Quadratic": 0,
-      "FalloffDistance": 1,
-      "Translation": [ 0.5, 0.5, 0 ],
-      "Color": [ 0.5, 0.5, 0.5 ]
+      "Linear": 0.5,
+      "Quadratic": 1,
+      "FalloffDistance": 2,
+      "Translation": [ 1, 1, 1 ],
+      "Color": [ 1, 1, 1 ]
     }
   ],
   "SceneObjects": [
@@ -31,64 +22,48 @@
       "Name": "Red Sphere",
       "ObjectType": "Sphere",
       "Transform": {
-        "Translation": [ 0.5, -0.7, 0.5 ],
+        "Translation": [ -1, 0, 0 ],
         "Rotation": [ 0, 0, 0 ],
-        "Scale": [ 0.3, 0.3, 0.3 ]
+        "Scale": [ 1, 1, 1 ]
       },
       "Material": {
         "DiffuseColor": [ 1, 0, 0 ],
-        "SpecularColor": [ 1, 1, 0.5 ],
+        "SpecularColor": [ 1, 1, 1 ],
         "SpecularExp": 100,
         "IsEmissive": false,
         "Reflectance": 0
       }
     },
     {
-      "Name": "Blue Sphere",
-      "ObjectType": "Sphere",
+      "Name": "Front Mirror",
+      "ObjectType": "Plane",
       "Transform": {
-        "Translation": [ 1, -0.7, 0 ],
-        "Rotation": [ 0, 0, 0 ],
-        "Scale": [ 0.3, 0.3, 0.3 ]
-      },
-      "Material": {
-        "DiffuseColor": [ 0, 0, 1 ],
-        "SpecularColor": [ 1, 1, 0.5 ],
-        "SpecularExp": 100,
-        "IsEmissive": false,
-        "Reflectance": 0
-      }
-    },
-    {
-      "Name": "Teal Mirror Sphere",
-      "ObjectType": "Sphere",
-      "Transform": {
-        "Translation": [ -0.5, 0, -0.5 ],
-        "Rotation": [ 0, 0, 0 ],
+        "Translation": [ 0, 0, -2 ],
+        "Rotation": [ -90, 0, 0 ],
         "Scale": [ 1, 1, 1 ]
       },
       "Material": {
         "DiffuseColor": [ 0, 1, 1 ],
-        "SpecularColor": [ 1, 1, 0.5 ],
+        "SpecularColor": [ 1, 1, 1 ],
         "SpecularExp": 100,
         "IsEmissive": false,
-        "Reflectance": 0.5
+        "Reflectance": 1
       }
     },
     {
-      "Name": "Yellow Mirror Sphere",
-      "ObjectType": "Sphere",
+      "Name": "Back Mirror",
+      "ObjectType": "Plane",
       "Transform": {
-        "Translation": [ 1.5, 0, -1.5 ],
-        "Rotation": [ 0, 0, 0 ],
+        "Translation": [ 0, 0, 5],
+        "Rotation": [ -90, 0, 0 ],
         "Scale": [ 1, 1, 1 ]
       },
       "Material": {
         "DiffuseColor": [ 1, 1, 0 ],
-        "SpecularColor": [ 1, 1, 0.5 ],
+        "SpecularColor": [ 1, 1, 1 ],
         "SpecularExp": 100,
         "IsEmissive": false,
-        "Reflectance": 0.5
+        "Reflectance": 1
       }
     },
     {
@@ -101,24 +76,8 @@
       },
       "Material": {
         "DiffuseColor": [ 1, 1, 1 ],
-        "SpecularColor": [ 0, 0, 0 ],
-        "SpecularExp": 1,
-        "IsEmissive": false,
-        "Reflectance": 0
-      }
-    },
-    {
-      "Name": "Back Wall",
-      "ObjectType": "Plane",
-      "Transform": {
-        "Translation": [ 0, 0, -3 ],
-        "Rotation": [ 90, 0, 0 ],
-        "Scale": [ 1, 1, 1 ]
-      },
-      "Material": {
-        "DiffuseColor": [ 1, 1, 1 ],
-        "SpecularColor": [ 0, 0, 0 ],
-        "SpecularExp": 1,
+        "SpecularColor": [ 1, 1, 1 ],
+        "SpecularExp": 100,
         "IsEmissive": false,
         "Reflectance": 0
       }
