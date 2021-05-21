@@ -18,8 +18,8 @@ public:
 	double RandomizeLocation() override {
 		// initialize pdf as 1.0, in case the obj doesn't have a randomization point method defined
 		double pdf = 1.0;
-		// Store the location that was chosen, used for sampling the light
-		sampledLocation = obj->GetRandomPointOnSurface(pdf);
+		// Store the location and normal of the point that was chosen, used for sampling the light
+		sampledLocation = obj->GetRandomPointOnSurface(pdf, sampledNormal);
 		return pdf;
 	}
 
@@ -32,7 +32,7 @@ public:
 		double distance = glm::length(hitVector);
 		hitVector = glm::normalize(hitVector);
 		// Treat this object as a surface that evenly emits light in all directions, attenuated by the angle btwn the surface normal and ray
-		double orientationAttenuation = std::max(0.0, glm::dot(hitVector, glm::dvec4(0, -1, 0, 0)));
+		double orientationAttenuation = std::max(0.0, glm::dot(hitVector, sampledNormal));
 		return GetColor() * orientationAttenuation * GetDistanceAttenuation(distance);
 	}
 
@@ -48,4 +48,5 @@ private:
 	std::shared_ptr<SceneObject> obj = nullptr;
 	// The most recently sampled random location of this light source
 	glm::dvec4 sampledLocation;
+	glm::dvec4 sampledNormal;
 };

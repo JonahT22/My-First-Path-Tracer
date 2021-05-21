@@ -7,6 +7,15 @@
     "Fov": 75.0
   },
   "Lights": [
+    {
+      "Name": "Light 1",
+      "LightType": "NULL",
+      "Linear": 0.5,
+      "Quadratic": 1,
+      "FalloffDistance": 6,
+      "Translation": [ 0, 2.99, -1 ],
+      "Color": [ 1, 1, 1 ]
+    }
   ],
   "SceneObjects": [
     {

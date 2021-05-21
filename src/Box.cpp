@@ -71,7 +71,7 @@ bool Box::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tMax
 	return false;
 }
 
-glm::dvec4 Box::GetRandomPointOnSurface(double& pdf)
+glm::dvec4 Box::GetRandomPointOnSurface(double& pdf, dvec4& normal)
 {
 	return transf.translation;
 }

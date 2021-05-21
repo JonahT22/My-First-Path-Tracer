@@ -33,7 +33,7 @@ bool Plane::IntersectLocal(Ray3D& ray, HitResult& outHit, double tMin, double tM
 	return false;
 }
 
-glm::dvec4 Plane::GetRandomPointOnSurface(double& pdf)
+glm::dvec4 Plane::GetRandomPointOnSurface(double& pdf, dvec4& normal)
 {
 	return transf.translation;
 }
