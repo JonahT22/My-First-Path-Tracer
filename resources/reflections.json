@@ -10,9 +10,9 @@
     {
       "Name": "Light 1",
       "LightType": "PointLight",
-      "Linear": 0.5,
+      "Linear": 0.3,
       "Quadratic": 1,
-      "FalloffDistance": 2,
+      "FalloffDistance": 1,
       "Translation": [ 1, 1, 1 ],
       "Color": [ 1, 1, 1 ]
     }
@@ -57,7 +57,7 @@
       "ObjectType": "Plane",
       "Transform": {
         "Translation": [ 0, 0, 5],
-        "Rotation": [ -90, 0, 0 ],
+        "Rotation": [ -90, -10, 0 ],
         "Scale": [ 1, 1, 1 ]
       },
       "Material": {
@@ -79,6 +79,57 @@
       },
       "Material": {
         "DiffuseColor": [ 1, 1, 1 ],
+        "SpecularColor": [ 1, 1, 1 ],
+        "SpecularExp": 100,
+        "IsEmissive": false,
+        "Reflectance": 0,
+        "Roughness": 1
+      }
+    },
+    {
+      "Name": "Ceiling",
+      "ObjectType": "Plane",
+      "Transform": {
+        "Translation": [ 0, 2, 0 ],
+        "Rotation": [ 180, 0, 0 ],
+        "Scale": [ 1, 1, 1 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 0.2, 0.4, 0.2 ],
+        "SpecularColor": [ 1, 1, 1 ],
+        "SpecularExp": 100,
+        "IsEmissive": false,
+        "Reflectance": 0,
+        "Roughness": 1
+      }
+    },
+    {
+      "Name": "Left Wall",
+      "ObjectType": "Plane",
+      "Transform": {
+        "Translation": [ -2.5, 0, 0 ],
+        "Rotation": [ 0, 0, -90 ],
+        "Scale": [ 1, 1, 1 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 0.2, 0.4, 0.2 ],
+        "SpecularColor": [ 1, 1, 1 ],
+        "SpecularExp": 100,
+        "IsEmissive": false,
+        "Reflectance": 0,
+        "Roughness": 1
+      }
+    },
+    {
+      "Name": "Right Wall",
+      "ObjectType": "Plane",
+      "Transform": {
+        "Translation": [ 4, 0, 0 ],
+        "Rotation": [ 0, 0, 90 ],
+        "Scale": [ 1, 1, 1 ]
+      },
+      "Material": {
+        "DiffuseColor": [ 0.2, 0.4, 0.2 ],
         "SpecularColor": [ 1, 1, 1 ],
         "SpecularExp": 100,
         "IsEmissive": false,

@@ -96,6 +96,8 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 			// Russian Roulette path termination
 			// Method from https://computergraphics.stackexchange.com/questions/2316/is-russian-roulette-really-the-answer
 			// Use throughput (color contribution modifier) as the terminating condition
+			// TODO: Should p be based on throughput or output color? Take a dark scene with white walls - throughput is 1 even
+			// though rays are very dark.
 			double p = std::max(throughput.x, std::max(throughput.y, throughput.z));
 			// the lower the max value of throughput, the more likely execution will go here and break the loop
 			if ((rand() / (double)RAND_MAX) >= p) {
