@@ -51,13 +51,13 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 			if ((rand() / (double)RAND_MAX) < mat->reflectance) {
 				// Glossy reflection (glossiness - based on 'roughness' value)
 				throughput = throughput * mat->ks;
-				// Next ray is a reflection ray
-				specularBounce = true;
 				dvec4 idealReflectDir = glm::reflect(ray.dir, hit.nor);
 				// Interpolate between a perfect specular reflection and a diffuse reflection based on roughness
 				dvec4 specularRayDir = (mat->roughness * diffuseRayDir) + ((1.0 - mat->roughness) * idealReflectDir);
 				// Create a new ray with the reflection direction
 				ray = Ray3D(hit.loc, specularRayDir);
+				// Next ray is a reflection ray
+				specularBounce = true;
 			}
 			else {
 				// Non-specular Lighting = Direct Lighting + Ambient Lighting
@@ -96,8 +96,10 @@ glm::dvec3 Scene::ComputeRayColor(Ray3D& ray) {
 			// Russian Roulette path termination
 			// Method from https://computergraphics.stackexchange.com/questions/2316/is-russian-roulette-really-the-answer
 			// Use throughput (color contribution modifier) as the terminating condition
-			// TODO: Should p be based on throughput or output color? Take a dark scene with white walls - throughput is 1 even
+			// Q: Should p be based on throughput or output color? Take a dark scene with white walls - throughput is 1 even
 			// though rays are very dark.
+			// A: No, a ray bouncing off a mirror surface will have an accumulated output color of 0, but it might hit a light later and
+			// have a large contribution. The only way to guarantee a ray won't have much effect is if it's bounced off dark surfaces.
 			double p = std::max(throughput.x, std::max(throughput.y, throughput.z));
 			// the lower the max value of throughput, the more likely execution will go here and break the loop
 			if ((rand() / (double)RAND_MAX) >= p) {
