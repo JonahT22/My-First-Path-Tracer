@@ -1,5 +1,5 @@
 # My First Path Tracer
-This project is an extension of the final project in Texas A&M's Intro to Computer Graphics course. It is a physically-based, monte-carlo path tracer. Some of its supported features are:
+This project is a physically-based, monte-carlo path tracer built from scratch in c++. Some of its supported features are:
 - Glossy Reflections
 - Importance sampling via a cosine-weighted ray generation function
 - Russian Roulette path termination
