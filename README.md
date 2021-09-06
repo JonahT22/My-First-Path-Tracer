@@ -1,5 +1,5 @@
 # My First Path Tracer
-This project is a physically-based, monte-carlo path tracer built from scratch in c++. Some of its supported features are:
+This project is a physically-based, monte-carlo path tracer built from scratch in C++. Some of its supported features are:
 - Glossy Reflections
 - Importance sampling via a cosine-weighted ray generation function
 - Russian Roulette path termination
