@@ -74,7 +74,7 @@ double Camera::DoubleLinearToSRGB(double val)
 {
 	// Linear->SRGB formula from https://www.nayuki.io/page/srgb-transform-library
 	if (val < 0.0031308) {
-		return val / 12.92;
+		return val * 12.92;
 	}
 	else {
 		return (1.055 * pow(val, 1.0 / 2.4)) - 0.055;
